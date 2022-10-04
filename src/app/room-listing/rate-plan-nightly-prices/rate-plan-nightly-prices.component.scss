@@ -1,0 +1,88 @@
+@import "../../../sass/variables/colors";
+/*Package Listing Tooltip */
+
+.Tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltiptext:hover {
+  color: #1a0dab;
+  cursor: pointer;
+}
+
+.Tooltip .tooltiptext {
+  visibility: hidden;
+  width: 280px;
+  background-image: linear-gradient(to right, #f3f3f3, #f6f6f6 48%, #ffffff);
+  box-shadow: 0px 2px 7.6px 0.4px rgba(0, 0, 0, 0.3);
+  text-align: left;
+  border-radius: 10px;
+  padding: 20px 15px 20px 15px;
+  position: absolute;
+  z-index: 120;
+  top: 36px;
+  right: -60px;
+}
+
+.Tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  right: 20%;
+  border-width: 15px;
+  border-style: solid;
+  border-color: transparent transparent #f6f6f6 transparent;
+}
+
+.Tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.circle-text {
+  text-align: center;
+  font: 18px Verdana, Geneva, sans-serif;
+}
+
+.outer {
+  background-color: #fff;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  line-height: 0!important;
+  display: inline-block
+}
+
+.outer-only {
+  top: 1%;
+  left: 1%;
+}
+
+:host-context(body[dir="rtl"]) {
+  .outer-only {
+    right: 1%;
+  }
+}
+
+.circle {
+  border-radius: 50%;
+}
+
+.shapeborder {
+  border: 1px solid $brownish-grey;
+  color: $brownish-grey;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}
+
+.price {
+  float: right;
+}

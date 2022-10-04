@@ -1,0 +1,123 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "~@ng-select/ng-select/themes/default.theme.css";
+@import "../sass/typography/headings";
+@import "../sass/typography/paragraphs";
+@import "../sass/typography/font";
+@import "../sass/helpers/backgrounds";
+@import "../sass/helpers/buttons";
+@import "../sass/helpers/dropdowns";
+@import "../sass/typography/hyperlinks";
+@import "../sass/helpers/margin";
+@import "../sass/helpers/borders";
+@import "../sass/helpers/padding";
+@import "../sass/helpers/common";
+@import "../sass/helpers/modals";
+@import "../sass/helpers/bullets";
+@import "../sass/helpers/form";
+
+.footer {
+  a {
+    color: #fff;
+    font-weight: 500;
+  }
+}
+
+body {
+  width: 100%;
+  max-width: 1366px;
+  margin: auto;
+  background-color: #F7F9FA;
+  font-family: 'Lato', sans-serif;
+  overflow-x: hidden;
+}
+
+.body-wrapper {
+  background-color: #fff;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.row {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.NoListStyle {
+  list-style-type: none;
+  padding: 0px;
+}
+
+.card-title {
+  margin-bottom: 10px;
+}
+
+.cardTitleDiv {
+  padding-bottom: 15px;
+}
+
+small .button-content {
+  margin-bottom: 0;
+  padding: 10px 10px 10px 10px;
+  font-weight: bold;
+}
+
+.component-ws100 {
+  width: 100%;
+}
+
+.outlet-container {
+  padding: 15px;
+  .rate-calendar {
+    box-shadow: 5px 5px $white-two;
+  }
+  .rate-calendar-button {
+    margin-top: 15px;
+    border: none;
+  }
+  @media only screen and (min-width: 1200px) {
+    padding: 15px 85px;
+  }
+}
+
+.mbs-card {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid $white-seven;
+  box-shadow: 5px 5px $white-two;
+  margin-bottom: 40px;
+  margin-top: 10px;
+  padding: 15px;
+}
+
+.form-control {
+  border-radius: 0rem !important;
+}
+
+.align-bottom {
+  // padding-top: 15px;
+  position: absolute;
+  bottom: 0;
+  padding-bottom: 15px;
+
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.cc-revoke, .cc-window {
+  border-width: 2px !important;
+  border-style: solid !important;
+  border-color: gray !important;
+}

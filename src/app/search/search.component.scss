@@ -1,0 +1,15 @@
+@import "../../sass/variables/colors";
+.rate-calendar-button, .mbs-button-primary {
+  width: 100%;
+  @media only screen and (min-width: 576px) {
+    width: auto;
+  }
+}
+
+.errDiv {
+  background: $light-pink;
+}
+
+p.contentClass {
+  padding: 20px 10px 20px 10px;
+}

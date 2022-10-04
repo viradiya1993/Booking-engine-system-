@@ -1,0 +1,326 @@
+<app-preferences-lightbox #PreferencesLightBox [source]="'confirmation'" [roomIndex]="currindex" [bookingRef]="currRefNo" [guestdetailsString]="guestdetailsString"></app-preferences-lightbox>
+
+<ng-template #modifyBookingWarningTemplate>
+  <div class="modal-header">
+    <h5 class="modal-title txt-xxx-lg-jb lh-32 txt-black-five mb-3"><strong><span [innerHTML]="localeObj?.tf_5_Confirmation_popup_modifyPopupHeading | safeHtml"></span>?</strong></h5>
+    <button type="button" class="control-focus close pull-right" aria-label="Close" (click)="modalRef.hide()" (keyup.enter)="$event.target.click()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <hr class="hr-large hr-thick">
+  <div class="modal-body {{ RTL_Flag ? 'text-right' : 'text-left'}}">
+    <p *ngIf="pgDepositAmtAvail === 0" [innerHTML]="localeObj?.tf_5_Confirmation_popup_modifyPopupText | safeHtml" tabindex="0"></p>
+    <p *ngIf="pgDepositAmtAvail > 0" [innerHTML]="getMessage(localeObj.tf_5_Confirmation_popup_modifyPopupAmtText, [defCurrCode, pgDepositAmtAvail])" tabindex="0"></p>
+  </div>
+  <br>
+  <div class ="d-flex justify-content-center">
+    <button class="control-focus btn mbs-button-primary enhance" type="button" (click)=" validateForModify(true, true)" (keyup.enter)="$event.target.click()"><span [innerHTML]="localeObj?.tf_4_Checkout_paymentMethod_button_proceed | safeHtml"></span></button>
+  </div>
+</ng-template>
+
+<div class="outlet-container {{RTL_Flag ? 'text-right' : '' }}">
+
+  <app-booking-info [email]="email" [refNumber]="referenceNumber" [cancellationRequiredObj]="cancellationRequiredObj" [guestdetailsString]="guestdetailsString" [isPrepaidBooking]="isPrepaidBooking" [crossSellAddonsExists]="crossSellAddonsExists" #bookingInfo></app-booking-info>
+  <div class="errDiv txt-lg-lr ls-x-sm txt-black" *ngIf="cancelReserFailed" id="error-{{errorMsg}}">
+    <p class="contentClass" [innerHTML]="errorMsg | safeHtml"></p>
+  </div>
+  <div class="control-focus mbs-card" tabindex="0">
+    <div *ngFor="let room of selectedRoomList; let i=index">
+      <div *ngIf="derbyTagData[i] !== undefined" id="{{'derbyTag' + (i + 1)}}" [innerHTML]="derbyTagData[i]"></div>
+      <div class="row">
+        <div class="col-sm-8 px-0">
+          <div class="row room-details">
+            <div class="mr-20 {{RTL_Flag ? 'vl pl-20' :''}}">
+              <img src="{{room?.RoomDetails?.largeImageUrl}}" attr.alt="{{room?.RoomDetails?.name}}" />
+            </div>
+            <div class="room-data">
+              <div class=" {{RTL_Flag ? 'pr-20' : 'vl pl-20'}}">
+                <span class="txt-x-lg-lb ls-x-sm txt-black">
+                  <span [innerHTML]="localeObj?.tf_4_Checkout_addons_roomLc | safeHtml"></span>&nbsp;<span [innerHTML]="i+1 | safeHtml"></span>:&nbsp;<span [innerHTML]="room.RoomDetails?.roomType | safeHtml"></span>
+                </span>
+                <!-- <p class="room-data-lable txt-lg-lr ls-x-sm txt-black-three">{{objCheckin?.guests[i].adults}} {{localeObj?.adults}}, {{objCheckin?.guests[i].children}} {{localeObj?.tf_1_Calendar_rateCalender_children}}</p> -->
+                <p class="room-data-lable txt-lg-lr ls-x-sm txt-black-three" [innerHTML]="guestdetailsString[i] | safeHtml"></p>
+                <p *ngIf="isMultiRooms">
+                  <span [innerHTML]="localeObj?.tf_5_Confirmation_bookingInfo_confNumber | safeHtml"></span>:
+                  <span class="room-data-lable txt-lg-lr ls-x-sm txt-black-three" [innerHTML]="referenceNumberList[i] | safeHtml"></span><br/>
+                  <span *ngIf = "!!transactionID" [innerHTML]="localeObj?.tf_5_Confirmation_bookingInfo_transactionNo | safeHtml"></span>:
+                  <span *ngIf = "!!transactionID" class="room-data-lable txt-lg-lr ls-x-sm txt-black-three text-uppercase" [innerHTML]="transactionID | safeHtml"></span>
+                </p>
+                <!--<p *ngIf="!isMultiRooms">{{localeObj?.tf_5_Confirmation_bookingInfo_confNumber}}:
+                  <span class="room-data-lable txt-lg-lr ls-x-sm txt-black-three"> {{referenceNumber}}</span>
+                </p>-->
+              </div>
+            </div>
+          </div>
+          <div class="data-card">
+            <div class="card-title txt-lg-lr ls-x-sm txt-warm-grey-four"><span [innerHTML]="localeObj?.tf_4_Checkout_addons_roomLc | uppercase | safeHtml"></span>:</div>
+            <div class="txt-lg-lr ls-x-sm txt-black-three"><span [innerHTML]="room.RoomDetails?.roomType | safeHtml"></span>
+                <span *ngIf="room.RoomDetails?.roomView">&nbsp;-&nbsp;<span [innerHTML]="room.RoomDetails?.roomView | safeHtml">
+                  </span>
+                </span>
+             </div>
+            <div class="txt-md-lr ls-x-sm txt-black-three">(<span [innerHTML]="room.BedTypeName | safeHtml"></span>)</div>
+          </div>
+          <div class="data-card">
+            <div class="card-title txt-lg-lr ls-x-sm txt-warm-grey-four pt-25"><span [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_package | safeHtml"></span>:</div>
+            <div class="row">
+              <div class="d-flex col-sm-12 pl-0">
+                <div class="w-50 pull-left txt-lg-lr ls-x-sm txt-black-three padding-left-0"><span [innerHTML]="room?.RatePlan?.name | safeHtml"></span></div>
+                <!-- <div class="w-50 pull-right txt-lg-lb ls-x-sm txt-black-three text-right">
+                  <strong>{{defCurrCode}}{{room.Pricing.DefPackagePrice + room.Pricing.DefTotalAddonPrice | customPriceFormat}}</strong>
+                </div> -->
+              </div>
+            </div>
+            <div *ngIf="addOns">
+              <div class="txt-md-lr ls-x-sm txt-black-three">
+                <span [innerHTML]="room.Packages[0].Category | safeHtml"></span>&nbsp;(<span [innerHTML]="room.Packages[0].NoOfSeats | safeHtml"></span>&nbsp;<span [innerHTML]="room.Packages[0].NoOfSeats>1 ? localeObj.tf_3_MultiRoom_packageListing_tickets : localeObj.tf_3_MultiRoom_packageListing_ticket | safeHtml"></span>)
+              </div>
+              <div class="txt-md-lr ls-x-sm txt-black-three" [innerHTML]="getTransformedDate(room.Packages[0].ShowTime) | safeHtml"></div>
+            </div>
+          </div>
+
+          <span *ngIf="suppressRateOnLookup && suppressRateAddonsList.length > 0">
+            <div class="card-title txt-lg-lr ls-x-sm txt-warm-grey-four pt-25"><span [innerHTML]="localeObj.tf_04_Checkout_alaCarteAddons_selectedAddons | safeHtml"></span>:</div>
+            <div class="row">
+              <span class="w-50 txt-md-jr ls-x-sm txt-black-three px-0"  [innerHTML]="suppressRateAddonsList[i] | safeHtml"></span>.
+            </div>
+          </span>
+
+          <div *ngIf="!suppressRateOnLookup">
+            <hr class="hr-thick">
+            <div class="row">
+              <div class="d-flex col-sm-12 pl-0">
+                <div class="w-50 txt-lg-lb ls-x-sm txt-black-three px-0">
+                  <span [innerHTML]="localeObj?.tf_4_Checkout_addons_roomLc | safeHtml"></span>&nbsp;
+                  <span [innerHTML]="i+1 | safeHtml"></span>&nbsp;
+                  <span [innerHTML]="localeObj?.tf_5_Confirmation_packageDetails_charges | safeHtml"></span>&nbsp; 
+                  <span *ngIf="dueAmount[referenceNumberList[i]] == 0">-</span>&nbsp;
+                  <span *ngIf="dueAmount[referenceNumberList[i]] == 0" [innerHTML]= "localeObj?.tf_5_Confirmation_packageDetails_fullPrePayment | safeHtml"></span>
+                </div>
+                <div class="w-50 pull-right txt-lg-lb ls-x-sm txt-black-three {{RTL_Flag ? 'text-left ml-3' : 'text-right' }}">
+                  <!-- <span *ngIf="!isConfirmationPage">
+                    <span [innerHTML]="defCurrCode | safeHtml"></span><span [innerHTML]="room.Pricing.DefPackagePrice + room.Pricing.DefTotalAddonPrice | customPriceFormat:'': defCurrFilter | safeHtml"></span>
+                  </span>
+                  <span *ngIf="isConfirmationPage">
+                    <span [innerHTML]="defCurrCode | safeHtml"></span><span [innerHTML]="room.Pricing.DefRoomRateAddonPrice | customPriceFormat:'': defCurrFilter | safeHtml"></span>
+                  </span> -->
+                  <!-- <span [innerHTML]="defCurrCode | safeHtml"></span><span [innerHTML]="room.Pricing.DefPackagePrice + room.Pricing.DefTotalAddonPrice | customPriceFormat:'': defCurrFilter | safeHtml"></span> -->
+                  <span *ngIf="!paymentCurrencyCode" [innerHTML]="defCurrCode | safeHtml"></span>
+                  <span *ngIf="!paymentCurrencyCode" [innerHTML]="room.Pricing.DefRoomRateAddonPrice | customPriceFormat:'': defCurrFilter | safeHtml"></span>
+                  <span *ngIf="paymentCurrencyCode" [innerHTML]="selectedCurrCode | safeHtml"></span>
+                  <span *ngIf="paymentCurrencyCode"[innerHTML]="room.Pricing.RoomRateAddonPrice | customPriceFormat:'': selectedCurrFilter | safeHtml"></span>
+                </div>
+              </div>
+            </div>
+
+            <span *ngIf="!!addonsList">
+              <div *ngFor="let addon of addonsList[i]?.NOT_SPECIFIED ">
+                <span class="d-flex col-sm-12 pl-0" *ngIf="addon.numberOfUnit > 0">
+                <div class="w-50 txt-md-jr ls-x-sm txt-black-three px-0">
+                  <span [innerHTML]="addon.name | safeHtml"></span><br>
+                </div>
+                <div class="w-50 pull-right txt-lg-lb ls-x-sm txt-black-three {{RTL_Flag ? 'text-left ml-3': 'text-right'}}">
+                  <span [innerHTML]="defCurrCode | safeHtml"></span>
+                  <span [innerHTML]="addon.preTaxAmount | customPriceFormat: '': currFilterValue | safeHtml"></span>
+                </div>
+              </span>
+              </div>
+            </span>
+
+            <div *ngIf="tax > 0 && showTaxBreakDown" class="row mt-3">
+              <div class="d-flex col-sm-12 pl-0">
+                <div class="w-50 px-0 txt-lg-lr ls-x-sm txt-black-three">
+                  <span [innerHTML]="localeObj?.tf_Generic_tax | safeHtml"></span> &amp; 
+                  <span [innerHTML]="localeObj?.tf_5_Confirmation_bookingInfo_serviceChargeText | safeHtml"></span>
+                </div>
+                <div class="w-50 pull-right txt-lg-lb ls-x-sm txt-black-three text-right {{RTL_Flag ? 'text-left ml-3': 'text-right'}}" *ngIf="!paymentCurrencyCode">
+                  <span [innerHTML]="defCurrCode | safeHtml"></span>
+                  <span [innerHTML]="room.Pricing.DefTax + addonDefTax + (ratePlan.packageAddOnTaxesByCurrency[defCurrFilter] || 0) | customPriceFormat: '': defCurrFilter | safeHtml"></span>
+                </div>
+                <div class="w-50 pull-right txt-lg-lb ls-x-sm txt-black-three text-right {{RTL_Flag ? 'text-left ml-3': 'text-right'}}" *ngIf="paymentCurrencyCode">
+                  <span [innerHTML]="selectedCurrCode | safeHtml"></span>
+                  <span [innerHTML]="selectedTax | customPriceFormat: '': selectedCurrFilter | safeHtml"></span>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="tax > 0 && isTaxbreakdownEnabled && showTaxBreakDown">
+              <div class="d-flex col-sm-12 pl-0 cursor-pointer">
+                <div *ngIf="!room.showTaxDetails" class="control-focus w-50 px-0 hyl-dark txt-underline txt-x-sm-lr ls-x-sm txt-black-three" (click)="taxBreakDown(i)" (keyup.enter)="$event.target.click()" tabindex="0" role="link" aria-description="Click this link to show tax details">
+                  <i>+</i>
+                  <i [innerHTML]="localeObj?.tf_5_Confirmation_bookingInfo_showTaxDetails | safeHtml"></i>
+                </div>
+                <div *ngIf="room.showTaxDetails" class="control-focus w-50 px-0 hyl-dark txt-underline txt-x-sm-lr ls-x-sm txt-black-three" (click)="taxBreakDown(i)" (keyup.enter)="$event.target.click()" tabindex="0" role="link" aria-description="Click this link to hide tax details">
+                  <i>-</i>
+                  <i [innerHTML]="localeObj?.tf_5_Confirmation_bookingInfo_hideTaxDetails | safeHtml"></i>
+                </div>
+              </div>
+              <div *ngIf="room.showTaxDetails">
+                <div class="d-flex col-sm-12 pl-0 cursor-pointer" *ngFor="let tax of room.RatePlan.taxBreakDown">
+                  <div class="w-50 px-0 txt-x-sm-lr ls-x-sm txt-black-three {{RTL_Flag ? 'mr-4' : 'ml-4'}} pt-2" *ngIf="tax.taxAmount[defCurrFilter] > 0">
+                    {{tax.name}}
+                    <ng-template #popoverTaxDetails>
+                      <div>{{tax.description}}</div>
+                    </ng-template>
+                    <i id="c_link_tax_details" *ngIf="tax.description" triggers="hover focus" #p="bs-popover"
+                      [popover]="popoverTaxDetails" placement="bottom"
+                      containerClass="tooltiptextCP confimration-page" container="body" class="control-focus TooltipCP cursor-pointer ml-1 hyl-dark txt-underline txt-x-sm-lr ls-x-sm txt-black-three"
+                      [innerHTML]="localeObj?.tf_5_Confirmation_bookingInfo_TaxDetails | safeHtml" tabindex="0"
+                      (keyup.enter)="$event.target.click()" attr.aria-label="{{tax.description}}" role="link">
+                    </i>
+                  </div>
+                  <div class="w-50 pull-right txt-x-sm-lb ls-x-sm txt-black-three {{RTL_Flag ? 'text-left ml-3': 'text-right'}}" *ngIf="!paymentCurrencyCode && tax.taxAmount[defCurrFilter] > 0">
+                    <span [innerHTML]="defCurrCode | safeHtml"></span>
+                    <span [innerHTML]="tax.taxAmount[defCurrFilter] | customPriceFormat: '': defCurrFilter | safeHtml"></span>
+                  </div>
+                  <div class="w-50 pull-right txt-x-sm-lb ls-x-sm txt-black-three {{RTL_Flag ? 'text-left ml-3': 'text-right'}}" *ngIf="paymentCurrencyCode  && tax.taxAmount[selectedCurrFilter] > 0">
+                    <span [innerHTML]="selectedCurrCode | safeHtml"></span>
+                    <span [innerHTML]="tax.taxAmount[selectedCurrFilter] | customPriceFormat: '': selectedCurrFilter | safeHtml"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="tax === 0 || !showTaxBreakDown" class="row mt-3">
+              <div class="d-flex col-sm-8 pl-0">
+                <div class="w-50 px-0 txt-lg-lr ls-x-sm txt-black-three" [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_inclusiveTaxes | safeHtml"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4 guest-details">
+          <strong class="txt-lg-lb ls-x-sm txt-black-three" [innerHTML]="localeObj?.tf_5_Confirmation_guestDetails_title_guestDetails | safeHtml"></strong>
+
+          <div class="guest-details-content txt-lg-lr ls-x-sm txt-black-three">
+            <span [innerHTML]="localeObj?.tf_Generic_name | safeHtml"></span>:&nbsp;
+            <span [innerHTML]="guestTitle | safeHtml"></span>&nbsp;
+            <span [innerHTML]="guestName | safeHtml"></span>
+          </div>
+          <div class="guest-details-content txt-lg-lr ls-x-sm txt-black-three">
+            <span [innerHTML]="localeObj?.tf_4_Checkout_guestDetails_countryOfOrigin | safeHtml"></span>:
+            <span [innerHTML]="country | safeHtml"></span>
+          </div>
+          <div *ngIf="isManagebooking && showManageBookingFlag && mobileNumberRequired" class="guest-details-content txt-lg-lr ls-x-sm txt-black-three">
+            <span [innerHTML]="localeObj?.tf_4_Checkout_guestDetails_phoneNumber | safeHtml"></span>:
+            <span [innerHTML]="countryCode | safeHtml"></span>
+            <span [innerHTML]="mobileNumber | safeHtml"></span>
+          </div>
+          <div *ngIf="!isManagebooking && mobileNumberRequired" class="guest-details-content txt-lg-lr ls-x-sm txt-black-three">
+            <span [innerHTML]="localeObj?.tf_4_Checkout_guestDetails_phoneNumber | safeHtml"></span>:
+            <span [innerHTML]="countryCode | safeHtml"></span> 
+            <span [innerHTML]="mobileNumber | safeHtml"></span>
+          </div>
+          <div class="guest-details-content txt-lg-lr ls-x-sm txt-black-three">
+            <span [innerHTML]="localeObj?.tf_4_Checkout_guestDetails_emailAddress | safeHtml"></span>:
+            <span [innerHTML]="email | safeHtml"></span>
+          </div>
+          <br>
+
+          <div *ngIf="room.additionalGuests && room.additionalGuests.length > 0">
+            <div *ngFor="let guest of room.additionalGuests; let k=index">
+              <div class="guest-details-content txt-lg-lr ls-x-sm txt-black-three" *ngIf="isGuestNameExists(guest.first_name, guest.last_name)">
+                <strong [innerHTML]="localeObj.tf_4_Checkout_AdditionalGuests_label_guest | safeHtml"></strong>&nbsp;<strong>{{k+2}}</strong><br>
+                <span [innerHTML]="localeObj?.tf_Generic_name | safeHtml"></span>:&nbsp;
+                <span [innerHTML]="guest.first_name | safeHtml"></span> &nbsp;
+                <span [innerHTML]="guest.last_name | safeHtml"></span></div>
+            </div> 
+            <br>
+          </div>
+
+          <span *ngIf="preferencesData && preferencesData[i] && preferencesData[i].length > 0" class="txt-lg-lb ls-x-sm txt-black-three" [innerHTML]="localeObj?.tf_Generic_preferences
+              | uppercase | safeHtml"></span>
+          <div *ngIf="preferencesData && preferencesData[i] && preferencesData[i].length > 0">
+            <div *ngFor="let preference of preferencesData[i]" class="guest-details-content txt-lg-lr ls-x-sm txt-black-three">
+              <span *ngIf="preference.questionType === 'freeText' || preference.questionType === 'single' || preference.questionType === 'multiple'">
+                <span [innerHTML]="preference.questionText | safeHtml"></span>:&nbsp;<span [innerHTML]="preference.optionsLabel | safeHtml"></span>
+              </span>
+              <span *ngIf="preference.questionType !== 'freeText' && preference.questionType !== 'single' && preference.questionType !== 'multiple'">
+                <span [innerHTML]="preference.optionsLabel | safeHtml"></span>
+              </span>
+            </div>
+          </div>
+          <div *ngIf="preferencesData && preferencesData[i] && preferencesData[i].length > 0"><small [innerHTML]="guestPreferenceDisclaimer | safeHtml"></small></div>
+          <div *ngIf="isConfirmationPage && !ifPayAndStay() && !isRT4ModifyFlowEnabled" dropdown class="modify-btn">
+            <a class="control-focus dropdown-toggle btn mbs-button-secondary nav-button show" dropdownToggle><span [innerHTML]="localeObj?.tf_5_Confirmation_bookingInfo_button_modify | uppercase | safeHtml"></span></a>
+            <ul *dropdownMenu class="dropdown-menu dropdown-menu-right list-unstyled">
+              <li>
+                <a *ngIf="propertyType === 'UD' && !UDdisableModify" class="control-focus dropdown-item textunderline" (click)="openModal(modifyBookingWarningTemplate, 'modal-md', i)"><span [innerHTML]="localeObj.tf_5_Confirmation_dropdown_modifyDropOption1 | safeHtml"></span></a>
+                <a *ngIf="propertyType !== 'UD'" class="control-focus dropdown-item textunderline" (click)="propertyType === 'RVNG' ? validateForModify(true, true, undefined, undefined, i) : openModal(modifyBookingWarningTemplate, 'modal-md', i)"><span [innerHTML]="localeObj.tf_5_Confirmation_dropdown_modifyDropOption1 | safeHtml"></span></a>
+              </li>
+              <li>
+                <a class="control-focus dropdown-item textunderline" (click)="openPreferences('modal-md', i)"><span [innerHTML]="localeObj.tf_5_Confirmation_dropdown_modifyDropOption2 | safeHtml"></span></a>
+              </li>
+            </ul>
+          </div>
+          <div class="edit-booking-btn">
+            <div class="pl-0 pr-0 modify-btn m-0 mt-2 mr-0" *ngIf="handleModifyBtnDisplay(referenceNumberList[i])">
+              <button *ngIf="propertyType === 'UD' && !UDdisableModify" id="ud_mb_modal_toggle_{{referenceNumberList[i]}}" class="control-focus btn mbs-button-primary nav-button show modify-details" (click)="_storeSvc.setActiveModalElem('ud_mb_modal_toggle_' + referenceNumberList[i]); getReservationLookupApiData(referenceNumberList[i], true, modifyBookingWarningTemplate, 'modal-md', i)" (keyup.enter)="$event.target.click()" attr.aria-label="{{localeObj.tf_5_Confirmation_bookingInfo_button_modify}}">
+                <span [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_button_modify | uppercase | safeHtml"></span>
+              </button>
+              <button *ngIf="propertyType !== 'UD'" id="mb_modal_toggle_{{referenceNumberList[i]}}" class="control-focus btn mbs-button-primary nav-button show modify-details" (click)="propertyType === 'RVNG' ? validateForModify(true, true, undefined, undefined, i) : getReservationLookupApiData(referenceNumberList[i], true, modifyBookingWarningTemplate, 'modal-md', i)" attr.aria-label="{{localeObj.tf_5_Confirmation_bookingInfo_button_modify}}">
+                <span [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_button_modify | uppercase | safeHtml"></span>
+              </button>
+            </div>
+            <div class="mt-2 cancel-button" *ngIf="showCancelBooking[referenceNumberList[i]]">
+              <app-cancel-booking class="cancel-booking-button" [cancellationRequiredObj]="cancellationObj[referenceNumberList[i]]"
+                [bookingRefNo]="referenceNumberList[i]" [email]="email" (errorMsg)="isCancelreservationFailed($event)">
+              </app-cancel-booking>
+            </div>
+          </div>
+      <!-- <hr class="hr-large"> -->
+      </div>
+      
+    </div>
+    <div class="row" *ngIf="!suppressRateOnLookup">
+      <div class="d-flex col-sm-8 pl-0">
+        <div class="w-50 px-0 txt-lg-lb ls-x-sm txt-black-three" [innerHTML]="localeObj?.tf_5_Confirmation_packageDetails_totalCharges | safeHtml"></div>
+        <div class="w-50 pull-right txt-xx-lg-lb ls-x-sm txt-black-three {{ RTL_Flag ? 'text-left ml-3' : 'text-right'}} px-0">
+          <span [innerHTML]="paymentCurrencyCode ? (selectedCurrCode | safeHtml) : (defCurrCode | safeHtml) "></span><span [innerHTML]="paymentCurrencyCode ? (selectedCurrTotalPrice | customPriceFormat: '': selectedCurrFilter | safeHtml) : (totalPrice | customPriceFormat: '': defCurrFilter | safeHtml)"></span>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="(selectedCurrCode !== defCurrCode && selectedCurrCode !== '' && !suppressRateOnLookup) && !multiPropertyCurrency" class="d-flex col-sm-8 pl-0">
+      <div class="w-50 px-0 txt-lg-lb ls-x-sm txt-black-three"></div>
+      <div class="w-50 pull-right txt-lg-lb ls-x-sm txt-black-three {{RTL_Flag ? 'text-left ml-3': 'text-right'}} px-0">
+        <small><b><span [innerHTML]="!paymentCurrencyCode ? (selectedCurrCode | safeHtml) : (defCurrCode | safeHtml)"></span><span [innerHTML]="!paymentCurrencyCode ? (selectedCurrTotalPrice | customPriceFormat: '': selectedCurrFilter | safeHtml) : (totalPrice | customPriceFormat: '': defCurrFilter | safeHtml)"></span></b></small>
+      </div>
+    </div>
+    <div class="row" [ngClass]="(selectedCurrCode !== defCurrCode && selectedCurrCode !== '')? 'ie-width': ''">
+      <div class="col-sm-8 pl-md-0" [ngClass]="!suppressRateOnLookup ? 'd-flex' : ''">
+        <ng-template #popoverTemp><div [innerHTML]="cancellationPolicy | safeHtml"></div></ng-template>
+        <div id="c_link_policy" triggers="hover focus" #p="bs-popover" (document:click)="closeFix($event, p, 'c_link_policy')"
+          [popover]="popoverTemp" placement="bottom" containerClass="tooltiptextCP confimration-page"
+          container="body" class="control-focus TooltipCP cursor-pointer hyl-dark txt-underline txt-sm-lr txt-black-three ls-x-sm {{ RTL_Flag ? 'mr-auto pl-3' : 'ml-auto'}}"
+          *ngIf="cancellationPolicy" [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_payment + ' & ' + localeObj.tf_2_RoomList_ratePlan_cancellationPolicy | safeHtml" tabindex="0" (keyup.enter)="$event.target.click()" attr.aria-label="{{cancellationPolicy}}" role="link">
+        </div>
+      </div>
+    </div>
+    <div *ngIf = "isConfirmationPage && showDeposite">
+      <div *ngIf = "depositAmount[referenceNumberList[i]]">
+        <div class="row" *ngIf = "depositAmount[referenceNumberList[i]] !=0">
+        <div class="d-flex col-sm-8 pl-0">
+          <div class="w-50 px-0 txt-md-lb ls-x-sm txt-black-three" [innerHTML]="localeObj?.tf_5_Confirmation_packageDetails_depositPaid | safeHtml"></div>
+          <div class="w-50 pull-right txt-lg-lb ls-x-sm txt-black-three text-right px-0">
+            <span [innerHTML]="paymentCurrencyCode ? (selectedCurrCode | safeHtml) : (defCurrCode | safeHtml) "></span><span [innerHTML]="paymentCurrencyCode ? (selectedCurrTotalPrice | customPriceFormat: '': selectedCurrFilter | safeHtml) : (depositAmount[referenceNumberList[i]] | customPriceFormat: '': defCurrFilter | safeHtml)"></span>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div *ngIf = "dueAmount[referenceNumberList[i]]">
+        <div class="row" *ngIf = "dueAmount[referenceNumberList[i]] !=0" >
+        <div class="d-flex col-sm-8 pl-0">
+          <div class="w-75 px-0 txt-md-lb ls-x-sm txt-black-three" [innerHTML]="localeObj?.tf_5_Confirmation_packageDetails_totalDueAtCheckIn | safeHtml"> </div>
+          <div class="w-50 pull-right txt-lg-lb ls-x-sm txt-black-three text-right px-0">
+            <span [innerHTML]="paymentCurrencyCode ? (selectedCurrCode | safeHtml) : (defCurrCode | safeHtml) "></span><span [innerHTML]="paymentCurrencyCode ? (selectedCurrTotalPrice | customPriceFormat: '': selectedCurrFilter | safeHtml) : (dueAmount[referenceNumberList[i]] | customPriceFormat: '': defCurrFilter | safeHtml)"></span>
+          </div>
+        </div>
+      </div>
+      </div>
+      
+    </div>
+      <hr class="hr-large hr-thick">
+    </div>
+  <!-- <div *ngIf="!isManagebooking"> -->
+    <app-cross-sell id="EnhancementsDiv" (crossSellAddonsExists)="onCrossSellAddonsExists($event)"></app-cross-sell>
+  <!-- </div> -->
+</div>

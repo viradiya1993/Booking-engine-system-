@@ -1,0 +1,33 @@
+.cardList {
+  background-image: linear-gradient(to left, #FCFCFC 0%, #fff 80%) !important;
+}
+
+.modal-footer-btn {
+  text-align: center;
+}
+
+/* Handle width */ 
+
+::ng-deep ::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+
+::ng-deep ::-webkit-scrollbar-track {
+  border-radius: 0px;
+}
+
+/* Handle */
+
+::ng-deep ::-webkit-scrollbar-thumb {
+  background: #2A6EBB;
+  border-radius: 0px;
+  height: 120px;
+}
+
+/* Handle on hover */
+
+::ng-deep ::-webkit-scrollbar-thumb:hover {
+  background: #2A6EBB;
+}

@@ -1,0 +1,114 @@
+<div class="Container">
+  <app-guestduration></app-guestduration>
+</div>
+<div class="outlet-container {{RTL_Flag ? 'text-right':''}}">
+  <div class="ltr">
+    <i class="fa fa-angle-left pr-10"></i>
+    <a href='#' (click)="backToRoomSelectionClicked()">
+      <u class="txt-lg-lr lh-30 txt-black mb-2 ls-sm">&nbsp;<span [innerHTML]="localeObj.tf_3_MultiRoom_ratePlan_link_roomSelection | safeHtml"></span></u>
+    </a>
+  </div>
+  <h4 class="txt-xxx-lg-jb txt-black-five mt-20"><span [innerHTML]="localeObj.tf_3_MultiRoom_ratePlan_offerToBooking | safeHtml"></span></h4>
+  <div *ngIf="rateplanVsRoomDetailsMap">
+    <ul class="packageList" *ngFor="let ratePlanObj of getValues(rateplanVsRoomDetailsMap)">
+      <div class="mbs-card"  *ngIf="filteredRatePlan?.length === 0 ? true : filteredRatePlan.includes(ratePlanObj.ratePlan.name )">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="txt-lg-lb ls-1 txt-black-five pb-10" [innerHTML]="ratePlanObj.ratePlan.name | safeHtml"></div>
+            <div class="txt-lg-lr txt-black-five ls-1" [innerHTML]="ratePlanObj.ratePlan.description"></div>
+            <!-- <ul>
+              <li class="txt-lg-lr txt-black-five ls-1 circle-bullet" *ngFor="let desc of ratePlanObj.ratePlan.description">
+                {{desc}}
+              </li>
+            </ul> -->
+            <div class="pt-10">
+              <app-rate-plan-details [ratePlan]=ratePlanObj.ratePlan></app-rate-plan-details>
+            </div>
+          </div>
+          <div class="col-sm-8">
+            <div class="container">
+              <ul>
+                <li *ngFor="let room of ratePlanObj.rooms; let i = index">
+                  <div class="row">
+                    <div class="col-sm-5 px-0 px-sm-3 py-3 py-sm-0">
+                      <div class="vl"></div>
+                      <strong><span [innerHTML]="room.roomName | safeHtml"></span></strong>
+                      <br>
+                      <small class="text-muted"><span [innerHTML]="room.bedTypeName | safeHtml"></span></small>
+                    </div>
+                    <div class="col-sm-3 px-0 px-sm-3">
+                      <p class="text-muted"><span [innerHTML]="guestdetailsString[i] | safeHtml"></span></p>
+                    </div>
+                    <div class="col-sm-4 px-0 px-sm-3">
+                      <div class="rateplan-pricing discounted-price" *ngIf="getDiscountedRatePlanPrice(room.ratePlan)">
+                        <del class="txt-lg-lr ls-x-sm txt-black-three"><span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="getAvgRatePrice(room.ratePlan)
+                          + ((room.ratePlan.lowestUnitAddOnPrice[currFilterValue] || 0) * (room.guests.adults +
+                          room.guests.children)/guestSummary.los) | customPriceFormat: '': currFilterValue | safeHtml"></span></del>
+                      </div>
+                      <div class="rateplan-pricing">
+                        <strong class="txt-xx-lg-lb ls-1 txt-black">
+                          <!-- {{(room.ratePlan.discountedAveragePriceByCurrency[currFilterValue] || room.ratePlan.averagePriceByCurrency[currFilterValue])}}
+                          {{(room.ratePlan.lowestUnitAddOnPrice[currFilterValue] || 0)}}
+                          {{(room.guests.adults + room.guests.children)}} -
+                          {{guestSummary.los}} -->
+                          <span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="(getDiscountedRatePlanPrice(room.ratePlan) ||
+                          getAvgRatePrice(room.ratePlan))
+                          + ((room.ratePlan.lowestUnitAddOnPrice[currFilterValue] || 0) * (room.guests.adults +
+                          room.guests.children)/guestSummary.los) | customPriceFormat: '': currFilterValue | safeHtml"></span>
+                          <!-- {{currCode}}{{(room.ratePlan?.discountedAveragePriceByCurrency[currFilterValue] || room.ratePlan?.averagePriceByCurrency[currFilterValue])
+                          | number : '1.2-2'}} -->
+                        </strong>
+                        <span class="txt-sm-lr ls-x-sm txt-black-three" [innerHTML]="localeObj.tf_2_RoomList_ratePlans_avgPerNightText | safeHtml" *ngIf="showAverageNightlyRate"></span>
+                        <span class="txt-sm-lr ls-x-sm txt-black-three" [innerHTML]="localeObj.tf_2_RoomList_rooms_label_perStay | safeHtml" *ngIf="!showAverageNightlyRate"></span>
+                        <app-rate-plan-nightly-prices [index]="room.roomCode + room.ratePlan.code + i" [roomNo]="i"
+                          [ratePlan]="room.ratePlan"></app-rate-plan-nightly-prices>
+                      </div>
+                    </div>
+                  </div>
+                  <hr>
+                </li>
+              </ul>
+              <div class="row">
+                <div class="col-sm-4 px-0 px-sm-3 price-summary-total-label">
+                  <span class="pl-0 pl-sm-3">
+                    <strong><span [innerHTML]="localeObj.tf_4_Checkout_priceSummery_totalLc | safeHtml"></span></strong>
+                  </span>
+                </div>
+                <div class="col-sm-4 px-0 px-sm-3"></div>
+                <div class="col-sm-4 px-0 px-sm-3">
+                  <div class="rateplan-pricing">
+                    <strong class="txt-xx-lg-lb ls-1 txt-black">
+                      <span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="(ratePlanObj.ratePlan.totalPrice[currFilterValue] +
+                      ratePlanObj.ratePlan.totalAddOnPrice[currFilterValue] || 0) | customPriceFormat: '':
+                      currFilterValue | safeHtml"></span>
+                      <!-- {{currCode}}{{ratePlanObj.ratePlan.totalAddOnPrice[currFilterValue] | customPriceFormat}} -->
+                    </strong>
+                    <span *ngIf="showAverageNightlyRate" class="txt-sm-lr ls-x-sm txt-black-three" [innerHTML]="localeObj.tf_2_RoomList_ratePlans_avgPerNightText | safeHtml"></span>
+                    <span *ngIf="!showAverageNightlyRate" class="txt-sm-lr ls-x-sm txt-black-three" [innerHTML]="localeObj.tf_2_RoomList_rooms_label_perStay | safeHtml"></span>
+                    <!-- <app-rate-plan-nightly-prices [ratePlan]=ratePlanObj.ratePlan></app-rate-plan-nightly-prices> -->
+                    <br>
+                    <small>
+                      <ng-template #popoverTemp><div [innerHTML]="ratePlanObj.ratePlan.cancellationPolicy | safeHtml"></div></ng-template>
+                      <div id="{{ratePlanObj.ratePlan.code}}" triggers="hover focus" #p="bs-popover" (document:click)="closeFix($event, p, ratePlanObj.ratePlan.code)"
+                        [popover]="popoverTemp" placement="bottom" containerClass="tooltiptextCP multiroom-rate-plan"
+                        container="body" class="control-focus TooltipCP rateplan-pricing txt-x-sm-lr txt-black-three" *ngIf="ratePlanObj.ratePlan.cancellationPolicy"
+                        [innerHTML]="localeObj.tf_2_RoomList_ratePlan_cancellationPolicy | safeHtml" tabindex="0" (keyup.enter)="$event.target.click()" role="link">
+                      </div>
+                    </small>
+                    <div class="pt-20">
+                      <button class="control-focus btn mbs-button-primary w-100" (click)="onRoomSelected($event, ratePlanObj.ratePlan, room)"
+                      id="m_btn_book">
+                        <span [innerHTML]="localeObj.tf_3_MultiRoom_ratePlan_button_book | safeHtml"></span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ul>
+  </div>
+</div>
+<app-add-ons #lionKingComponent (lionKingPackageSelected)="onLionKingPackageSelected($event)"></app-add-ons>

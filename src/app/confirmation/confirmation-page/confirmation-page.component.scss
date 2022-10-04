@@ -1,0 +1,229 @@
+@import "../../../sass/variables/colors";
+
+a {
+  color: black;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.guest-details {
+  padding: 20px 25px;
+  background-color: $white-three;
+  margin-top: 1rem;
+
+  @media only screen and (min-width: 576px) {
+    margin-top: 0;
+  }
+}
+
+hr.hr-large {
+  width: 100%;
+  color: $white-seven;
+}
+
+hr.hr-thick {
+  margin-right: 15px;
+  border-top: 2px solid $pinkish-grey-two;
+}
+
+.vl {
+  border-left: 1.5px solid #002c5F;
+  height: 30px;
+  float: left;
+  padding-left: 0px;
+  height: 100%;
+}
+
+.room-details {
+  padding-bottom: 20px;
+  padding-top: 15px;
+
+  img {
+    width: 118px;
+  }
+
+  .room-data {
+    margin-top: 1rem;
+
+    @media only screen and (min-width: 576px) {
+      margin-top: 0;
+    }
+  }
+}
+
+.room-charges {
+  padding-top: 15px;
+}
+
+.tinyFont {
+  font-size: 11px;
+  text-align: right;
+  cursor: pointer;
+}
+
+.TooltipCP {
+  position: relative;
+}
+
+.TooltipCP:hover {
+  cursor: pointer;
+}
+
+.TooltipCP .tooltiptextCP {
+  visibility: hidden;
+  width: 260px;
+  background-image: linear-gradient(to right, #f3f3f3, #f6f6f6 48%, #ffffff);
+  box-shadow: 0px 2px 7.6px 0.4px rgba(0, 0, 0, 0.3);
+  line-height: 18px;
+  color: black;
+  text-align: left;
+  border-radius: 6px;
+  padding: 15px 10px;
+  position: absolute;
+  z-index: 120;
+  top: 36px;
+  left: 0;
+}
+
+.TooltipCP .tooltiptextCP::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 12.5%;
+  border-width: 15px;
+  border-style: solid;
+  border-color: transparent transparent #f6f6f6 transparent;
+}
+
+.TooltipCP:hover .tooltiptextCP {
+  visibility: visible;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
+.padding-left-0 {
+  padding-left: 0px;
+}
+
+p {
+  margin-bottom: 0;
+}
+
+.ie-width {
+  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    margin-top: 21px;
+  }
+}
+
+@media (max-width:1024px) {
+  ::ng-deep *>body {
+    position: relative !important;
+  }
+}
+
+.dropdown-toggle{
+  padding-top:18px;
+}
+
+.dropdown-menu {
+  border: 1px solid #283557 !important;
+  min-width: 60px;
+  width: 169px;
+  left: 0px !important;
+  font-size: 0.9rem !important;
+  margin: 0px !important;
+  color: #696969;
+  position: relative;
+  border-radius: 0.1rem 0.1rem .25rem.25rem !important;
+}
+
+.dropdown-item {
+  text-align: left;
+  padding-left: 8px;
+}
+
+.textunderline {
+  text-decoration: underline !important;
+  text-underline-position: under !important;
+}
+
+.dd-display{
+  padding-left: 0px !important;
+}
+.mbs-button-primary-wrapper,
+.mbs-button-primary,
+.mbs-button-secondary {
+  width: 100%;
+  border-radius: 5px !important;
+  margin-bottom: 0px !important;
+  @media only screen and (min-width: 1290px) {
+    width: 168px !important;
+    padding: 5px;
+    position: relative;
+    right: 15px;
+    letter-spacing: 0.5px;
+  }
+}
+
+.textunderline {
+  text-decoration: underline !important;
+  text-underline-position: under !important;
+}
+.modify-btn {
+  margin:0px 10px 0px 10px;
+}
+
+.edit-booking-btn {
+  display: flex;
+  @media only screen and (max-width: 1290px) {
+    flex-direction: column;
+  }
+}
+
+.edit-booking-btn {
+  .modify-btn {
+    min-width: 159px;
+  }
+  @media only screen and (max-width: 1290px) {
+    .modify-btn {
+      width: 100%;
+      margin-right: 0px !important;
+    }
+  }
+}
+
+.errDiv {
+  background-color: $light-pink;
+}
+
+.contentClass {
+  padding: 20px 10px 20px 10px;
+}
+
+.cancel-button {
+  margin-left:0px;
+  @media only screen and (max-width: 1290px) {
+  position: relative;
+  margin-left: 10px;
+  right: 10px;
+  width: 100%;
+  }
+}
+
+:host-context(body[dir="rtl"]) {
+  .cancel-button {
+    @media only screen and (max-width: 1290px) {  
+    right: 0px;
+    }
+  }
+}
+
+button.btn.mbs-button-primary.enhance {
+  width: auto;
+  @media only screen and (max-width: 768px) {
+    width: 100%;
+  }
+}

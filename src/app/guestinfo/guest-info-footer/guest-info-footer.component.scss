@@ -1,0 +1,108 @@
+@import "../../../sass/typography/font";
+
+#try {
+  font-size: 11px;
+  background: #2A6EBB;
+  color: black;
+}
+
+h5 {
+  font-family: 'Garamond', sans-serif;
+  font-weight: bold;
+}
+
+.modal-content {
+  max-width: 900px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+  background: #2A6EBB;
+  border-radius: 10px;
+  height: 120px;
+}
+
+/* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2A6EBB;
+}
+
+.viewDetails {
+  cursor: pointer;
+}
+
+.button {
+  background-color: rgb(218, 165, 32);
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+ul {
+  padding-left: 30px;
+}
+
+ul li {
+  color: #3c3c3c;
+  list-style: none;
+  text-indent: -1em;
+}
+
+ul li::before {
+  color: #2A6EBB;
+  content: "\2022";
+  font-size: 1.3em;
+  padding-right: 0.3em;
+  position: relative;
+  top: 0em;
+}
+
+.terms-and-conditions {
+  font-size: 10px;
+  padding-left: 14px;
+}
+
+.mbs-button-primary {
+  width: 100%;
+  @media only screen and (min-width: 576px) {
+    width: auto;
+  }
+}
+
+:host-context(body[dir="rtl"]) {
+  .mbs-checkbox-primary {
+    label {
+      padding-left: 0;
+      padding-right: 30px;
+      text-align: right;
+      &:before {
+        content: '';
+        right: 0;
+      }
+    }
+  }
+
+  .mr-2 {
+    margin-right: 0!important;
+    margin-left: 0.5rem!important;
+  }
+}

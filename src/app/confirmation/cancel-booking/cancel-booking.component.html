@@ -1,0 +1,40 @@
+<ng-template #template>
+  <div id="canbel-booking-modal">
+    <div class="modal-header">
+      <h5 class="modal-title txt-xxx-lg-jb lh-32 txt-black-five mb-3"><strong><span [innerHTML] = "localeObj.tf_5_Confirmation_cancelBooking_button_cancel | safeHtml" tabindex="0" id="cb-modal-title"></span></strong></h5>
+      <button type="button" class="control-focus close pull-right" aria-label="Close" (click)="modalRef.hide()" tabindex="0" id="cb-modal-closeBtn">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body {{RTL_Flag? 'text-right' : 'text-left'}}">
+      <div *ngIf="cancelMessageValid">
+        <p [innerHTML] = "cancellationFeeText | safeHtml" tabindex="0"></p>
+      </div>
+      <div class="row" *ngIf="reasons && reasons.length > 0">
+        <div class="col-sm-12 p-150">
+          <label class="control-focus txt-lg-lb txt-black-five ls-x-sm" [innerHTML] = "localeObj.tf_5_Confirmation_cancelBooking_cancelPopFormLabel | safeHtml" tabindex="0"></label>
+        </div>
+      </div>
+      <div class="col-sm-12 p-150 mb-25">
+        <div *ngIf="reasons && reasons.length > 0" class="mbs-dropdown-primary" dropdown>
+          <a dropdownToggle class="control-focus dropdown-toggle cancel-dropdown-toggle">
+            <span [innerHTML] = "selectedReason.reason || selectedReasonDefault | safeHtml" tabindex="0"></span>
+          </a>
+          <ul *dropdownMenu class="dropdown-menu cancel-dropdown-menu">
+            <li class="dropdown-item" *ngFor="let cancelType of reasons" [value]="cancelType.reason" (click)="cancellationReasonSelected(cancelType)" tabindex="0">
+              <span [innerHTML] = "cancelType.reason | safeHtml" tabindex="0"></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-12  p-150">
+          <button class="control-focus btn mbs-button-primary enhance" type="button" (click)="cancelBooking()" tabindex="0" id="cancelBooking-btn"><span [innerHTML] = "localeObj.tf_5_Confirmation_cancelBooking_button_cancelPopup | safeHtml"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<div>
+  <button type="button" id ="cancelBtn-{{bookingRefNo}}" class="control-focus btn confirm-page-button nav-button show {{confirmationPage? 'cancel-booking-btn mbs-button-secondary': 'mbs-button-secondary' }} " (click)="propertyInfo.propertyType === 'RVNG' ? cancelBooking() : openModal(template)"><span [innerHTML] = "localeObj.tf_5_Confirmation_cancelBooking_button_cancel | uppercase | safeHtml"></span></button>
+</div>

@@ -1,0 +1,85 @@
+@import "../../../sass/variables/colors";
+.card {
+  border-radius: 0rem;
+}
+
+.reselection {
+  background-color: $pinkish-grey-four;
+  text-align: center;
+}
+
+.banner-outlet {
+  padding: 5px 0px 15px 10px;
+}
+
+.card-outlet {
+  padding: 10px 10px 0px 0px;
+}
+
+.banner-display {
+  flex-grow: 1;
+  padding: 10px 10px 0px 0px;
+  text-align: center;
+}
+
+.banner-display .card {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: $pinkish-grey;
+}
+
+.vl {
+  border-left: 3px solid $tan;
+  padding-left: 10px;
+}
+
+:host-context(body[dir="rtl"]) {
+  .vl {
+    border-left: none!important;
+    border-right: 3px solid $tan;
+    padding-left: 0;
+    padding-right: 10px;
+  }
+}
+
+.banner-card {
+  width: 100%;
+  padding: 10px 10px 10px 10px;
+}
+
+.banner-title {
+  padding: 5px 0px 0px 0px;
+}
+
+.banner {
+  padding: 0px 15px;
+  margin: 0px -15px 20px -15px;
+  background-color: $white-seven;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  @media only screen and (min-width: 1200px) {
+    padding: 0px 85px;
+    margin: 0px -85px 20px -85px;
+  }
+}
+
+.promo-banner {
+  padding: 0px 15px;
+  margin: 0px ;
+  background-color: $white-seven;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  @media only screen and (min-width: 1200px) {
+    padding: 0px 85px;
+    margin: 0px;
+  }
+}
+
+.mbs-button-primary-wrapper, .mbs-button-primary {
+  width: 100%;
+  @media only screen and (min-width: 576px) {
+    width: auto;
+  }
+}

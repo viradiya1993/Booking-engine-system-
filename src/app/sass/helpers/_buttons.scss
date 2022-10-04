@@ -1,0 +1,60 @@
+@import "../../sass/variables/colors";
+@import "../../sass/variables/font";
+
+.mbs-button-primary {
+  background-color: $sand;
+  min-width: 145px;
+  min-height: 50px;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  color: #ffffff;
+  &:hover {
+    background: #2A6EBB;
+    color: #ffffff;
+  }
+  &.disabled,
+  &:disabled {
+    &:hover {
+      background-color: #2A6EBB;
+    }
+  }
+}
+
+.mbs-button-secondary {
+  color: $dark-grey-blue;
+  min-width: 145px;
+  min-height: 50px;
+  border: 2px solid $dark-grey-blue;
+  background: white;
+  &:hover {
+    color: #2a6ebb;
+    border-color: #2a6ebb;
+  }
+  &.disabled,
+  &:disabled {
+    &:hover {
+      color: #2a6ebb;
+      border: 2px solid #2a6ebb;
+      background: white;
+    }
+  }
+}
+
+.mbs-button-primary,
+.mbs-button-secondary {
+  font-family: $font-secondary;
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 5px;
+  letter-spacing: 1px;
+  line-height: 11px;
+}
+
+.btn {
+  &.disabled,
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}

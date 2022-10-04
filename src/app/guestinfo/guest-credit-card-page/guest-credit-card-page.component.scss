@@ -1,0 +1,136 @@
+.guestInfo-layout {
+  margin-top: 50px;
+  margin-bottom: 5px;
+}
+
+.credit-guest-widget {
+  padding: 0;
+  @media only screen and (min-width: 992px) {
+    padding: 0 15px;
+  }
+}
+
+.modal-footer-btn {
+  text-align: center;
+}
+
+.static {
+  @media only screen and (min-width: 992px) {
+    position: static !important;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    width: auto;
+  }
+}
+
+.fixed {
+  @media only screen and (min-width: 992px) {
+    position: fixed !important;
+    top: 0px;
+    right: auto;
+    bottom: auto; 
+    width: auto;
+    z-index: 10;
+  }
+}
+
+.absolute {
+  @media only screen and (min-width: 992px) {
+    position: absolute !important;
+    top: auto;
+    right: auto;
+    bottom: 30px;
+    left: auto;
+    width: auto;
+  }
+}
+
+.Payment-Error-popup{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+}
+.Payment-Error-popup-content {
+  background-color: #fefefe;
+  padding: 20px;
+  width: 65%;
+  border-radius: 5px;
+  @media only screen and (max-width: 767px) {
+    width: 86%;
+  }
+  @media only screen and (max-width: 320px) {
+    width: 95%;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+.overlayButton{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+  position: relative;
+  @media only screen and (max-width: 767px) {
+    font-size: small;
+  }
+}
+#Payment-Error-Header{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: x-large;
+  color: #002C5F;
+}
+#Payment-Error-Sub-Header{
+  display: flex;
+  align-items: center;
+  font-size: large;
+  justify-content: center;
+  font-size: medium;
+  position: relative;
+  word-break: break-word;
+  @media only screen and (max-width: 767px) {
+    font-size: small;
+  }
+  @media only screen and (max-width: 320px) {
+    font-size: 10px;
+  }
+}
+#Payment-Error-msg{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: medium;
+  position: relative;
+  word-break: break-word;
+  @media only screen and (max-width: 767px) {
+    font-size: small;
+  }
+  @media only screen and (max-width: 320px) {
+    font-size: 10px;
+  }
+}
+.stay{
+  cursor: pointer;
+  height: 2.5rem;
+  width: 7.5rem;
+  margin-left: 1rem;
+  font-weight: bold;
+  border-radius: 5px;
+  border : 1px solid black;
+  @media only screen and (max-width: 767px) {
+    margin-left: 0rem;
+  }
+}

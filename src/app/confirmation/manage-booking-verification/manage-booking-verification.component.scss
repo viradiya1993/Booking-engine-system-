@@ -1,0 +1,71 @@
+@import "../../../sass/variables/colors";
+.card {
+    box-shadow: 5px 5px #e5e5e5;
+    border-radius: 0rem;
+    max-width:800px;
+    padding:20px;
+  }
+
+ .mb-width{
+   max-width:800px;
+ }
+h1 {
+  font-size: 22px;
+  @media only screen and (min-width: 768px) {
+    font-size: 45px;
+  }
+  @media only screen and (min-width: 1024px) {
+    font-size: 54px;
+  }
+}
+
+
+.mbs-button-primary-wrapper,
+.mbs-button-primary,
+.mbs-button-secondary {
+  width: 100%;
+  margin-bottom: 10px !important;
+  @media only screen and (min-width: 576px) {
+    width: auto;
+  }
+}
+
+hr.hr-large {
+  width: 100%;
+  color: $white-seven;
+}
+
+hr.hr-thick {
+  margin-right: 15px;
+  border-top: 2px solid $pinkish-grey-two;
+}
+
+.vertical-center {
+  align-items: center; 
+}
+
+.errDiv {
+    background-color: $light-pink;
+    
+  }
+.contentClass {
+  padding: 20px 10px 20px 10px;
+  }  
+
+.mb-label{
+      text-align: center;
+}
+.form-group {
+    padding: 10px 5px;
+    margin: 0px;
+    > * {
+      padding: 0 0 15px 0;
+      @media only screen and (min-width: 576px) {
+        padding: 0 15px;
+      }
+    }
+}
+
+.form-control {
+  border-color: #7A979F;
+}

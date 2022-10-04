@@ -1,0 +1,316 @@
+<div class="guest-info">
+  
+  <h4 class="txt-xxx-lg-jb txt-black-five m-0 {{RTL_Flag ? 'text-right' : ''}}" [innerHTML]="localeObj.tf_4_Checkout_guestDetails_title_guestInfo | safeHtml"></h4>
+  <div class="mbs-card {{RTL_Flag ? 'text-right' : ''}}">
+    <div>
+      <h6 class="txt-sm-lb ls-x-sm txt-br-grey" [innerHTML]="localeObj.tf_4_Checkout_guestDetails_onlyEnglish | safeHtml"></h6>
+    </div>
+    <form>
+      <!--room number to be automated-->
+      <!--salutation div-->
+      <div class="form-group row" *ngIf="displayTitle">
+        <label for="salId" class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0">
+          <span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_title | safeHtml"></span>
+          <span class="error-msg">*</span>
+        </label>
+        <!-- <div class="col-sm-2">
+          <select class="form-control txt-md-lr txt-black-three ls-x-sm" #Salutaion [(ngModel)]="salutation" class="dropdown" name="salId"
+            id="salId">
+            <option *ngFor="let salType of salutationList" [value]="salType" required>{{salType}}</option>
+          </select>
+        </div> -->
+        <div *ngIf="salutationList" class="mbs-dropdown-primary {{RTL_Flag ? 'mr-3' : ''}}" >
+          <!-- <a dropdownToggle class="dropdown-toggle" tabindex="0">
+            {{salutation}}
+          </a>
+          <ul *dropdownMenu class="dropdown-menu" >
+            <li  class="dropdown-item" *ngFor="let salType of salutationList" [value]="salType" (click)="updateSalType(salType)">
+              {{salType}}
+            </li>
+          </ul> -->
+          <ng-select id="salId" name="Salutationsdd" [disabled]="isManageBookingFlow && mb_validSalutation" [(ngModel)]="salutation" class="dropdown custom" [items]="salutationList" [multiple]="false" bindLabel="name" [closeOnSelect]="true" bindValue="name" (change)="updateSalType($event)" [clearable]="false" [searchable]="false" aria-label="Salutation Dropdown" [labelForId]="'salId'"></ng-select>
+        </div>
+        <!-- <div  *ngIf="salutationList && isManageBookingFlow"  >
+          <input [disabled]="isManageBookingFlow" class="form-control txt-md-lr txt-black-three ls-x-sm" [value]="salutation" >
+        </div> -->
+        
+        <div class="row col-sm-12" *ngIf="!isSalutationValid">
+          <div class="row col-sm-4"></div>
+          <small tabindex="0" class="row col-sm-8 error-msg ScrollToElement" [innerHTML]="salutationError | safeHtml"></small>
+        </div>
+      </div>
+      <!--First Name div-->
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="firstName">
+          <span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_firstName | safeHtml"></span>
+          <span class="error-msg">*</span>
+          <p class="txt-sm-lb ls-x-sm txt-br-grey d-inline-block">
+            (<span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_asInPassport | safeHtml"></span>)
+          </p>
+        </label>
+        <div class="col-sm-8" [ngClass]="{'error': !isFirstNameValid}" >
+          <input [disabled]="isManageBookingFlow && firstName!== '' && mb_validFirstName && !allowModification" class="control-focus form-control txt-md-lr txt-black-three ls-x-sm" [attr.maxlength]="firstNameMaxLength" [(ngModel)]="firstName" name="firstName" id="firstName"  
+            placeholder="{{localeObj.tf_4_Checkout_guestDetails_firstNameHelptext}}" (keyup)="onKeyUp('firstName')" (keypress)="onKeyPress('firstName', $event)" (change)="isNameValid('firstName')" tabindex="0" aria-describedby="firstName_error" autocomplete="nope">
+          <small tabindex="0" class="error-msg ScrollToElement" id="firstName_error" role="alert" [ngClass]="!isFirstNameValid ? 'd-block' : 'd-none'" [innerHTML]="fNameFieldError | safeHtml"></small>
+        </div>
+      </div>
+      <!--Last Name div-->
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="lastName"> <span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_lastName | safeHtml"></span><span class="error-msg">*</span>
+          <p class="txt-sm-lb ls-x-sm txt-br-grey d-inline-block">(<span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_asInPassport | safeHtml"></span>)</p>
+        </label>
+        <div class="col-sm-8" [ngClass]="{'error': !isLastNameValid}">
+          <input [disabled]="isManageBookingFlow && lastName!=='' && mb_validLastName && !allowModification" class="control-focus form-control txt-md-lr txt-black-three ls-x-sm" [attr.maxlength]="lastNameMaxLength" [(ngModel)]="lastName" name="lastName" id="lastName"  
+            placeholder="{{localeObj.tf_4_Checkout_guestDetails_lastNameHelptext}}" (keyup)="onKeyUp('lastName')" (keypress)="onKeyPress('lastName', $event)" (change)="isNameValid('lastName')" tabindex="0" aria-descibedby="lastName_error" autocomplete="nope">
+          <small tabindex="0" class="error-msg ScrollToElement" id="lastName_error" role="alert" [ngClass]="!isLastNameValid ? 'd-block' : 'd-none'" [innerHTML]="lNameFieldError | safeHtml"></small>
+        </div>
+      </div>
+
+      <div class="form-group row" *ngIf="displayAdditionalGuestsConfig && showAdditionalGuests && !toggleAddGuestsAddRemove">
+        <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="AddGuestNamesRooom1"></label>
+        <div class="col-sm-8" ><a href="#" id="AddGuestNamesRooom1" tabindex="0" (click)="toggleAddtionalGuests(true)" (key.enter)="toggleAddtionalGuests(true)" [innerHTML]="localeObj.tf_4_Checkout_AdditionalGuests_link_add | safeHtml"></a></div>
+      </div>
+     
+      <div class="prefDiv">
+        <div *ngIf="displayAdditionalGuestsConfig && showAdditionalGuests && toggleAddGuestsAddRemove && addtionalGuestInfoByRoom && addtionalGuestInfoByRoom.length > 0">
+          <div *ngFor="let guest of addtionalGuestInfoByRoom; index as k">
+            <h4 class="mt-30 col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0">
+            <span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_room | safeHtml"></span>&nbsp;<span [innerHTML]="1 | safeHtml"></span>: <span [innerHTML]="localeObj.tf_4_Checkout_AdditionalGuests_label_guest | safeHtml"></span>&nbsp;<span>{{k + 2}}</span></h4>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="Room1Guest{{k + 2}}FirstName"> <span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_firstName | safeHtml"></span>
+                  <p class="txt-sm-lb ls-x-sm txt-br-grey d-inline-block">(<span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_asInPassport | safeHtml"></span>)</p>
+                </label>
+                <div class="col-sm-8" [ngClass]="{'error': isAddGuestFirstNameValid[k] !== undefined && !isAddGuestFirstNameValid[k]}" >
+                  <input class="control-focus form-control txt-md-lr txt-black-three ls-x-sm" [attr.maxlength]="firstNameMaxLength" [(ngModel)]="guest.first_name" name="guest.first_name{{k}}" id="Room1Guest{{k + 2}}FirstName"
+                    placeholder="{{localeObj.tf_4_Checkout_guestDetails_firstNameHelptext}}" tabindex="0" autocomplete="nope" aria-describedby="Room1Guest{{k + 2}}FirstName_Err">
+                  <small tabindex="0" class="error-msg ScrollToElement" id="Room1Guest{{k + 2}}FirstName_Err" *ngIf="isAddGuestFirstNameValid[k] !== undefined && !isAddGuestFirstNameValid[k]" [innerHTML]="isAddGuestFirstNameFieldError[k] | safeHtml"></small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="Room1Guest{{k + 2}}LastName"> <span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_lastName | safeHtml"></span>
+                  <p class="txt-sm-lb ls-x-sm txt-br-grey d-inline-block">(<span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_asInPassport | safeHtml"></span>)</p>
+                </label>
+                <div class="col-sm-8" [ngClass]="{'error': isAddGuestLastNameValid[k] !== undefined && !isAddGuestLastNameValid[k]}" >
+                  <input class="control-focus form-control txt-md-lr txt-black-three ls-x-sm" [attr.maxlength]="lastNameMaxLength" [(ngModel)]="guest.last_name" name="guest.last_name{{k}}" id="Room1Guest{{k + 2}}LastName"
+                    placeholder="{{localeObj.tf_4_Checkout_guestDetails_lastNameHelptext}}" tabindex="0" autocomplete="nope" aria-describedby="Room1Guest{{k + 2}}LastName_Err">
+                  <small tabindex="0" class="error-msg ScrollToElement" id="Room1Guest{{k + 2}}LastName_Err" *ngIf="isAddGuestLastNameValid[k] !== undefined && !isAddGuestLastNameValid[k]" [innerHTML]="isAddGuestLasttNameFieldError[k] | safeHtml"></small>
+                </div>
+              </div>
+           
+          </div>
+    </div>
+    </div>
+    <div class="form-group row" *ngIf="displayAdditionalGuestsConfig && showAdditionalGuests && toggleAddGuestsAddRemove">
+      <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="RemoveGuestRoom1"></label>
+      <div class="col-sm-8" ><a href="#" id="RemoveGuestRoom1" tabindex="0" (click)="toggleAddtionalGuests(false)" (key.enter)="toggleAddtionalGuests(false)" [innerHTML]="localeObj.tf_4_Checkout_AdditionalGuests_link_remove | safeHtml"></a></div>
+    </div>
+
+      <!--Country div-->
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="countrySelect"><span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_countryOfOrigin | safeHtml"></span>
+          <span class="error-msg">*</span>
+        </label>
+        <div class="col-sm-6">
+          <!-- <div *ngIf="countryDataList" class="mbs-dropdown-primary" dropdown>
+            <a dropdownToggle class="dropdown-toggle hyl-dark country-drop" tabindex="0">
+              {{countryName}}
+            </a>
+            <ul *dropdownMenu class="dropdown-menu country-menu">
+              <li class="dropdown-item" *ngFor="let country of countryDataList" [value]="localeObj[country.countryCode_2]" (click)="onCountrySelected(country.countryCode_2)">
+                {{localeObj[country.countryCode_3]}}
+              </li>
+            </ul>
+          </div> -->
+          <ng-select name="Countrydd" [disabled]="isManageBookingFlow && mb_validCountryName" [(ngModel)]="countryName" class="dropdown custom" [items]="countryDataList1" [multiple]="false" bindLabel="name" [closeOnSelect]="true" bindValue="name" (change)="onCountrySelected($event)" [clearable]="false" [labelForId]="'countrySelect'"></ng-select>
+        </div>
+      </div>
+
+      <!--Address Line-1 div-->
+      <div class="form-group row" *ngIf="displayAddressLine1">
+        <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="addressLine1"> <span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_addressLine1 | safeHtml"></span>
+          <span class="error-msg">*</span>
+        </label>
+        <div class="col-sm-8" [ngClass]="{'error': !isStreetAddress1Valid}">
+          <input [disabled]="isManageBookingFlow && addressLine1!=='' && mb_validAddressLine1 && !allowModification" class="control-focus form-control txt-md-lr txt-black-three ls-x-sm" [attr.maxlength]="addressLine1MaxLength" [(ngModel)]="addressLine1" name="addressLine1" id="addressLine1" pattern="[#.0-9a-zA-Z\s,-]*"
+            placeholder="{{localeObj.tf_4_Checkout_guestDetails_addressLine1}}" (keyup)="onKeyUp('addressLine1')" (keypress)="onKeyPress('addressLine1', $event)" (change)="isNameValid('addressLine1')" tabindex="0" aria-describedby="addressLine1_error" autocomplete="nope">
+          <small tabindex="0" class="error-msg ScrollToElement" id="addressLine1_error" role="alert" [ngClass]="!isStreetAddress1Valid ? 'd-block' : 'd-none'" [innerHTML]="addressLine1Error | safeHtml"></small>
+        </div>
+      </div>
+
+      <!--Address Line-2 div-->
+      <div class="form-group row" *ngIf="displayAddressLine2">
+        <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="addressLine2"> <span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_addressLine2 | safeHtml"></span>
+          <span class="error-msg" *ngIf="addressLine2Required">*</span>
+        </label>
+        <div class="col-sm-8" [ngClass]="{'error': !isStreetAddress2Valid}">
+          <input [disabled]="isManageBookingFlow && addressLine2!=='' && mb_validAddressLine2 && !allowModification" class="control-focus form-control txt-md-lr txt-black-three ls-x-sm" [attr.maxlength]="addressLine2MaxLength" [(ngModel)]="addressLine2" name="addressLine2" id="addressLine2" pattern="[#.0-9a-zA-Z\s,-]*"
+            placeholder="{{localeObj.tf_4_Checkout_guestDetails_addressLine2}}" (keyup)="onKeyUp('addressLine2')" (keypress)="onKeyPress('addressLine2', $event)" (change)="isNameValid('addressLine2')" tabindex="0" aria-describedby="addressLine2_error" autocomplete="nope">
+          <small tabindex="0" class="error-msg ScrollToElement" id="addressLine2_error" role="alert" [ngClass]="!isStreetAddress2Valid ? 'd-block' : 'd-none'" [innerHTML]="addressLine2Error | safeHtml"></small>
+        </div>
+      </div>
+
+      <!--City div-->
+      <div class="form-group row" *ngIf="displayCity">
+        <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="city"> <span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_city | safeHtml"></span>
+          <span class="error-msg" *ngIf="cityRequired">*</span>
+        </label>
+        <div class="col-sm-8" [ngClass]="{'error': !isCityValid}">
+          <input [disabled]="isManageBookingFlow && city!=='' && mb_validCityName && !allowModification" class="control-focus form-control txt-md-lr txt-black-three ls-x-sm" [attr.maxlength]="cityMaxLength" [(ngModel)]="city" name="city" id="city"  
+            placeholder="{{localeObj.tf_4_Checkout_guestDetails_city}}" (keyup)="onKeyUp('city')" (keypress)="onKeyPress('city', $event)" (change)="isNameValid('city')" tabindex="0" aria-describedby="city_error" autocomplete="nope">
+          <small tabindex="0" class="error-msg ScrollToElement" id="city_error" role="alert" [ngClass]="!isCityValid ? 'd-block' : 'd-none'" [innerHTML]="cityFieldError | safeHtml"></small>
+        </div>
+      </div>
+
+      <!--State div-->
+      <div class="form-group row" *ngIf="displayState">
+        <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="state"> <span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_state | safeHtml"></span>
+          <span class="error-msg" *ngIf="stateRequired">*</span>
+        </label>
+
+        <!--State-Dropdown-->
+        <div class="col-sm-6" [ngClass]="{'error': !isStateValid}" *ngIf="!!stateDataList">
+          <ng-select name="stateList" [disabled]="isManageBookingFlow && state!=='' && mb_validStateName && !allowModification" [(ngModel)]="state" class="dropdown custom" [items]="stateDataList" [multiple]="false" bindLabel="name" [closeOnSelect]="true" bindValue="name" (change)="onStateSelected($event)" [clearable]="false" [labelForId]="'state'"></ng-select>
+          <small tabindex="0" class="error-msg ScrollToElement" [ngClass]="!isStateValid ? 'd-block' : 'd-none'" [innerHTML]="stateFieldError | safeHtml"></small>
+        </div>
+        
+        <!--State-TextField-->
+        <div class="col-sm-8" [ngClass]="{'error': !isStateValid}" *ngIf="!(!!stateDataList)">
+          <input [disabled]="isManageBookingFlow && state!=='' && mb_validStateName && !allowModification" class="control-focus form-control txt-md-lr txt-black-three ls-x-sm" [attr.maxlength]="stateMaxLength" [(ngModel)]="state" name="state" id="state"  
+            placeholder="{{localeObj.tf_4_Checkout_guestDetails_state}}" (keyup)="onKeyUp('state')" (keypress)="onKeyPress('state', $event)" (change)="isNameValid('state')" tabindex="0" aria-describedby="state_error" autocomplete="nope">
+          <small tabindex="0" class="error-msg ScrollToElement" id="state_error" role="alert" [ngClass]="!isStateValid ? 'd-block' : 'd-none'" [innerHTML]="stateFieldError | safeHtml"></small>
+        </div>
+      </div>
+
+      <!--Zipcode div-->
+      <div class="form-group row" *ngIf="displayZipcode">
+        <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="zipCode"> <span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_zipCode | safeHtml"></span>
+          <span class="error-msg" *ngIf="zipCodeRequired">*</span>
+        </label>
+        <div class="col-sm-8" [ngClass]="{'error': !isZipCodeValid}">
+          <input [disabled]="isManageBookingFlow && zipCode!=='' && mb_validZipCode && !allowModification" class="control-focus form-control txt-md-lr txt-black-three ls-x-sm" [attr.maxlength]="zipCodeMaxLength" [(ngModel)]="zipCode" name="zipCode" id="zipCode" 
+            placeholder="{{localeObj.tf_4_Checkout_guestDetails_zipCode}}" (keyup)="onKeyUp('zipCode')" (keypress)="onKeyPress('zipCode', $event)" (change)="isNameValid('zipCode')" tabindex="0" aria-describedby="zipCode_error" autocomplete="nope">
+          <small tabindex="0" class="error-msg ScrollToElement" id="zipCode_error" role="alert" [ngClass]="!isZipCodeValid ? 'd-block' : 'd-none'"  [innerHTML]="zipcodeFieldError | safeHtml"></small>
+        </div>
+      </div>
+
+      <!--Phone div-->
+      <!-- <div class="form-group row">
+        <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="phone">{{localeObj.tf_4_Checkout_guestDetails_phoneNumber}}
+        </label>
+        <div class="col-sm-3 country-code">
+          <div dropdown>
+            <button dropdownToggle type="button" class="form-control dropdown-toggle txt-md-lr txt-black-three ls-x-sm">
+              <img class="country-icon" src="{{countryFlag}}"> +{{callingCode}}
+              <span class="caret"></span>
+            </button>
+            <ul *dropdownMenu class="dropdown-menu scrollable-menu" role="phoneMenu">
+              <li class="dropdown-item" id="phoneCode" *ngFor="let countryData of countryDataList" (click)="onPhoneCodeSelected(countryData)">
+                <img class="country-icon" src="{{countryData.flag}}">&nbsp;{{countryData.name}}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-4" [ngClass]="{'error': !isPhoneNumberValid}">
+          <input class="form-control txt-md-lr txt-black-three ls-x-sm" [(ngModel)]="phoneNumber" name="phone" id="phone" pattern="[0-9]+"
+            placeholder="12345678" (keyup)="onKeyUp('phoneNumber')" (change)="isPhoneNumValid()">
+          <small class="error-msg" *ngIf="!isPhoneNumberValid">{{phoneNumberError}}</small>
+        </div>
+      </div> -->
+
+      <!-- temp npm i intl-tel-input -->
+      
+      <div class="form-group row" *ngIf="displayPhoneNumber">
+        <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="phone"><span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_phoneNumber | safeHtml"></span>
+          <span class="error-msg" *ngIf="phoneNumberRequired">*</span>
+        </label>
+        <div class="country-code {{!RTL_Flag ? 'pr-0' : 'pl-0'}}">
+          <label for="callCode" class="d-none" [innerHTML]="localeObj.tf_4_Checkout_guestDetails_phoneNumber | safeHtml"></label>
+          <input [disabled]="isManageBookingFlow && callingCode!== '' && !allowModification" type="tel" appSkipKeyStrokes id="callCode" class="control-focus form-control txt-md-lr txt-black-three ls-x-sm" tabindex="0" autocomplete="nope">
+        </div>
+        <div class="col-sm-4 phone-number" [ngClass]="{'error': !isPhoneNumberValid}">
+          <input [disabled]="isManageBookingFlow && phoneNumber !== '' && mb_validPhoneNum && !allowModification" type="tel" class="control-focus form-control txt-md-lr txt-black-three ls-x-sm" [attr.maxlength]="phoneNumberMaxLength" [(ngModel)]="phoneNumber" name="phone" pattern="[0-9]+"
+            placeholder="{{localeObj.tf_4_Checkout_guestDetails_phonenumberHelptext}}" (keyup)="onKeyUp('phoneNumber')" (keypress)="onKeyPress('phoneNumber', $event)" (change)="isPhoneNumValid()" tabindex="0" aria-describedby="phoneIntl_error" autocomplete="nope" id="phone">
+          <small tabindex="0" class="error-msg ScrollToElement" id="phoneIntl_error" role="alert" [ngClass]="!isPhoneNumberValid ? 'd-block' : 'd-none'" [innerHTML]="phoneNumberError | safeHtml"></small>
+        </div>
+      </div>
+
+      <!--Email div-->
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="emailInput"><span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_emailAddress | safeHtml"></span>
+          <span class="error-msg">*</span>
+        </label>
+        <div class="col-sm-6" [ngClass]="{'error': !isMailValid}">
+          <input [disabled]="isManageBookingFlow && emailID!== '' && mb_validEmail && !allowModification" class="control-focus form-control txt-md-lr txt-black-three ls-x-sm" [(ngModel)]="emailID" name="emailInput" id="emailInput" type="email"
+            placeholder="{{localeObj.tf_4_Checkout_guestDetails_emailHelptext}}" [attr.maxlength]="emailMaxLength" (keyup)="onKeyUp('email')" (keypress)="onKeyPress('email', $event)" (change)="isEmailValid('email')" (paste)="checkPastedCharacters($event)" (keydown)="checkTypedCharacters($event)" tabindex="0" aria-describedby="emailInput_error" autocomplete="nope"/>
+          <small tabindex="0" class="error-msg ScrollToElement" id="emailInput_error" role="alert" [ngClass]="!isMailValid ? 'd-block' : 'd-none'"  [innerHTML]="emailFieldError | safeHtml"></small>
+        </div>
+      </div>
+
+      <app-preferences  #Preferences [bookingRef]="resid"></app-preferences> 
+      <!-- if showing preferences, check preferences validation -->
+      <!--MemberShip  div : not in release 1 scope-->
+      <!-- <div class="form-group row">
+              <label class="col-sm-4 col-form-label" for="memberShip">Sands Rewards Membership Number </label>
+              <div class="col-sm-3">
+                <input class="form-control" formControlName="memNumber" id="memberShip">
+              </div>
+              <div class="col-sm-5">
+                <small> Kindly contact us on +98765432 in case of any discrepancy in details</small>
+              </div>
+            </div> -->
+      <!-- <div class="prefDiv">
+        <h5>Room 1: Preferences</h5>
+        <small>Fields marked with * are compulsary</small>
+        <div class="form-group row">
+          <label class="col-sm-4 col-form-label" for="ExpectedTime">Expected time of arrival at hotel*</label>
+          <div class="col-sm-2">
+            <select #t class="dropdown" id="ExpectedTime">
+              <option *ngFor="let expectedTime of expectedTimesList" [value]="expectedTime">{{expectedTime}}</option>
+            </select>
+          </div>
+          <div class="col-sm-1">
+            <select #t class="dropdown">
+              <option value="AM">AM</option>
+              <option value="PM" selected>PM</option>
+            </select>
+          </div>
+          <div class="col-sm-5">
+            <small>
+              You may check in any time after 3 pm.
+              <br> Please make a reservation after the evening prior to your arrival if you plan to check in earlier.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-sm-4 col-form-label" for="occasionSelect">
+            Are you celebrating an occasion? </label>
+          <div class="col-sm-3">
+            <input type="radio" name="no" value="0" class="form-control" id="occasionNo">
+            <label for="occasionNo">No</label>
+          </div>
+          <div class="col-sm-3">
+            <input type="radio" name="yes" value="1" class="form-control" id="occasionYes">
+            <label for="occasionYes">Yes</label>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-4 col-form-label" for="PrefInput">Prefernces </label>
+          <div class="col-sm-6">
+            <ng-select class="dropdown" [items]="prefOptions" [multiple]="true" bindLabel="pref" [closeOnSelect]="false" bindValue="prefId"></ng-select>
+            <ng-template ng-option-tmp let-item="item" let-index="index">
+              <input id="item-{{index}}" type="checkbox" /> {{item.name}}
+            </ng-template>
+            <div>
+              <small>
+                we will take your preferences into consideration as far as possible when assigning you a room.
+              </small>
+            </div>
+          </div>
+        </div>
+
+      </div> -->
+
+    </form>
+  </div>
+</div>

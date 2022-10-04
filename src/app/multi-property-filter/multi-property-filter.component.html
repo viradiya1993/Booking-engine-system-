@@ -1,0 +1,112 @@
+<div class="d-flex list-alignment">
+  <div class="d-flex multiprop-filters-list {{RTL_Flag ? 'mr-35':'ml-35'}}">
+    <!-- Location Dropdown Filter Start -->
+    <div
+      class="mbs-dropdown-primary multiprop-filters location-desktop-filter flex-row control-focus {{RTL_Flag ? 'ml-2':'mr-2'}}"
+      [ngClass]="{
+        'd-none': !displayFiltesrView.displayLocationFilter,
+        'd-flex': displayFiltesrView.displayLocationFilter,
+        'filter-applied' : locationSelected && locationSelected !== localeObj.tf_8_MultiProperty_allLocationFilter
+      }" tabindex="0" (keyup.enter)="openSelect2('.location')" role="combobox" attr.aria-label="Selected Location: {{locationSelected}}"
+    >
+      <span class="location-dropdown label txt-md-lr ls-sm txt-br-grey {{RTL_Flag ? 'mr-4':'ml-4'}} text-decoration-none" (click)="openSelect2('.location')" role="link">
+        <div class="row filter-type">
+          <p
+            [innerHTML]="localeObj.tf_00_MultiPropertyFilter_location | safeHtml"
+          ></p>
+          <p>:</p>
+        </div>
+      </span>
+      <select class="form-control location">
+        <option
+          *ngFor="let location of locationsAvail"
+          [selected]="locationViewFilter.length && location.id === locationViewFilter[0].id"
+        >
+          {{ location.text }}
+        </option>
+      </select>
+    </div>
+    <!-- Location Dropdown Filter Start -->
+
+    <!-- Star Rating Filter Start -->
+    <div
+      class="mbs-dropdown-primary multiprop-filters location-desktop-filter flex-row {{RTL_Flag ? 'ml-2':'mr-2'}} control-focus"
+      [ngClass]="{
+        'd-none': !displayFiltesrView.displayStarRating,
+        'd-flex': displayFiltesrView.displayStarRating,
+        'filter-applied' : ratingSelected && ratingSelected !== localeObj.tf_8_MultiProperty_allRatingsFilter
+      }" tabindex="0" (keyup.enter)="openSelect2('.ratings')" role="combobox" attr.aria-label="Selected Hotel Ratings: {{ratingSelected}}"
+    >
+      <span class="ratings-dropdown label txt-md-lr ls-sm txt-br-grey {{RTL_Flag ? 'mr-4':'ml-4'}} text-decoration-none" (click)="openSelect2('.ratings')" role="link">
+        <div class="row filter-type">
+          <p
+            [innerHTML]="localeObj.tf_00_MultiPropertyFilter_rating | safeHtml"
+          ></p>
+          <p>:</p>
+        </div>
+      </span>
+      <select class="form-control ratings">
+        <option
+          *ngFor="let starRating of ratingAvail; let id = index"
+          [value]="starRating"
+          data-icon="fa-star"
+          [selected]="ratingViewFilter.length && starRating == ratingSelected"
+        >
+          {{starRating}}
+        </option>
+      </select>
+    </div>
+    <!-- Star Rating Filter End -->
+
+    <!-- Currency Dropdown Filter Start -->
+    <div
+      class="mbs-dropdown-primary multiprop-filters location-desktop-filter d-flex flex-row {{RTL_Flag ? 'ml-2':'mr-2'}} control-focus" tabindex="0" (keyup.enter)="openSelect2('.currency')" role="combobox" attr.aria-label="Selected Currency: {{selectedCurrency}}"
+    >
+      <span class="location-dropdown label txt-md-lr ls-sm txt-br-grey {{RTL_Flag ? 'mr-4':'ml-4'}} text-decoration-none" (click)="openSelect2('.currency')" role="link">
+        <div class="row filter-type">
+          <p
+            [innerHTML]="localeObj.tf_00_MultiPropertyFilter_currency | safeHtml"
+          ></p>
+          <p>:</p>
+        </div>
+      </span>
+      <select class="form-control currency">
+        <option *ngFor="let currency of currencies" [selected]="currency.code === selectedCurrency">
+          {{ currency.code }} - {{ currency.name }}
+        </option>
+      </select>
+    </div>
+    <!-- Currency Dropdown Filter End -->
+
+    <!-- Sortby Filter Start -->
+    <div class="sort-by filter d-flex align-items-center multiprop-filters pt-0 control-focus" (click)="toggleSortOrder(isSortOrderAsc)" (keyup.enter)="$event.target.click()" tabindex="0" role="combobox" attr.aria-label="Sort By Price: {{isSortOrderAsc ? 'Ascending' : 'Descending'}}">
+      <div class="row filter-type {{RTL_Flag ? 'mr-4':'ml-4'}}">
+        <p
+          [innerHTML]="localeObj.tf_00_MultiPropertyFilter_Sortby | safeHtml"
+        ></p>
+        <p>:</p>
+        <p class="mx-2 control-focus"
+          [innerHTML]="localeObj.tf_00_MultiPropertyFilter_price | safeHtml"
+        ></p>
+      </div>
+      <span class="formatButton pb-0 cursor-pointer mr-3 {{RTL_Flag ? 'ml-3':'mr-3'}}">
+        <div *ngIf="isSortOrderAsc; else elseBlock">
+          <i class="fa fa-long-arrow-down"></i>
+        </div>
+        <ng-template #elseBlock>
+          <i class="fa fa-long-arrow-up"></i>
+        </ng-template>
+      </span>
+    </div>
+  </div>
+  <!-- Sortby Filter End -->
+
+  <div class="multiprop-filters enable-map px-4 {{RTL_Flag ? 'ml-35':'mr-35'}}" *ngIf="!showMap" (click)="disableMap()" tabindex="0" (keyup.enter)="$event.target.click()">
+    <div class="row filter-type">
+      <p class="pr-2"
+        [innerHTML]="localeObj.tf_00_MultiPropertyFilter_showMap | safeHtml"
+      ></p>
+      <img src="/assets/multiproperty/noun_Map_3485501.svg" alt="map-icon">
+    </div>
+  </div>
+</div>

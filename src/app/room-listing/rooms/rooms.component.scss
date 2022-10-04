@@ -1,0 +1,156 @@
+@import "../../../sass/variables/colors";
+.roomList {
+  list-style-type: none;
+  padding: 0px;
+}
+
+.card {
+  box-shadow: 5px 5px #e5e5e5;
+  border-radius: 0rem;
+}
+
+.modal-footer-btn {
+  text-align: center;
+}
+
+.icon-service {
+  width: 25px;
+  height: 25px ;
+  @media only screen and (max-width: 576px) {
+    width: 32px;
+    height: 32px
+  }
+}
+
+.disabled-room {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.errDiv {
+  background: $light-pink;
+}
+
+p.contentClass {
+  padding: 20px 10px 20px 10px;
+}
+
+.rate-calendar {
+  border: 1px solid #dee2e6 !important;
+  box-shadow: 5px 5px #e4e4e4;
+}
+
+.rate-calendar-button {
+  margin-top: 15px;
+}
+
+.rate-calendar-button,
+.mbs-button-primary {
+  width: 100%;
+  @media only screen and (min-width: 576px) {
+    width: auto;
+  }
+}
+
+.roomImagePanel {
+  width: 100%;
+  margin-right: 0;
+  margin-bottom: 20px;
+  @media only screen and (min-width: 992px) {
+    width: 318px;
+    margin-right: 20px;
+    margin-bottom: 0;
+  }
+}
+
+:host-context(body[dir="rtl"]) {
+  .roomImagePanel {
+    @media only screen and (min-width: 992px) {
+      margin-left: 20px;
+      margin-right: 0;
+    }
+  } 
+}
+
+.roomImageCenterPanel {
+  width: 100%;
+  padding-left: 10px;
+  @media only screen and (min-width: 992px) {
+    width: calc(100% - 338px);
+    padding-left: 20px;
+  }
+}
+
+:host-context(body[dir="rtl"]) {
+  .roomImageCenterPanel {
+    border-left: none!important;
+    border-right: 2px solid $tan;
+    padding-left: 0;
+    padding-right: 10px;
+    @media only screen and (min-width: 992px) {
+      border-right: 3px solid $tan;
+      padding-right: 20px;
+    }
+  }
+}
+
+.pricePanel {
+  background-color: #f3f3f3 !important;
+  height: 100%;
+  .mbs-button-primary {
+    width: 100%;
+    @media only screen and (min-width: 576px) {
+      width: auto;
+    }
+  }
+}
+
+.close {
+  font-size: 36px;
+  line-height: 20px;
+  opacity: .4;
+  padding: 15px;
+}
+
+.dprTagLine {
+  border: 1px solid black;
+  margin-top: 14px;
+  width: auto;
+  display: inline-flex;
+}
+
+.bell {
+  height: 20px;
+  width: 20px;
+}
+
+.sample {
+  padding: 4px;
+  width: max-content;
+  background-color: black;
+}
+
+.dprText {
+  padding: 5px;
+  font-size: 12px;
+  color: black;
+}
+
+.dprPosition {
+  float: right;
+}
+
+.contentClassFilter {
+  text-align: center;
+  font-weight: bold;
+  font-size: 36px;
+  @media only screen and (max-width: 1024px) {
+    font-size: 28px
+  }
+  @media only screen and (max-width: 768px) {
+    font-size: 20px;
+  }
+  @media only screen and (max-width: 568px) {
+    font-size: 18px;
+  }
+}

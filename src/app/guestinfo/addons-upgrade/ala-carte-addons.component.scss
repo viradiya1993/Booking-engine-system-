@@ -1,0 +1,193 @@
+// Don't Modify ::ng-deep classes
+@media only screen and (min-width: 1200px) {
+    ::ng-deep .modal-lg.addon-modal {
+        max-width: 1130px;
+    }
+}
+::ng-deep .addon-modal.modal-dialog .modal-content {
+    background-image: linear-gradient(to right, white, white 48%, white);
+}
+
+// Addons Selector
+.addonsList {
+    color: green;
+}
+
+// Modal
+.modal-header {
+    @media only screen and (max-width: 990px) {
+        flex-direction: column;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        align-content: center;
+    }
+    .mbs-button-secondary {
+        min-height: 40px;
+        height: 40px;
+    }
+    .addonsTotal {
+        @media only screen and (max-width: 1200px) {
+            flex-direction: column;
+        }
+    }
+    .total-cost {
+        color: #2A6EBB;
+    }
+}
+.modal-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    @media only screen and (min-width: 992px) {
+        justify-content: flex-start;
+    }
+}
+
+.modal-body.min-addon {
+    @media only screen and (min-width: 992px) {
+        justify-content: flex-start;
+    }
+}
+
+// Card
+.card {
+    border: 1px solid #e7e7e7;
+    box-shadow: 5px 5px #e4e4e4;
+    border-radius: 0px;
+    margin-bottom: 2rem;
+    width: -webkit-fill-available;
+    cursor: pointer;
+    @media only screen and (min-width: 400px) {
+        width: 324px;
+        margin: 1rem;
+    }
+    .addon-type {
+        color: #4B5050;
+        font-weight: 600;
+        font-size: 14px;
+        margin: 14px 21px 10px 21px;
+        letter-spacing: 0.3px;
+        font-family: lato;
+    }
+    .card-title {
+        font-size: 14px;
+        font-weight: 400;
+        font-family: lato;
+    }
+    .card-img-top {
+        width: 285px;
+        height: 165px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 0px;
+        @media only screen and (max-width: 440px) {
+            width: 286px;
+        }
+    }
+    .avail-rooms {
+        padding: 3px 0px;
+    }
+    .addon-cost {
+        background-color: black;
+        opacity: 0.75;
+        position: relative;
+        top: -49px;
+        text-align: right;
+        padding: 5px;
+        width: 165px;
+        right: 18px;
+        margin-left: auto;
+        @media only screen and (max-width: 375px) {
+            right: 0;
+        }
+        .addon-pricing {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            line-height: 25px;
+        }
+        .addon-frequency {
+            font-size: 14px;
+            color: white;
+            line-height: 14px;
+            letter-spacing: normal;
+        }
+    }
+    .multiAddonValue {
+        position: relative;
+        top: -107px;
+    }
+    .card-body {
+        position: relative;
+        top: -50px;
+        br {
+            display: block;
+            margin: 6px;
+            content: "";
+        }
+        .addon-description, .short-addon-description {
+            display: -ms-flexbox;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: 3.6em;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            margin-bottom: 15px;
+            display: -webkit-box;
+        }
+        .short-addon-description {
+            -webkit-line-clamp: 4;
+            height: 4.6em;
+        }
+        .col-sm-6 {
+            padding: 0px;
+            @media only screen and (max-width: 450px) {
+                justify-content: flex-start !important;
+            }
+            br {
+                display: block;
+                margin: -4px;
+                content: "";
+            }
+            .room-count {
+                color: #868686;
+                font-size: 14px;
+                font-weight: 600;
+            }
+            .room-name {
+                font-weight: 600;
+                font-size: 15px;
+            }
+            button.btn.mbs-button-primary {
+                min-width: 114px;
+                min-height: 34px;
+                font-size: 12px;
+                @media only screen and (max-width: 450px) {
+                    float: left !important;
+                    margin-left: 0px !important;
+                }
+            }
+            button.btn.mbs-button-primary.selected-btn {
+                background-image: -webkit-linear-gradient(top, #ababab, #ababab) !important;
+                color: white;
+                border: 1px solid #9d9d9d;
+            }
+        }
+        .toggle {
+            min-width: 40px !important;
+            max-height: 34px !important;
+        }
+    }
+
+    .multiValueCard {
+        position: relative;
+        top: -109px;
+    }
+}
+
+.card.selected {
+    background-color: #f7f7f7;
+}

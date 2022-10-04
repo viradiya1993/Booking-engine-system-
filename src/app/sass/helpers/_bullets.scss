@@ -1,0 +1,16 @@
+@import "../../sass/variables/colors";
+
+.circle-bullet {
+  padding-left: 15px;
+  position: relative;
+  &:before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    background: $desert;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 10px;
+  }
+}

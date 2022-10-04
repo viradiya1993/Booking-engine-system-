@@ -1,0 +1,225 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "~@ng-select/ng-select/themes/default.theme.css";
+@import "../sass/typography/headings";
+@import "../sass/typography/paragraphs";
+@import "../sass/typography/font";
+@import "../sass/helpers/backgrounds";
+@import "../sass/helpers/buttons";
+@import "../sass/helpers/dropdowns";
+@import "../sass/typography/hyperlinks";
+@import "../sass/helpers/margin";
+@import "../sass/helpers/borders";
+@import "../sass/helpers/padding";
+@import "../sass/helpers/common";
+@import "../sass/helpers/modals";
+@import "../sass/helpers/bullets";
+@import "../sass/helpers/form";
+.footer {
+  a {
+    color: #fff;
+    font-weight: 500;
+  }
+}
+
+body {
+  width: 100%;
+  max-width: 1366px;
+  margin: auto;
+  background-color: #F7F9FA;
+  font-family: 'Lato', sans-serif;
+  overflow-x: hidden;
+}
+
+.body-wrapper {
+  background-color: #fff;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.row {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.NoListStyle {
+  list-style-type: none;
+  padding: 0px;
+}
+
+.card-title {
+  margin-bottom: 10px;
+}
+
+.cardTitleDiv {
+  padding-bottom: 15px;
+}
+
+small .button-content {
+  margin-bottom: 0;
+  padding: 10px 10px 10px 10px;
+  font-weight: bold;
+}
+
+.component-ws100 {
+  width: 100%;
+}
+
+.outlet-container {
+  padding: 15px;
+  .rate-calendar {
+    box-shadow: 5px 5px $white-two;
+  }
+  .rate-calendar-button {
+    margin-top: 15px;
+    border: none;
+  }
+  @media only screen and (min-width: 1200px) {
+    padding: 15px 85px;
+  }
+}
+
+.slick-slider {
+  width: 100%;
+  margin: auto;
+}
+
+.mbs-card {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid $white-seven;
+  box-shadow: 5px 5px $white-two;
+  margin-bottom: 40px;
+  margin-top: 10px;
+  padding: 15px;
+}
+
+.form-control {
+  border-radius: 0rem !important;
+}
+
+.align-bottom {
+  // padding-top: 15px;
+  position: absolute;
+  bottom: 0;
+  padding-bottom: 15px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.cc-revoke,
+.cc-window {
+  // border-width: 2px !important;
+  // border-style: solid !important;
+  // border-color: gray !important;
+}
+
+.cc-window.cc-banner {
+  padding: 5px 1.8em !important;
+  position: sticky !important;
+  background-color: #FAFAFA !important;
+  color: #333 !important;
+  font-family: Lato, sans-serif !important;
+  font-size: 1rem !important;
+  font-style: normal !important;
+  line-height: 1.7 !important;
+  letter-spacing: .025rem !important;
+  transition: opacity .2s ease !important;
+}
+
+.cc-window.cc-banner .cc-message {
+  text-align: right !important;
+}
+
+.cc-btn {
+  padding: 0px !important;
+  border-width: 1px !important;
+  border-style: dotted !important;
+  font-weight: 400 !important;
+  width: 100% !important;
+}
+
+.tooltiptextCP {
+  .popover-arrow {
+    &:after {
+      // border-right-color: #f6f6f6;
+    }
+  }
+  .popover-content {
+    background-image: linear-gradient(to right, #f3f3f3, #f6f6f6 48%, #ffffff);
+    box-shadow: 0px 2px 7.6px 0.4px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 15px;
+    font-family: $font-secondary;
+    font-size: $font-size-small;
+    font-weight: normal;
+    color: $black-three;
+    letter-spacing: $letter-spacing-x-small;
+  }
+  &.select-room {
+    @media only screen and (max-width: 991px) {
+      left: 0 !important;
+    }
+  }
+  &.multiroom-rate-plan {
+    @media only screen and (max-width: 575px) {
+      left: 0 !important;
+    }
+  }
+  &.rate-plan-nightly-prices {
+    @media only screen and (max-width: 575px) {
+      left: 50px !important;
+      .popover-arrow {
+        left: 57% !important;
+      }
+    }
+  }
+  &.children {
+    line-height: 1.1 !important;
+    // left: auto !important;
+    // right: 15px !important;
+    width: auto !important;
+    @media only screen and (max-width: 575px) {
+      // left: auto !important;
+      max-width: 180px !important;
+    }
+  }
+}
+
+.bs-popover-bottom .arrow::after,
+.bs-popover-auto[x-placement^="bottom"] .arrow::after {
+  top: 1px;
+  border-bottom-color: #f7f7f7 !important;
+}
+
+.dropdown-menu {
+  cursor: pointer;
+}
+
+div#customHeader, div#customFooter {
+  @media only screen and (max-width: 768px) {
+    display: none !important;
+  }
+}
+
+.popover {
+  border-radius: 10px;
+}
+
+.control-focus:focus, .control-focus:focus-visible {
+  border-color: $light-blue;
+  outline: 0px !important;
+  box-shadow: 0 0 0 0.2rem $saturated-blue;
+}

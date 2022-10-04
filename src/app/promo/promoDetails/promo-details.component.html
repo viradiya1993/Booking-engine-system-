@@ -1,0 +1,371 @@
+<div class="offer container d-flex {{RTL_Flag ? 'text-right':''}}">
+  <div class="offer-summary-brief">
+    <h3 class="offer-title">{{promoDetailsObject.name}}</h3>
+    <div class="offer-shortDescription" *ngIf="promoDetailsObject.promoTagLine" [innerHTML]="promoDetailsObject.promoTagLine"></div>
+    <img class="offer-img" *ngIf="!!promoDetailsObject.imageInfo[0]; else emptyOfferImg" alt="{{promoDetailsObject?.imageInfo[0].alt_text}}" title="{{promoDetailsObject?.imageInfo[0].alt_text}}" src="{{promoDetailsObject.imageInfo[0].urls.large}}">
+    <ng-template #emptyOfferImg>
+      <img class="offer-img" src="/assets/images/offers-blank.png">
+    </ng-template>
+  </div>
+  <div class="offer-summary-description">
+    <div class="offer-selection d-flex {{!isCheckInDateEntry ? 'select-dates-btn' : 'justify-content-between'}} mb-2">
+      <div class="price-from txt-lg-lb ls-sm" *ngIf="isCheckInDateEntry && promoDetailsObject.isBookable">
+        <h5 class="mb-0" [innerHTML]="localeObj.tf_7_PromoDetails_pricesFrom | safeHtml"></h5>
+        <div class="offer-pricing d-flex flex-row" *ngIf="showAvgDiscountedPrice">
+          <div class="strikeOffPrice txt-br-grey {{RTL_Flag ? 'ml-1':'mr-1'}}">
+            <s>{{currCode}}{{avgPrice | customPriceFormat: '1.0-2': currencyType}}</s>
+          </div>
+          <div class="discountedPrice">
+            {{currCode}}{{discountedAvgPrice | customPriceFormat: '1.0-2': currencyType}}
+          </div>&nbsp;
+          <span *ngIf="showAverageNightlyRate" class="perNight" [innerHTML]="localeObj.tf_2_RoomList_rooms_perNight | safeHtml"></span>
+          <span *ngIf="!showAverageNightlyRate" class="perNight" [innerHTML]="'/' + localeObj.tf_2_RoomList_rooms_label_perStay | safeHtml"></span>
+        </div>
+        <div class="offer-pricing d-flex flex-row" *ngIf="!showAvgDiscountedPrice">
+          <div class="offerPrice txt-br-grey {{RTL_Flag ? 'ml-1':'mr-1'}}">
+            {{currCode}}{{avgPrice | customPriceFormat: '1.0-2': currencyType}}
+          </div>
+          <!-- <div class="discountedPrice">
+            {{currCode}}{{discountedAvgPrice}}
+          </div>&nbsp; -->
+          <span class="perNight" *ngIf="showAverageNightlyRate" [innerHTML]="localeObj.tf_2_RoomList_rooms_perNight | safeHtml"></span>&nbsp;
+          <span class="perNight" *ngIf="!showAverageNightlyRate" [innerHTML]="'/' +localeObj.tf_2_RoomList_rooms_label_perStay | safeHtml"></span>
+        </div>
+      </div>
+
+      <div class="date-selection" *ngIf="isCheckInDateEntry && promoDetailsObject.isBookable">
+        <button id="r_btn_select_date" class="control-focus btn mbs-button-primary" type="button" (click)="scrollToSelect()">
+          <span [innerHTML]="localeObj.tf_7_PromoDetails_button_selectRooms | safeHtml"></span>
+        </button>
+      </div>
+      <div class="change-dates" *ngIf="isCheckInDateEntry && !promoDetailsObject.isBookable">
+        <div class="card-text offer-pricing txt-sm-jr no-offer-text" [innerHTML] = "localeObj.tf_6_MultiSpecials_text_offerNotAvailable | safeHtml"></div>
+        <button id="r_btn_select_date" class="control-focus btn mbs-button-secondary button-unavailable-promo" type="button" (click)="rateCal.openRateCalendar(checkInSummary)" tabindex="0" attr.aria-label="{{localeObj.tf_6_MultiSpecials_button_changeDates | safeHtml}}">
+          <span [innerHTML] = "localeObj.tf_6_MultiSpecials_button_changeDates | safeHtml"></span>
+        </button>
+      </div>
+      <div class="select-dates" *ngIf="!isCheckInDateEntry">
+        <button id="r_btn_select_date" class="control-focus btn mbs-button-secondary button-unavailable-promo" type="button" (click)="rateCal.openRateCalendar(checkInSummary)" tabindex="0" attr.aria-label="{{localeObj.tf_6_MultiSpecials_button_selectDates | safeHtml}}">
+          <span [innerHTML] = "localeObj.tf_6_MultiSpecials_button_selectDates | safeHtml"></span>
+        </button>
+      </div>
+    </div>
+    <div class="offer-termsAndCondition">
+      <accordion closeOthers="true">
+        <accordion-group #group [isOpen]="offerIncludes">
+          <div accordion-heading tabindex="0" class="accordian-heading room-feature-heading txt-md-lb lh-30 ls-sm" >
+            <h2 class="remove-whitespace">
+              <button class="txt-md-lb ls-sm txt-black-five feature"  [innerHTML]="localeObj.tf_7_PromoDetails_accordion_OfferIncludes | safeHtml"></button>
+              <i class="{{RTL_Flag ? 'pull-left':'pull-right'}} glyphicon" [ngClass]="group?.isOpen ? 'fa fa-angle-up': 'fa fa-angle-down'" attr.aria-label="{{localeObj.tf_7_PromoDetails_accordion_OfferIncludes | safeHtml}}"></i>
+            </h2>
+            <!-- <span [innerHTML]="localeObj.tf_7_PromoDetails_accordion_OfferIncludes | safeHtml"></span>
+            <i class="{{RTL_Flag ? 'pull-left':'pull-right'}} glyphicon" [ngClass]="group?.isOpen ? 'fa fa-angle-up': 'fa fa-angle-down'" attr.aria-label="{{localeObj.tf_7_PromoDetails_accordion_OfferIncludes | safeHtml}}"></i> -->
+          </div>
+          <div id='grow'>
+            <div id='measuringWrapper' tabindex="0">
+              <ul class="p-0 m-0 accordion-data">
+                <li class="feature txt-sm-lb ls-sm lh-24 mb-3  pl-2">
+                  <span [innerHTML]="promoDetailsObject.longDescription"></span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </accordion-group>
+        <div class="accordion-separator"></div>
+        <accordion-group #group1 [isOpen]="tnc">
+          <div accordion-heading  tabindex="0" class="accordian-heading room-feature-heading txt-md-lb lh-30 ls-sm txt-black-five">
+            <h2 class="remove-whitespace">
+              <button class="txt-md-lb feature" [innerHTML]="localeObj.tf_7_PromoDetails_accordion_termsAndConditions | safeHtml"></button>
+              <i class="{{RTL_Flag ? 'pull-left':'pull-right'}} glyphicon" [ngClass]="group1?.isOpen ? 'fa fa-angle-up': 'fa fa-angle-down'" attr.aria-label="{{ localeObj.tf_7_PromoDetails_accordion_termsAndConditions | safeHtml}}"></i>
+            </h2>
+            <!-- <span [innerHTML]="localeObj.tf_7_PromoDetails_accordion_termsAndConditions | safeHtml"></span>
+            <i class="{{RTL_Flag ? 'pull-left':'pull-right'}} glyphicon" [ngClass]="group1?.isOpen ? 'fa fa-angle-up': 'fa fa-angle-down'" attr.aria-label="{{ localeObj.tf_7_PromoDetails_accordion_termsAndConditions | safeHtml}}"></i> -->
+          </div>
+          <div id='grow2'>
+            <div id='measuringWrapper2' tabindex="0">
+              <ul class="p-0 accordion-data">
+                <li class="txt-sm-lb ls-sm txt-warm-grey-four lh-24 mb-3 pl-2">
+                  <span [innerHTML]="promoDetailsObject.termsAndConditions"></span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </accordion-group>
+      </accordion>
+
+    </div>
+  </div>
+</div>
+
+<div class="roomsAvail container txt-x-lg-lb txt-black-three my-4 py-2" *ngIf="isCheckInDateEntry && promoDetailsObject.isBookable">
+  <div [innerHTML]="localeObj.tf_7_PromoDetails_title_offeredRooms | safeHtml"></div>
+</div>
+<!-- START - checkInSummary, filters for desktop -->
+<div class="d-flex flex-column container pl-0" id="element" *ngIf="isCheckInDateEntry && promoDetailsObject.isBookable">
+  <app-guestduration [isPromoSpecialsFlow]="true" class="promo-guest-duration pl-0"></app-guestduration>
+  <app-filters class="promo-filter" [isPromoSpecialsFlow]="true" (roomFilters) = "updateRoomList($event)" [entireRoomsList]="sortedRoomList"></app-filters>
+</div>
+<!-- END - checkInSummary, filters for desktop -->
+
+<!-- START - MultiRoom Banner -->
+<div class="multiroom-banner">
+    <app-multi-room-banner *ngIf="multiRoomBanner" [rateCode]="offerCode" [roomBookingOrder]="roomBookingOrder"
+    (multiRoomRemoved)="multiRoomRemoved($event)" [isPromoOrSpecialsFlow]="isPromoOrSpecialsFlow" (promoMultiRoomSelected)="onPromoMultiRoomSelected()"></app-multi-room-banner>
+</div>
+<!-- End - MultiRoom Banner -->
+
+<!--- START - Mobile version sorting & currency filter-->
+<!-- <div class="d-block d-sm-block d-md-none mobile-filter container" *ngIf="isCheckInDateEntry && promoDetailsObject.isBookable">
+  <ng-template #lightboxmodel>
+    <div class="room-filters">
+      <div class="modal-header mb-30">
+        <h4 class="modal-title txt-x-lg-lb lh-30 ls-1 txt-black-five"></h4>
+        <button type="button" class="control-focus close pull-right" aria-label="Close" (click)="closeFilter()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="lightbox-contents">
+          <form>
+            <div class="row pt-10 d-block d-sm-flex">
+              <div class="currency filter d-flex align-items-center mr-auto">
+                <div class="label txt-md-lr ls-sm txt-br-grey {{RTL_Flag ? 'ml-10':'mr-10'}}"><span [innerHTML]="localeObj.tf_2_RoomList_roomListFilters_currency | safeHtml"></span> :</div>
+                <div class="mbs-dropdown-primary currency-dropdown" dropdown>
+                  <a dropdownToggle class="control-focus dropdown-toggle dropdown-toggle-filter p-2">
+                    <span [innerHTML]="currencySelection.code | safeHtml"></span>
+                  </a>
+                  <ul *dropdownMenu class="dropdown-menu">
+                    <li class="dropdown-item px-10 currency-name" *ngFor="let currency of supportedCurrencies"
+                      [value]="currency.code" (click)="updateCurrencySelection(currency)">
+                      <span [innerHTML]="currency.code | safeHtml"></span>&nbsp;(<span
+                        [innerHTML]="currency.symbol | safeHtml"></span>)
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="mt-3 sort-by filter d-flex align-items-center" (click)="toggleSortOrder()">
+                <div class="txt-md-lr ls-sm txt-br-grey {{RTL_Flag ? 'ml-10 pr-2':'mr-10 pl-2'}}"><span [innerHTML]="localeObj.tf_2_RoomList_roomListFilters_sortBy | safeHtml"></span>:</div>
+                <div class="txt-md-lb ls-sm txt-black-five {{RTL_Flag ? 'ml-10 pr-20':'mr-10 pl-20'}} cursor-pointer" [innerHTML]="localeObj.tf_2_RoomList_roomListFilters_price | safeHtml"></div>
+                <button class="control-focus formatButton pb-0 cursor-pointer">
+                  <div *ngIf="isSortOrderAsc; then thenBlock else elseBlock"> </div>
+                  <ng-template #elseBlock>
+                    <i class="fa fa-long-arrow-up"></i>
+                  </ng-template>
+                  <ng-template #thenBlock>
+                    <i class="fa fa-long-arrow-down"></i>
+                  </ng-template>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="control-focus btn mbs-button-primary w-100 mt-3" type="button" (click)="applyFilters()" id="done">
+          <span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_done | safeHtml"></span>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+  <div class="filter-button txt-lg-lb txt-black-three my-3 py-2" (click)="openFiltersModal(lightboxmodel)"><i
+      class="fa fa-sliders mr-2" aria-hidden="true"></i>
+    <span [innerHTML]="localeObj.tf_2_RoomList_filterDropdown_filter | safeHtml"></span></div>
+</div> -->
+<!--- END - Mobile version sorting & currency filter-->
+
+<!-- START - Rooms List -->
+<ul class="roomList container NoListStyle mt-3" *ngIf="isCheckInDateEntry && promoDetailsObject.isBookable">
+  <li *ngFor="let room of roomList | roomsSortBy : currencyType : sortOrder | priceSlider : currencyType : range ;">
+    <div attr.name={{room.code}}>
+      <div class="card {{room.code}}">
+        <div class=" control-focus roomCardBody {{RTL_Flag ? 'text-right':''}}" tabindex="0" [ngClass]="{'disabled-room': ((roomCode !== undefined || roomCode!== '') && room.code !== roomCode && unselectedroom)}">
+          <div class="row">
+            <div class="col-md-9 p-20">
+              <div class="txt-x-lg-lb txt-black-five ls-1 lh-30 pb-2" tabindex="0">
+                <span [innerHTML]="room.roomType | safeHtml"></span><span *ngIf="room.roomView">&nbsp;-&nbsp;<span
+                    [innerHTML]="room.roomView | safeHtml"></span></span>
+              </div>
+              <div class="row">
+                <div class="roomImagePanel">
+                  <img class="left-panel" src="{{room.largeImageUrl}}" aria-label="Room Image">
+                  <div class="dprTagLine {{RTL_Flag === false ? '' : 'dprPosition'}}" id="dprTagLine4" *ngIf="!showClose && room.dprTagLine && room.dprTagLine.length > 0 && isDpr4">
+                    <span class="sample"><img class="bell" src="/assets/icons/icon-noun-alert.png"></span>
+                    <span class="txt-sm-lr lh-24 mr-2 dprText" [innerHTML] = "room.dprTagLine | safeHtml"></span>
+                  </div>
+                </div>
+                <div class="roomImageCenterPanel">
+                  
+                  <!-- <div class="txt-x-lg-lb txt-black-five ls-1 lh-30" tabindex="0">
+                    <span [innerHTML]="room.roomType | safeHtml"></span><span *ngIf="room.roomView">&nbsp;-&nbsp;<span
+                        [innerHTML]="room.roomView | safeHtml"></span></span>
+                  </div> -->
+                  <div class="dprTagLine" id="dprTagLine5" *ngIf="!showClose && room.dprTagLine && room.dprTagLine.length > 0 && isDpr5s">
+                    <span class="sample"><img class="bell" src="/assets/icons/icon-noun-alert.png"></span>
+                    <span class="txt-sm-lr lh-24 mr-2 dprText" [innerHTML] = "room.dprTagLine | safeHtml"></span>
+                  </div>
+                  <div class="guestNumberDiv">
+                    <p class="txt-md-lr lh-30 txt-black mb-2 ls-sm" [innerHTML]="room.occupancyDescription | safeHtml">
+                    </p>
+                  </div>
+                  <div class="longDescriptionDiv txt-lg-lr lh-30 txt-black mb-2 ls-sm" *ngIf="showRoomDescriptionOnListing">
+                    <p [innerHTML] = "room.shortDescription | safeHtml"></p>
+                  </div>
+                  <div class="amenitiesDiv">
+                    <ul class="noStyleForList pl-0">
+                      <li *ngFor="let service of room.amenities | roomAmenitiesFilter: noOfMaxAmenities;">
+                        <div class="serviceDiv txt-md-lr lh-24 ls-sm txt-black-three">
+                          <img class="icon-service mr-2 p-1" src="{{service.thumbnailImageUrl}}" aria-label="Room Amenities"/> <span
+                            [innerHTML]="service.name | safeHtml"></span>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  <div *ngIf="!room.isBaseRoom && room.amenities.length > 0" class="roomBookingUpdates txt-sm-lr lh-24 ls-x-sm txt-black-three mt-3" [innerHTML] = "localeObj.tf_2_RoomList_rooms_allAmenitiesFromLowerTierRooms | safeHtml"></div>
+                  <p class="m-0 mt-3">
+                    <app-room-details [roomname]="room.name" [roomid]="room.code" [isImage]="false"></app-room-details>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 p-0">
+              <div class="pricePanel p-20" *ngIf="!showClose || selectedRoomCode !== room.code">
+                <h5 class="txt-sm-lr lh-20 ls-sm txt-black d-inline-block d-sm-block align-middle m-0 {{RTL_Flag ? 'ml-1':'mr-1'}}" [innerHTML]="localeObj.tf_7_PromoDetails_pricesFrom | safeHtml">
+                </h5>
+                <div *ngIf="checkDiscountPriceDisplay(getDiscountedRoomPrice(room))" class="room-price d-inline-block d-sm-block align-middle">
+                  <del class="strikedPrice txt-lg-lr lh-24 ls-x-sm txt-black-three">&nbsp;<span
+                      [innerHTML]="currCode | safeHtml"></span><span
+                      [innerHTML]="getAvgRoomPrice(room) | customPriceFormat: '1.0-2': currencyType | safeHtml"></span></del>
+                </div>
+                <div class="room-price d-inline-block d-sm-block align-middle {{RTL_Flag ? 'ml-1':'mr-1'}}">
+                  <strong class="price txt-x-lg-lb lh-30 txt-black ls-1"><span
+                      [innerHTML]="currCode | safeHtml"></span><span
+                      [innerHTML]="(getDiscountedRoomPrice(room) || getAvgRoomPrice(room)) | customPriceFormat: '1.0-2': currencyType | safeHtml"></span></strong>
+                <span *ngIf="showAverageNightlyRate" class="txt-sm-lr lh-30 txt-black-three ls-x-sm">&nbsp;<span  [innerHTML]="localeObj.tf_2_RoomList_rooms_perNight | safeHtml"></span>
+                </span>
+
+                <span *ngIf="!showAverageNightlyRate" class="txt-sm-lr lh-30 txt-black-three ls-x-sm">&nbsp;<span  [innerHTML]="localeObj.tf_2_RoomList_rooms_label_perStay | safeHtml"></span>
+                </span>
+                </div>
+                <div>
+                  <span class="txt-x-sm-lr ls-x-sm txt-black-three" [innerHTML] = "room.roomSpecifications | safeHtml">
+                  </span>
+                </div>
+                <div>
+                  <span class="txt-x-sm-lr ls-x-sm txt-black-three" [innerHTML] = "localeObj.tf_2_RoomList_rooms_ratesAndAvailabilityChanges | safeHtml"></span>
+                </div>
+                <br *ngIf="!(!showClose && room.dprTagLine && room.dprTagLine.length > 0 && isDpr6)">
+                <div class="dprTagLine mb-3" id="dprTagLine6" *ngIf="!showClose && room.dprTagLine && room.dprTagLine.length > 0 && isDpr6">
+                  <span class="sample"><img class="bell" src="/assets/icons/icon-noun-alert.png"></span>
+                  <span class="txt-sm-lr lh-24 mr-2 dprText" [innerHTML] = "room.dprTagLine | safeHtml"></span>
+                </div>
+                <!-- START - SELECT ROOM - Button -->
+                <button id="r_btn_select_rooms" class="control-focus btn mbs-button-primary" type="button" (click)="selectRoom(room, bedTypesRef)">
+                  <span [innerHTML]="localeObj.tf_7_PromoDetails_button_reserve | safeHtml"></span>
+                </button>
+                <!-- END - SELECT ROOM Button -->
+              </div>
+               <!-- START - CLOSE Button -->
+              <div class="row justify-content-end" *ngIf="showClose && selectedRoomCode === room.code">
+                <button type="button" class="control-focus close" aria-label="Close" (click)="unselectRoom(room, bedTypesRef)">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+               <!-- END - CLOSE Button -->
+
+            </div>
+          </div>
+          <!-- START - Room Expanding/Collapsing part (BedTypes, Book - Button)-->
+          <div class="collapse roomDetail" #bedTypesRef>
+            <div>
+            <div *ngIf="!!room.bedTypes && room.bedTypes.length > 0">
+              <h5 class="txt-x-lg-lb lh-30 ls-1 txt-black-five " [innerHTML]="localeObj.tf_2_RoomList_ratePlans_chooseBedType | safeHtml"></h5>
+              <div class="row" id="noBorder">
+                <!-- START - Showing Bed Types -->
+                <div *ngFor="let bedTypeObject of room.bedTypes; let i = index">
+                  <div class="radio" (click)="setBedType(bedTypeObject)">
+                    <div class="radio-div mb-20" [ngClass]="{'radio-div-selected': bedTypeObject.bedTypeCode === bedType}">
+                      <label class="container d-flex lh-30">
+                        <span class="txt-lg-lb {{RTL_Flag ? 'pr-4':'pl-4'}} ls-1 txt-black-five" [innerHTML]="bedTypeObject.bedTypeName | safeHtml"></span>
+                        <input type="radio" [checked]="bedTypeObject.bedTypeCode === bedType && room.code === roomCode" name="control-focus {{roomCode}} {{room.code}}" value="{{bedTypeObject.bedTypeCode}}">
+                        <span class="checkmark checkmark-{{bedTypeObject.bedTypeCode}}"></span>
+                      </label>
+                      <label for="option" class="beds">
+                        <span>
+                          <img src="{{bedTypeObject.bedTypeImageURL}}" alt="{{bedTypeObject.bedTypeName}}">
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <!-- END - Showing Bed Types -->
+
+                <!-- Start - Multi Room Booking (Book Button Section)-->
+                <div *ngIf="isMultiRooms" class="multiroom-book p-0 d-flex flex-column align-items-center justify-content-center {{RTL_Flag ? 'mr-sm-auto':'ml-sm-auto'}}">
+                  <div class="multiroom-book-inner">
+                    <div>
+                      <button class="control-focus btn mbs-button-primary" (click)="onMultiRoomSelected($event, bedTypesRef)" (keyup.enter)="$event.target.click()" id="book">
+                        <span [innerHTML]="localeObj.tf_3_MultiRoom_ratePlan_button_book | safeHtml"></span>
+                      </button>
+                    </div>
+                    <div *ngIf="isNextRoomValid">
+                      <small>
+                        <b><span [innerHTML]="localeObj.tf_4_Checkout_addons_roomLc | safeHtml"></span>&nbsp;<span [innerHTML]="nextRoomNo + 1 | safeHtml"></span></b>:&nbsp;<span [innerHTML]="nextRoomAdults | safeHtml"></span>
+                        <span *ngIf="nextRoomAdults === 1">&nbsp;<span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_adult | safeHtml"></span></span>
+                        <span *ngIf="nextRoomAdults > 1">&nbsp;<span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_adults | safeHtml"></span></span>
+                        <span *ngIf="nextRoomChildren > 0"><span [innerHTML]="localeObj.tf_3_MultiRoom_packageListing_comma || ',' | safeHtml"></span> <span [innerHTML]="nextRoomChildren | safeHtml"></span>
+                          <span *ngIf="nextRoomChildren === 1">&nbsp;<span [innerHTML]="localeObj.tf_2_RoomList_ratePlans_child | safeHtml"></span></span>
+                          <span *ngIf="nextRoomChildren > 1">&nbsp;<span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_children | safeHtml"></span></span>
+                        </span>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <!-- End - Multi Room Booking (Book Button Section)-->
+
+                <!-- Start - Single Room Booking (Reserve Now - Button Section)-->
+                <div *ngIf="!isMultiRooms" class="reserve-book p-0 d-flex flex-column align-items-center justify-content-center {{RTL_Flag ? 'mr-sm-auto':'ml-sm-auto'}}">
+                  <div class="reserve-room-inner">
+                    <div>
+                      <h5 class="txt-sm-lr lh-20 ls-sm txt-black d-inline-block d-sm-block align-middle m-0 {{RTL_Flag ? 'ml-1':'mr-1'}}" [innerHTML]="localeObj.tf_7_PromoDetails_pricesFrom | safeHtml">
+                      </h5>
+                      <div *ngIf="checkDiscountPriceDisplay(getDiscountedRoomPrice(room))" class="room-price d-inline-block d-sm-block align-middle">
+                        <del class="strikedPrice txt-lg-lr lh-24 ls-x-sm txt-black-three">&nbsp;<span
+                            [innerHTML]="currCode | safeHtml"></span><span
+                            [innerHTML]="getAvgRoomPrice(room) | customPriceFormat: '1.0-2': currencyType| safeHtml"></span></del>
+                      </div>
+                      <div class="room-price d-inline-block d-sm-block align-middle {{RTL_Flag ? 'ml-1':'mr-1'}}">
+                        <strong class="price txt-x-lg-lb lh-30 txt-black ls-1"><span
+                            [innerHTML]="currCode | safeHtml"></span><span
+                            [innerHTML]="(getDiscountedRoomPrice(room) || getAvgRoomPrice(room)) | customPriceFormat: '1.0-2': currencyType | safeHtml"></span></strong>
+                        <span *ngIf="showAverageNightlyRate" class="txt-sm-lr lh-30 txt-black-three ls-x-sm">&nbsp;<span [innerHTML]="localeObj.tf_2_RoomList_rooms_perNight | safeHtml"></span>
+                      </span>
+                      <span *ngIf="!showAverageNightlyRate" class="txt-sm-lr lh-30 txt-black-three ls-x-sm">&nbsp;<span [innerHTML]="localeObj.tf_2_RoomList_rooms_label_perStay | safeHtml"></span>
+                      </span>
+                      </div>
+                    </div>
+                    <div>
+                      <button id="r_btn_select_rooms" class="control-focus btn mbs-button-primary" type="button" (click)="onRoomSelected($event, room)" (keyup.enter)="$event.target.click()">
+                        <span [innerHTML]="localeObj.tf_7_PromoDetails_button_reserve | safeHtml"></span>
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+                <!-- End Single Room Booking -->
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      <br>
+    </div>
+  </li>
+</ul>
+<!-- End Rooms List -->
+<div *ngIf="(roomList.length === 0 && !datesAvail) || ((!datesAvail && roomList | roomsSortBy : currencyType : sortOrder | priceSlider : currencyType : range).length === 0)">
+  <div class="txt-lg-lr ls-x-sm txt-black container" id="red-error">
+    <p class="contentClass" [innerHTML]="localeObj.tf_2_RoomList_filters_noAvailbilityMsg | safeHtml"></p>
+  </div>
+</div>
+<app-ratecalendarlightbox #rateCal [checkinsummary]="guestSummary" (checkInSummaryChanged)="onCheckInSummaryChanged($event)" [isPromoDetailsPage]="true" [selectedPromoCode]="promoDetailsObject.code"></app-ratecalendarlightbox>

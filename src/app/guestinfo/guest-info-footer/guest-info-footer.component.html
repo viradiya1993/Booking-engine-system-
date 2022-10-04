@@ -1,0 +1,140 @@
+<ng-template #template>
+  <div id="tnc-modal">
+    <div class="modal-header">
+      <h5 class="control-focus modal-title txt-xxx-lg-jb txt-black d-none d-sm-block" [innerHTML] = "localeObj.tf_4_Checkout_guestInfoFooter_termAndConditions | safeHtml" id="tnc-modal-title" tabindex="0"></h5>
+      <h5 class="control-focus modal-title txt-lg-jb txt-black d-block d-sm-none" [innerHTML] = "localeObj.tf_4_Checkout_guestInfoFooter_termAndConditions | safeHtml" id="tnc-modal-title" tabindex="0"></h5>
+      <button type="button" class="control-focus close pull-right" aria-label="Close" (click)="modalRef.hide()" id="tnc-modal-close" tabindex="0">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="control-focus modal-body terms-and-conditions {{RTL_Flag ? 'text-right':''}}">
+      <div *ngIf="propertyType === 'RVNG'" [innerHTML]="localeObj.tf_4_Checkout_guestInfoFooter_RVNG_termsAndConditions | safeHtml" id="tnc-modal-body" tabindex="0"></div>
+      <div *ngIf="propertyType !== 'RVNG'" [innerHTML]="ratePlan?.termsAndConditions" id="tnc-modal-body" tabindex="0"></div>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #modifyBookingWarningTemplate>
+  <div id="modify_BookingWarning_Template">
+      <div class="modal-header">
+          <h5 class="modal-title txt-xxx-lg-jb lh-32 txt-black-five mb-3"><strong><span [innerHTML]="localeObj.tf_5_Confirmation_popup_modifyPopupHeading | safeHtml"></span>?</strong></h5>
+          <button type="button" class="control-focus close pull-right" aria-label="Close" (click)="modalRef.hide()" (keyup.enter)="$event.target.click()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <hr class="hr-large hr-thick">
+        <div>
+          <p *ngIf="additionalAmount > 0" [innerHTML]="getMessage(localeObj.tf_5_Confirmation_popup_modifyPopupAdditionalAmtText, [defCurrCode, additionalAmount])" tabindex="0"></p>
+          <p *ngIf="refundAmount > 0" [innerHTML]="getMessage(localeObj.tf_5_Confirmation_popup_modifyPopupRefundAmtText, [defCurrCode, refundAmount])" tabindex="0"></p>
+        </div>
+        <br>
+        <div class ="d-flex justify-content-center">
+          <button class="control-focus btn mbs-button-primary enhance" (click)="modifyproceedPayment(false)" type="button"><span [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_button_proceed | safeHtml"></span></button>
+        </div>
+  </div>
+</ng-template>
+
+<div class="row">
+  <div class="TermsAndConditions form-check form-check mbs-checkbox-primary pl-0 mb-3">
+    <input class="control-focus form-check-input" type="checkbox" required value="TERMSACCEPTED" id="defaultCheck1" (change)="termsCheckbox($event)">
+    <span tabindex="0" class="control-focus mr-1 radio" (keyup.enter)="termsCheckboxOnEnter($event)" (keyup.Space)="termsCheckboxOnEnter($event)"></span>
+    <label class="control-focus form-check-label txt-sm-lr ls-x-sm txt-black-three cursor-pointer" for="defaultCheck1">
+      <span [innerHTML] = "localeObj.tf_4_Checkout_guestInfoFooter_readAndAcceptText | safeHtml"></span>
+    </label>
+    <a id="g_link_tnc" (click)="openModal(template)" class="control-focus viewDetails hyl-dark txt-underline txt-sm-lr ls-x-sm txt-black-three" tabindex="0" role="link" (keyup.enter)="$event.target.click()">
+      <span [innerHTML] = "localeObj.tf_4_Checkout_paymentMethodFooter_link_termsAndConditions | safeHtml"></span>
+    </a>.
+    <br>
+    <small tabindex="0" id="tc_error" class="error-msg ScrollToElement" *ngIf="showTermsError" [innerHTML] = "termsErrorMsg | safeHtml"></small>
+  </div>
+</div>
+
+<div class="row" *ngIf="marketingConsent">
+  <div class="form-check mbs-checkbox-primary pl-0">
+    <input class="control-focus form-check-input" type="checkbox" required value="DATASHAREACCEPTED" id="defaultCheck2" (change)="consentcheckbox($event)">
+    <span tabindex="0" class="control-focus mr-1 radio" (keyup.enter)="termsCheckboxOnEnter($event)" (keyup.Space)="termsCheckboxOnEnter($event)"></span>
+    <label class="control-focus form-check-label txt-sm-lr ls-x-sm txt-black-three cursor-pointer" for="defaultCheck2" tabindex="0">
+      <span [innerHTML] = "marketingConsent | safeHtml"></span>
+    </label>
+  </div>
+</div>
+
+<div class="row my-3">
+  <button class="control-focus btn mbs-button-primary" type="button" [disabled]="disableProceedButton" (click)="proceedToPayment(false)" tabindex="0">
+    <span [innerHTML] = "localeObj.tf_4_Checkout_paymentMethod_button_proceed | safeHtml"></span>
+  </button>
+</div>
+
+<ng-container>
+  <div *ngIf="policyGuaranteeType === 'Credit Card Guarantee' && !!localeObj.tf_4_Checkout_Policy_CreditCardGuarantee" class="row txt-x-sm-lr txt-br-grey ls-x-sm ">
+    <img src="assets/icons/Credit card.svg" class="mr-2" alt="Credit Card"> 
+    <span class="mt-1" [innerHTML]="localeObj.tf_4_Checkout_Policy_CreditCardGuarantee | safeHtml"></span>
+  </div>
+  <div *ngIf="policyGuaranteeType === 'Pre Payment/Deposit' && !!getMessage(localeObj.tf_4_Checkout_Policy_PrePaymentDeposit, [defCurrCode, policyDepositAmount | customPriceFormat: '': currency])" class="row txt-x-sm-lr txt-br-grey ls-x-sm ">
+    <img src="assets/icons/deposit.svg" class="mr-2"> 
+    <span class ="mt-2"
+      [innerHTML]="getMessage(localeObj.tf_4_Checkout_Policy_PrePaymentDeposit, [defCurrCode, policyDepositAmount | customPriceFormat: '': currency]) | safeHtml">
+    </span>
+  </div>
+  <div *ngIf="currentWindow && !!getMessage(localeObj.tf_4_Checkout_Policy_CurrentCancellationPolicy, [defCurrCode, totalCancelFee | customPriceFormat: '': currency])" class="row txt-x-sm-lr txt-br-grey ls-x-sm">
+    <img src="assets/icons/cancellation.svg" class="mr-2" alt="Cancellation"> 
+    <span class="mt-1"
+      [innerHTML]="getMessage(localeObj.tf_4_Checkout_Policy_CurrentCancellationPolicy, [defCurrCode, totalCancelFee | customPriceFormat: '': currency]) |safeHtml">
+    </span>
+  </div>
+  <div *ngIf="futureWindow && futureCancellationWindows && futureCancellationWindows.length > 0">
+    <div *ngFor="let futureCancelWindow of futureCancellationWindows; let i = index" class="row txt-x-sm-lr txt-br-grey ls-x-sm">
+      <div *ngIf="!!getMessage(localeObj.tf_4_Checkout_Policy_FutureCancellationPolicy, [getTranslatedDate(cancelFutureStartDate[i]),cancelFutureStartTime[i] | date:'h:mm:ss a ',defCurrCode,totalFutureCancelFee[i] | customPriceFormat: '': currency])">
+      <img src="assets/icons/cancellation.svg" class="mr-2" alt="Cancellation"> 
+      <span class="mt-1"
+        [innerHTML]="getMessage(localeObj.tf_4_Checkout_Policy_FutureCancellationPolicy, [getTranslatedDate(cancelFutureStartDate[i]),cancelFutureStartTime[i] | date:'h:mm:ss a ',defCurrCode,totalFutureCancelFee[i] | customPriceFormat: '': currency]) |safeHtml">
+      </span>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="!currentWindow && !futureWindow && !!localeObj.tf_4_Checkout_Policy_CommonCancellationPolicy" class="row txt-x-sm-lr txt-br-grey ls-x-sm ">
+    <img src="assets/icons/cancellation.svg" class="mr-2" alt="Cancellation"> 
+    <span class="mt-1"
+      [innerHTML]="localeObj.tf_4_Checkout_Policy_CommonCancellationPolicy |safeHtml">
+    </span>
+  </div>
+</ng-container>
+
+
+<div *ngIf="isManageBookingFlow">
+  <ng-container *ngIf="ifCardTypeAlipay(); else showNonAlipayMBText">
+    <div class="row txt-lg-lr txt-black-three ls-x-sm my-3" *ngIf=" !sameAmountFlag && compareBookingAmount()">
+      <span [innerHTML] = "getMessage(localeObj.tf_4_Checkout_guestInfoFooter_modifyAlert4, [currCode,(currentTotalPrice-previousTotalPrice[currency]|customPriceFormat: '': currency)]) | safeHtml"></span>
+    </div>
+    <div class="row txt-lg-lr txt-black-three ls-x-sm my-3" *ngIf="!sameAmountFlag && !compareBookingAmount()">
+      <span [innerHTML] = "getMessage(localeObj.tf_4_Checkout_guestInfoFooter_modifyAlert3, [currCode,(previousTotalPrice[currency]-currentTotalPrice|customPriceFormat: '': currency)]) | safeHtml"></span>
+    </div>
+    <div class="row txt-lg-lr txt-black-three ls-x-sm my-3" *ngIf="sameAmountFlag">
+      <span [innerHTML] = "localeObj.tf_4_Checkout_guestInfoFooter_modifyAlert5 | safeHtml"></span>
+    </div>
+  </ng-container>
+  <ng-template #showNonAlipayMBText>
+    <div class="row txt-lg-lr txt-black-three ls-x-sm my-3" *ngIf="!isStayAndPay && policyGuaranteeType !== 'Pre Payment/Deposit'">
+      <span [innerHTML] = "getMessage(localeObj.tf_4_Checkout_guestInfoFooter_modifyAlert1, [currCode,currentTotalPrice | customPriceFormat: '': currency]) | safeHtml"></span>
+    </div>
+    <div class="row txt-lg-lr txt-black-three ls-x-sm my-3" *ngIf="isStayAndPay && policyGuaranteeType !== 'Pre Payment/Deposit'">
+      <span [innerHTML] = "localeObj.tf_4_Checkout_guestInfoFooter_modifyAlert2 | safeHtml"></span>
+    </div>
+  </ng-template>
+</div>
+<!-- <div *ngIf="!isManageBookingFlow">
+<ng-container *ngIf="isStayAndPay; else showPayAndStayText">
+  <div class="row txt-lg-lr txt-black-three ls-x-sm my-3" *ngIf="!isPastCancellationDate && noCancellationDate">
+    <span [innerHTML] = "getMessage(localeObj.tf_4_Checkout_guestInfoFooter_bookingCancellationAllowedMsg, [getTranslatedDate(noCancelDate)]) | safeHtml"></span>
+  </div>
+  <div class="row txt-lg-lr txt-black-three ls-x-sm my-3" *ngIf="isPastCancellationDate">
+    <span [innerHTML] = "localeObj.tf_4_Checkout_guestInfoFooter_noCancellationMsg | safeHtml"></span>
+  </div>
+</ng-container>
+<ng-template #showPayAndStayText>
+  <div class="row txt-lg-lr txt-black-three ls-x-sm my-3" [innerHTML] = "localeObj.tf_4_Checkout_footer_payAndStayCancellationMsg | safeHtml"></div>
+</ng-template>
+</div> -->
+

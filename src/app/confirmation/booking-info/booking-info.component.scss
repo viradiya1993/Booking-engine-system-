@@ -1,0 +1,184 @@
+@import "../../../sass/variables/colors";
+h1 {
+  font-size: 22px;
+  @media only screen and (min-width: 768px) {
+    font-size: 55px;
+  }
+}
+
+.fa-long-arrow-right {
+  font-size: 19px;
+  color: $greyish-brown-two;
+}
+
+.mbs-button-primary-wrapper,
+.mbs-button-primary,
+.mbs-button-secondary {
+  width: 100%;
+  border-radius: 5px !important;
+  margin-bottom: 0px !important;
+  text-decoration: none;
+  @media only screen and (min-width: 576px) {
+    width: auto;
+  }
+}
+
+.enhance-your-stay-button {
+  width: 346px;
+  margin: 0px 11px;
+  @media only screen and (min-width: 576px) {
+    width: auto;
+    margin-left: auto;
+  } 
+  @media only screen and (max-width: 576px) {
+    margin: 0px 0px 10px 0px;
+    width: 100%;
+  } 
+}
+
+.dropdown-toggle{
+  padding-top:18px;
+}
+
+.dropdown-menu {
+  border: 1px solid #002c5F;
+  min-width: 60px;
+  width: inherit;
+  left: 0px !important;
+  font-size: 0.9rem !important;
+  margin: 0px !important;
+  color: #696969;
+  border-radius: 0.1rem 0.1rem .25rem.25rem !important;
+}
+
+.dropdown-item {
+  text-align: left;
+  padding-left: 8px;
+}
+
+.textunderline {
+  text-decoration: underline !important;
+  text-underline-position: under !important;
+}
+
+.cancel-booking-button {
+  width: 100%;
+  margin-bottom: 0px !important;
+  margin-top: 20px;
+  @media only screen and (min-width: 576px) {
+    width: auto;
+    margin-top: 0px !important;
+  }
+}
+
+.confirm-page-button {
+  margin-left: 0px !important;
+  @media only screen and (min-width: 768px) {
+    margin-left: 10px !important;
+  }
+}
+
+.guest-details {
+  padding: 20px 25px;
+  background-color: $white-three;
+  margin-top: 1rem;
+  @media only screen and (min-width: 576px) {
+    margin-top: 0;
+  }
+}
+
+hr.hr-large {
+  width: 100%;
+  color: $white-seven;
+}
+
+hr.hr-thick {
+  margin-right: 15px;
+  border-top: 2px solid $pinkish-grey-two;
+}
+
+.vertical-center {
+  align-items: center; // display: flex;
+}
+
+.modify-btn {
+  min-width: 185px;
+  margin:0px 10px 0px 10px;
+  @media only screen and (max-width: 1024px) {
+    // margin-bottom: 10px;
+    margin: 0 0 10px 0;
+  }
+}
+
+.modify-btn-bd {
+  margin:0px 0px 0px 10px;
+  @media only screen and (max-width: 1024px) {
+    margin: 0 10px 10px 0;
+  }
+  @media only screen and (max-width: 576px) {
+    width: 100%;
+    margin: 0px 0px 10px 0px;
+  }
+}
+
+.modify-details-bd {
+  padding: 20px 10px 5px 10px;  
+  color: white;
+}
+
+.modify-details-bd:hover {
+  color: white;
+}
+
+.modify-details {
+  padding: 20px 5px 5px 5px;
+  width: inherit !important;
+}
+
+.errDiv {
+  background-color: $light-pink;
+}
+
+.contentClass {
+  padding: 20px 10px 20px 10px;
+}
+
+.resend-btn-enhanceYourStay-container {
+  text-align: right;
+  @media screen and (min-width: 768px) {
+    padding-left: 15px;
+    padding-right: 0px;
+  }
+}
+
+:host-context(body[dir="rtl"]) {
+  .resend-btn-enhanceYourStay-container {
+    @media screen and (min-width: 768px) {
+      padding-left: 0px;
+      padding-right: 15px;
+    }
+  }
+}
+
+.resend-btn-container-manage-page {
+  text-align: right;
+  @media screen and (min-width: 768px) {
+    padding-left: 0px;
+    padding-right: 10px;
+  }
+  @media screen and (max-width: 576px) {
+    width: 100%;
+  }
+}
+
+.confirm-page-button {
+  @media screen and (min-width: 768px) {
+    margin-right: -5px;
+  }
+}
+
+.booking-details-modf {
+  @media screen and (max-width: 576px) {
+    width: 100%;
+  }
+}

@@ -1,0 +1,83 @@
+<ng-template #template *ngIf="crossSellList.length > 0">
+  <div id="cross-sell-modal">
+    <div class="modal-header mb-30">
+      <h5 id="cs-modal-title" tabindex="0" class="control-focus modal-title text-uppercase txt-xxx-lg-jb txt-black" [innerHTML]="currCrossSell.addOnName | safeHtml"></h5>
+      <button type="button" id="cs-modal-closeBtn" tabindex="0" class="control-focus close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="control-focus imgPanel" id="cs-modal-image" tabindex="0">
+          <img src="{{currCrossSell.largeImageUrl}}" alt="{{currCrossSell.addOnName}}-Image"/>
+          <!-- image url-->
+        </div>
+        <div class="rt-Body">
+          <div class="control-focus txt-lg-lr ls-x-sm txt-black-three" id="cs-modal-desc" tabindex="0" [innerHTML]="currCrossSell.longDescription | safeHtml"></div>
+          <div class="pt-20">
+            <div class="toogle-panel" *ngIf="currCrossSell.isUnitAddOn">
+              <span class="control-focus txt-xx-lg-lb ls-x-sm txt-black" id="cs-modal-unitPrice" tabindex="0">&nbsp;<span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="currCrossSell.price[currType] | customPriceFormat: '': currType | safeHtml"></span></span>
+              <span class="control-focus txt-lg-lr ls-x-sm txt-black-three" id="cs-modal-pricingInfo" tabindex="0" *ngIf="currCrossSell.priceText">&nbsp;(<span [innerHTML]="currCrossSell.priceText | safeHtml"></span>)</span>
+            </div>
+            <div class="toogle-panel" *ngIf="!currCrossSell.isUnitAddOn">
+              <span class="control-focus txt-xx-lg-lb ls-x-sm txt-black" id="cs-modal-adultPrice" tabindex="0" >&nbsp;<span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="currCrossSell.price[currType] | customPriceFormat: '': currType | safeHtml"></span></span>
+              <span class="control-focus txt-lg-lr ls-x-sm txt-black-three" >&nbsp;(<span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_adult | safeHtml"></span>)</span>&nbsp;|
+              <span class="control-focus txt-xx-lg-lb ls-x-sm txt-black" id="cs-modal-childPrice" tabindex="0" ><span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="currCrossSell.childPrice[currType] | customPriceFormat: '': currType | safeHtml"></span> </span>
+              <span class="control-focus txt-lg-lr ls-x-sm txt-black-three">(<span [innerHTML]="localeObj.tf_2_RoomList_ratePlans_child | safeHtml"></span>)</span>
+            </div>
+          </div>
+          <div class="pt-20 pb-20">
+            <button class="control-focus btn mbs-button-primary" id="cs-modal-bookBtn" tabindex="0" (click)="openNewWindow(currCrossSell.externalLink)">&nbsp;<span [innerHTML]="localeObj.tf_4_Checkout_addons_button_book | safeHtml"></span>
+              <i [ngClass]="currCrossSell.isExternalSystem? 'fa fa-external-link': ''"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div class="enhanceYourStay" *ngIf="crossSellList.length > 0">
+  <h1 [innerHTML]="localeObj.tf_5_Confirmation_enhanceYourStay_heading | safeHtml"></h1>
+  <ng-container *ngFor="let crossSells of crossSellList">
+    <div class="card-group cross-sell-body pt-20">
+      <ng-container *ngFor="let crossSell of crossSells; let i = index">
+        <div class="card col-md-4 p-0 m-0 mb-3 " [ngClass]="(i + 1) % 3 === 0 ? 'mr-0': RTL_Flag ? 'ml-3' : 'mr-3'">
+          <img src="{{crossSell.thumbnailImageUrl}}" alt="Card image cap">
+          <div class="card-body mt-20 py-0 {{RTL_Flag ? 'pl-0' : 'pr-0'}}">
+            <div class="vl">
+              <div class="cross-sell-content">
+                <p class="card-title txt-lg-lb ls-x-sm txt-black-five" [innerHTML]="crossSell.addOnName | safeHtml"></p>
+                <p class="card-text txt-lg-lr txt-black-three ls-x-sm" [innerHTML]="crossSell.shortDescription | safeHtml"></p>
+                <p class="card-text">
+                  <a id="c_link_view_details_{{i}}" (click)="store.setActiveModalElem('c_link_view_details_' + i); openModal(template, crossSell)" class="control-focus viewDetails txt-lg-lr txt-black-three ls-x-sm hyl-dark cursor-pointer" tabindex="0" attr.aria-label="{{localeObj.tf_2_RoomList_ratePlanDetails_link_viewDetails}}" role="link">
+                    <u [innerHTML]="localeObj.tf_2_RoomList_ratePlanDetails_link_viewDetails | safeHtml"></u>
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer {{RTL_Flag ? 'pl-0' : 'pr-0'}} pb-0">
+            <div class="toogle-panel" *ngIf="crossSell.isUnitAddOn">
+              <span class="currency-style txt-xx-lg-lb txt-black ls-1">&nbsp;<span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="crossSell.price[currType] | customPriceFormat: '': currType | safeHtml"></span></span>
+              <span *ngIf="crossSell.priceText" class="txt-sm-lr txt-black-three ls-x-sm">&nbsp;(<span [innerHTML]="crossSell.priceText | safeHtml"></span>)</span>
+            </div>
+            <div class="toogle-panel" *ngIf="!crossSell.isUnitAddOn">
+              <span class="currency-style txt-xx-lg-lb txt-black ls-1">&nbsp;<span [innerHTML]="currCode | safeHtml"></span> <span [innerHTML]="crossSell.price[currType] | customPriceFormat: '': currType | safeHtml"></span></span>
+              <span class="txt-sm-lr txt-black-three ls-x-sm">&nbsp;<span [innerHTML]="localeObj.tf_5_Confirmation_priceSummery_adultBracket | safeHtml"></span>&nbsp;|&nbsp;</span>
+              <span class="currency-style txt-xx-lg-lb txt-black ls-1"><span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="crossSell.childPrice[currType] | customPriceFormat: '': currType | safeHtml"></span>&nbsp;</span>
+              <span class="txt-sm-lr txt-black-three ls-x-sm"><span [innerHTML]="localeObj.tf_5_Confirmation_enhanceYourStay_childBracket | safeHtml"></span></span>
+            </div>
+            <br>
+            <div class="crossSellBookDiv">
+              <button id="c_btn_enhance_book" class="control-focus btn mbs-button-secondary" (click)="openNewWindow(crossSell.externalLink)">
+                <span [innerHTML]="localeObj.tf_4_Checkout_addons_button_book | safeHtml"></span>
+                <i [ngClass]="crossSell.isExternalSystem ? 'fa fa-external-link': ''"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>

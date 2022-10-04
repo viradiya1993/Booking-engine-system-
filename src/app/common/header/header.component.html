@@ -1,0 +1,186 @@
+<app-mbs-spinner></app-mbs-spinner>
+<!-- <div *ngIf="!confirmationPage"> -->
+  <div class="row theme-header" *ngIf= "!displayHeader">
+    <div class="header body-wrapper-child">
+      <img class="control-focus logo" [src]="this.logo.src" [alt]="this.logo.alt" (click)="navigateToHomePage()" (keyup.enter)="navigateToHomePage()" *ngIf="this.logo.src" tabindex="0">
+    </div>
+    <p  *ngIf="selectedHotelName" class="sibling-property" [innerHTML] = "selectedHotelName | safeHtml"></p>
+    <div class="lang-filter {{currencies.length > 1 ? 'pr-0' : ''}}" *ngIf="showLangOptions">
+      <span [innerHTML] = "selectedLang.name | safeHtml" *ngIf="languages.length === 0"></span>
+      <div class="mbs-dropdown-primary" dropdown *ngIf="languages.length != 0">
+        <a dropdownToggle class="control-focus dropdown-toggle hyl-dark txt-md-lr" tabindex="0" (keyup.enter)="$event.target.click()" attr.aria-label="Selected Language {{selectedLang.name}}" role="link">
+          <span [innerHTML] = "selectedLang.name | safeHtml"></span>
+        </a>
+        <ul *dropdownMenu class="dropdown-menu">
+          <li class="dropdown-item language" #t *ngFor="let lang of languages" [value]="lang.code" (click)="updateLanguageSelection(lang)">
+            <span [innerHTML] = "lang.name | safeHtml"></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="lang-filter ml-0 px-2" *ngIf="displayCurrency() && !(propertyType.length > 0 &&  propertyType === 'UD')">
+      <div class="mbs-dropdown-primary" dropdown *ngIf="currencies.length > 1">
+        <a dropdownToggle class="control-focus dropdown-toggle hyl-dark txt-md-lr" tabindex="0" (keyup.enter)="$event.target.click()" attr.aria-label="Selected Currency {{currencySelection.code}}" role="link">
+          <span [innerHTML] = "currencySelection.code | safeHtml"></span>
+        </a>
+        <ul *dropdownMenu class="dropdown-menu">
+          <li  class="dropdown-item currencies" #t *ngFor="let currency of currencies" [value]="currency.code" (click)="updateCurrencySelection(currency)">
+            {{ currency.code }} ({{currency.symbol}})
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf= "!displayHeader">
+    <p *ngIf="selectedHotelName"class="sibling-property-mobView" [innerHTML] = "selectedHotelName | safeHtml"></p>
+  </div>
+  <div *ngIf="isIataNumberValid && !displayHeader" tabindex="0" attr.aria-label="Agency {{agencyName}} with IATA code {{iataNumber}}" class="align-iata-data txt-md-lr ls-sm txt-br-grey">
+    <div *ngIf="agencyName">{{agencyName}}</div>
+    <div *ngIf="iataNumber">{{iataNumber}}</div>
+  </div>
+  <!-- New Main Nav -->
+<header *ngIf= "displayHeader" [ngClass]="(mobileView && showMap) ? 'hideHeader' : ''">
+  <div class="main-nav" id="mainDropdownMenu">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <div class="header body-wrapper-child">
+          <img class="control-focus logo" [src]="this.logo.src" [alt]="this.logo.alt" (click)="navigateToHomePage()" (keyup.enter)="navigateToHomePage()" *ngIf="this.logo.src" tabindex="0">
+        </div>
+        <p *ngIf="selectedHotelName" class="sibling-property" [innerHTML] = "selectedHotelName | safeHtml"></p>
+        <button class="control-focus navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" (click)="expandMobileMenu()" id="outerMobileMenuButton">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- Closing button for mobile menu -->
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+        <div class="p-3 text-right d-block d-lg-none">
+          <button class="control-focus navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-label="Toggle navigation" (click)="collapseMobileMenu()" id="innerMobileMenuButton">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+        <!-- Language dropdown for mobile -->
+        <li class="nav-link d-block d-lg-none" *ngIf="showLangOptions && languages.length === 0">{{selectedLang.name}}</li>
+        <ul class="navbar-nav navbar-sub d-block d-lg-none" *ngIf="showLangOptions && languages.length > 0">
+            <li class="nav-item dropdown">
+                <a class="control-focus nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" (click)="openLanguageDropdown($event.currentTarget, 'mobileLanguageDropdown')" tabindex="0" role="link" (keyup)= "navigateLang($event)">{{selectedLang.name}}</a>
+                <div class="dropdown-menu dropdown-menu-right" id="mobileLanguageDropdown">
+                  <ul class="list-unstyled lang-list" role="listbox">
+                     <li class="dropdown-item" #t *ngFor="let lang of languages" [value]="lang.code" (click)="updateLanguageSelection(lang)" role="option">{{lang.name}}</li>
+                  </ul>
+                </div>
+              </li>
+          </ul>
+          <ul class="navbar-nav navbar-sub d-block d-lg-none" *ngIf="currencies.length > 1 && displayCurrency() && !(propertyType.length > 0 &&  propertyType === 'UD')">
+            <li class="nav-item dropdown">
+                <a class="control-focus nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" (click)="openLanguageDropdown($event.currentTarget, 'mobileCurrencyDropdown')" tabindex="0" role="link">{{currencySelection.code}}</a>
+                <div class="dropdown-menu dropdown-menu-right" id="mobileCurrencyDropdown">
+                  <ul class="list-unstyled lang-list" role="listbox">
+                     <li class="dropdown-item" #t *ngFor="let currency of currencies" [value]="currencySelection.code" (click)="updateCurrencySelection(currency)" role="option">{{ currency.code }} ({{currency.symbol}})</li>
+                  </ul>
+                </div>
+              </li>
+          </ul>
+          <ul class="navbar-nav" id="nav-items">
+            <li class="control-focus nav-item dropdown menu-item"
+              *ngFor="let mainNavItems of headerMenuData,let i = index" (mouseenter)="addMenuShowClass($event.target, mainNavItems)" (mouseleave)="removeMenuShowClass($event.target, mainNavItems)" (click)="expandInnerMobileMenu($event.target, mainNavItems)">
+              <a *ngIf="mainNavItems.linkType === 'POP_UP'&& mainNavItems.opens === 'EXTERNAL'" class="control-focus nav-link" data-toggle="dropdown" aria-expanded="false" id="header_mb_modal" (click)="manageBooking.openManageBooking(); storeSvc.setActiveModalElem('header_mb_modal')" (keyup.enter)="$event.target.click()" tabindex="0" attr.aria-label="{{mainNavItems.name}}" role="link">{{mainNavItems.name}}</a>
+              <div class="dropdown-menu {{navArr?.length > 120 ? 'dropdown-menu-center' : 'dropdown-menu-right'}}" *ngIf="mainNavItems.subMenuItems.length > 0">
+                <ul class="list-unstyled">
+                  <li class="dropdown-item" *ngFor="let subItems of mainNavItems.subMenuItems">
+                    <a *ngIf="subItems.linkType === 'POP_UP'&& subItems.opens === 'EXTERNAL'" class="control-focus dropdown-item" (click)="manageBooking.openManageBooking(); mainNavResponse(subItems, $event.target)" attr.aria-label="{{subItems.label}}">
+                      {{subItems.label}}
+                    </a>
+                  </li>
+                </ul>
+               </div>     
+            </li>
+           </ul> 
+        <!-- main nav item -->
+         <ul class="navbar-nav" id="nav-items">
+          <li class="control-focus nav-item dropdown menu-item {{!singlePropertyPortal ? 'hideHeader' : ''}}"
+            *ngFor="let mainNavItems of headerMenuData,let i = index" (click)="expandInnerMobileMenu($event.target, mainNavItems)" (mouseenter)="addMenuShowClass($event.target, mainNavItems)" (mouseleave)="removeMenuShowClass($event.target, mainNavItems)">
+            <a *ngIf="mainNavItems.linkType !== 'POP_UP'" class="nav-link control-focus" data-toggle="dropdown" aria-expanded="false" target="{{mainNavItems.linkType}}" (click)="mainNavResponse(mainNavItems, $event.target)" (keyup.enter)="$event.target.click()" tabindex="0" attr.aria-label="{{mainNavItems.name}}" role="link">{{mainNavItems.name}}</a>
+            <a *ngIf="mainNavItems.linkType === 'POP_UP'&& mainNavItems.opens === 'CALENDAR'" class="nav-link control-focus" data-toggle="dropdown" aria-expanded="false" id="header_rc_modal" (click)="rateCal.openRateCalendar(GuestSummary); mainNavResponse(mainNavItems, $event.target); storeSvc.setActiveModalElem('header_rc_modal')" (keyup.enter)="$event.target.click()" tabindex="0" attr.aria-label="{{mainNavItems.name}}" role="link">{{mainNavItems.name}}</a>
+            <a *ngIf="mainNavItems.linkType === 'POP_UP'&& mainNavItems.opens === 'MANAGE_BOOKING'" class="nav-link control-focus" data-toggle="dropdown" aria-expanded="false" id="header_mb_modal" (click)="manageBooking.openManageBooking(); storeSvc.setActiveModalElem('header_mb_modal')" (keyup.enter)="$event.target.click()" tabindex="0" attr.aria-label="{{mainNavItems.name}}" role="link">{{mainNavItems.name}}</a>
+            <a *ngIf="mainNavItems.linkType === 'POP_UP'&& mainNavItems.opens === 'HOTEL_DETAILS'" class="nav-link control-focus" data-toggle="dropdown" aria-expanded="false"id="header_hd_modal" (click)="hotelDetails.openHotelDetailsModal(); storeSvc.setActiveModalElem('header_hd_modal')" (keyup.enter)="$event.target.click()" tabindex="0" attr.aria-label="{{mainNavItems.name}}" role="link">{{mainNavItems.name}}</a>
+            <div class="dropdown-menu {{navArr?.length > 120 ? 'dropdown-menu-center' : 'dropdown-menu-right'}}" *ngIf="mainNavItems.subMenuItems.length > 0">
+              <ul class="list-unstyled">
+                <li class="dropdown-item" *ngFor="let subItems of mainNavItems.subMenuItems">
+                  <a *ngIf="subItems.linkType !== 'POP_UP'" class="dropdown-item control-focus" target="{{subItems.linkType}}" (click)="mainNavResponse(subItems, $event.target)" attr.aria-label="{{subItems.label}}">
+                    {{subItems.label}}
+                  </a>
+                  <a *ngIf="subItems.linkType === 'POP_UP'&& subItems.opens === 'CALENDAR'" class="dropdown-item control-focus" (click)="rateCal.openRateCalendar(GuestSummary); mainNavResponse(subItems, $event.target)" attr.aria-label="{{subItems.label}}">
+                    {{subItems.label}}
+                  </a>
+                  <a *ngIf="subItems.linkType === 'POP_UP'&& subItems.opens === 'MANAGE_BOOKING'" class="dropdown-item control-focus" (click)="manageBooking.openManageBooking(); mainNavResponse(subItems, $event.target)" attr.aria-label="{{subItems.label}}">
+                    {{subItems.label}}
+                  </a>
+                  <a *ngIf="subItems.linkType === 'POP_UP'&& subItems.opens === 'HOTEL_DETAILS'" class="dropdown-item control-focus" (click)="hotelDetails.openHotelDetailsModal(); mainNavResponse(subItems, $event.target)" attr.aria-label="{{subItems.label}}">
+                    {{subItems.label}}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <!-- Language dropdown for desktop -->
+          <li class="nav-link menu-item d-lg-flex d-none" *ngIf="showLangOptions && languages.length === 0" tabindex="0" attr.aria-label="{{selectedLang.name}}">{{selectedLang.name}}</li>
+          <li class="nav-item dropdown d-lg-flex d-none menu-item" id="language-dropdown-id" (mouseleave)="closeSuppFieldsDropdown('lang-dropdown', 'desktop-langDropdown')" (mouseenter)="openSuppFieldsDropdown('lang-dropdown')" (keyup.enter)="$event.target.click()" *ngIf="showLangOptions && languages.length != 0" (keyup.escape)="closeSuppFieldsDropdown('lang-dropdown','desktop-langDropdown')">
+            <a class="control-focus nav-link dropdown-toggle" id="lang-dropdown" data-toggle="dropdown" aria-expanded="false" tabindex="0" attr.aria-label="selected language is {{selectedLang.name}}" role="link">{{selectedLang.name}}</a>
+            <div id="desktop-langDropdown" class="dropdown-menu {{navArr?.length > 120 ? 'dropdown-menu-center' : RTL_Flag === true ? 'dropdown-menu-left' : 'dropdown-menu-right'}}">
+              <ul class="list-unstyled lang-list" role="listbox" id="lang-dropdown-desktop" aria-label="languages list">
+                 <li class="dropdown-item {{RTL_Flag === true ? 'text-right':'text-left'}} menu-item" #t *ngFor="let lang of languages" [value]="lang.code" (click)="updateLanguageSelection(lang)" attr.aria-label="{{lang.name}}" role="option" (keyup)= "navigateLang($event)" (keyup.escape)="closeSuppFieldsDropdown('lang-dropdown','desktop-langDropdown')">{{lang.name}}</li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item dropdown d-lg-flex d-none menu-item" id="currency-dropdown-header" (mouseleave)="closeSuppFieldsDropdown('curr-dropdown','desktop-CurrDropdown')" (mouseenter)="openSuppFieldsDropdown('curr-dropdown')" (keyup.enter)="$event.target.click()" *ngIf="currencies.length > 1 && displayCurrency() && !(propertyType.length > 0 &&  propertyType === 'UD')" (keyup.escape)="closeSuppFieldsDropdown('curr-dropdown', 'desktop-CurrDropdown')">
+            <a class="control-focus nav-link dropdown-toggle" id="curr-dropdown" data-toggle="dropdown" aria-expanded="false" tabindex="0" attr.aria-label="selected currency is {{currencySelection.code}}" role="link">{{currencySelection.code}}</a>
+            <div id="desktop-CurrDropdown" class="dropdown-menu {{navArr?.length > 120 ? 'dropdown-menu-center' : RTL_Flag === true ? 'dropdown-menu-left' : 'dropdown-menu-right'}}">
+              <ul class="list-unstyled lang-list" role="listbox" id="lang-dropdown-desktop" aria-label="languages list">
+                 <li class="dropdown-item {{RTL_Flag === true ? 'text-right':'text-left'}} menu-item" #t *ngFor="let currency of currencies" [value]="currency.code" (click)="updateCurrencySelection(currency)" attr.aria-label="{{currency.name}}" role="option" (keyup)= "navigateLang($event)" (keyup.escape)="closeSuppFieldsDropdown('curr-dropdown','desktop-CurrDropdown')">{{ currency.code }} ({{currency.symbol}})</li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    </nav>
+  </div>
+  <hr *ngIf="!isMultiproperty">
+  <div class="row">
+    <p *ngIf="selectedHotelName"class="sibling-property-mobView" [innerHTML] = "selectedHotelName | safeHtml"></p>
+  </div>
+  <div *ngIf="!isErrPage && !confirmationPage && isMBpage && !isMultiproperty && !!localeObj.tf_Header_Commons_bookYourStay" class="book-your-stay-header-wrapper body-wrapper-child">
+    <h1 *ngIf="localeObj.tf_Header_Commons_bookYourStay" class="book-my-stay-heading" [innerHTML]="localeObj.tf_Header_Commons_bookYourStay| safeHtml"></h1>
+    <div class="row ">
+      <div class="lfe mr-5" *ngIf="localeObj.tf_Header_Commons_lowestPriceGrntd">
+        <img class="mr-2 media" src="/assets/icons/icon-tick-circle.svg">
+        <span class="align-middle" [innerHTML]="localeObj.tf_Header_Commons_lowestPriceGrntd | safeHtml"></span>
+      </div>
+      <div class="lfe mr-5" *ngIf="localeObj.tf_Header_Commons_cancellationHeader">
+        <img class="mr-2 media" src="/assets/icons/icon-tick-circle.svg">
+        <span class="align-middle" [innerHTML]="localeObj.tf_Header_Commons_cancellationHeader | safeHtml"></span>
+      </div>
+      <div class="lfe" *ngIf="localeObj.tf_Header_Commons_earlyCheckin">
+        <img class="mr-2 media" src="/assets/icons/icon-tick-circle.svg">
+        <span class="align-middle" [innerHTML]="localeObj.tf_Header_Commons_earlyCheckin | safeHtml"></span>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isIataNumberValid" tabindex="0" attr.aria-label="Agency {{agencyName}} with IATA code {{iataNumber}}" class="control-focus align-iata-data txt-md-lr ls-sm txt-br-grey">
+    <div *ngIf="agencyName">{{agencyName}}</div>
+    <div *ngIf="iataNumber">{{iataNumber}}</div>
+  </div>
+<!-- </div>
+<div *ngIf="confirmationPage">
+  <app-header-confirmation></app-header-confirmation>
+</div> -->
+
+  </header>
+
+  <!-- RateCalendar Pop-up -->
+<app-ratecalendarlightbox #rateCal [checkinsummary]="GuestSummary" (checkInSummaryChanged)="onCheckInSummaryChanged($event)"></app-ratecalendarlightbox>
+  <!-- ManageBooking Pop-up -->
+<app-manage-booking-lightbox #manageBooking></app-manage-booking-lightbox>
+  <!--Hotel Details Pop-up-->
+<app-multiproperty-view-rooms-detail #hotelDetails></app-multiproperty-view-rooms-detail>

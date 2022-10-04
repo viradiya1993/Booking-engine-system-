@@ -1,0 +1,67 @@
+<div id="guestDuration" class="bg-white align-items-center d-none d-md-flex {{isPromoSpecialsFlow? 'promo-guest-summary' : 'guest-duration'}}" *ngIf="availableRooms || isPromoSpecialsFlow || isCheckinSummaryAvailable || roomsListAvail" (window:resize)="onResize()">
+  <span class="control-focus los" id="r_checkin_summary_desktop" (click)="rateCal.openRateCalendar(guestSummary); storeService.setActiveModalElem('r_checkin_summary_desktop')" (keyup.enter)="$event.target.click()" tabindex="0" role="button" attr.aria-description="selected arrival date is {{getTranslatedDate(guestSummary.checkindate)}} and departure date is {{getTranslatedDate(guestSummary.checkoutdate)}}, press enter key if you want to edit">
+    <span class="txt-lg-jb txt-black-three ls-x-sm {{RTL_Flag ? 'mr-10' : 'ml-10'}}" [innerHTML]="getTranslatedDate(guestSummary.checkindate) | uppercase | safeHtml"></span>
+    <i class="fa {{RTL_Flag ? 'fa-long-arrow-left mr-10' : 'fa-long-arrow-right ml-10'}}"></i>
+    <span class="txt-lg-jb txt-black-three ls-x-sm {{RTL_Flag ? 'mr-10' : 'ml-10'}}" [innerHTML]="getTranslatedDate(guestSummary.checkoutdate)| uppercase | safeHtml"></span>
+  </span>
+  <span class="separator d-inline-block bg-pg-three {{RTL_Flag ? 'mr-20' : 'ml-20'}}"></span>
+  <span class="txt-md-jr ls-x-sm txt-black-three {{RTL_Flag ? 'mr-10' : 'ml-10'}}">
+    <span class="txt-md-jr ls-x-sm txt-black-three {{RTL_Flag ? 'pl-10 bl-black-three-1x' : 'pr-10 br-black-three-1x'}}"><span [innerHTML]="guestSummary.los | safeHtml"></span>&nbsp;<span [innerHTML]="nightVerbiage | safeHtml"></span></span>
+    <span class="txt-md-jr ls-x-sm txt-black-three {{RTL_Flag ? 'mr-10' : 'ml-10'}}"><span [innerHTML]="guestSummary.rooms || 1 | safeHtml"></span>&nbsp;<span [innerHTML]="roomVerbiage | safeHtml"></span><span [innerHTML]="localeObj.tf_3_MultiRoom_packageListing_comma || ',' | safeHtml"></span>&nbsp;<span [innerHTML]="adultsCount | safeHtml"></span>&nbsp;<span [innerHTML]="adultVerbiage | safeHtml"></span>&nbsp;<span [innerHTML]="childVeriagewithCount | safeHtml"></span></span>
+  </span>
+  <a href="#" id="r_link_edit_desktop" class="control-focus txt-md-lr txt-black-three ls-x-sm {{isPromoSpecialsFlow? 'pt-1' : ''}}" (click)="storeService.setActiveModalElem('r_link_edit_desktop'); rateCal.openRateCalendar(guestSummary);" role="button" attr.aria-label="{{localeObj.tf_2_RoomList_guestDuration_button_promoEdit}}" aria-description="press enter key if you want to edit"><span [innerHTML]="localeObj.tf_2_RoomList_guestDuration_button_promoEdit | safeHtml"></span></a><br>
+  <div class="d-none d-lg-flex d-xl-flex" *ngIf="(isMultiProp && showAccessCode && accessCodePathValidation) || (showAccessCode && accessCodePathValidation)" [ngClass]="{'mt-4': isMultiProp}">
+    <span class="separator d-inline-block bg-pg-three mx-3" *ngIf="!isMultiProp"></span><br>
+    <span class="row mt-1">
+      <div class="txt-md-jr txt-black" [innerHTML]="localeObj.tf_1_Calendar_roomsGuests_promoCode | safeHtml"></div>
+      <div class="txt-md-jr mr-1">:</div> &nbsp;
+      <div *ngIf="!enableAccessCodeField" class="txt-lg-jb txt-black accessCode {{RTL_Flag ? 'ml-3' : 'mr-3'}}" [innerHTML]="accessCode | uppercase | safeHtml"></div>
+     <span class="accessCodeInput">
+      <input *ngIf="enableAccessCodeField" [(ngModel)]="accessCode" class="control-focus form-control txt-sm-jr {{RTL_Flag ? 'ml-3' : 'mr-3'}} access-code" name="promoCode" attr.aria-label="{{localeObj.tf_1_Calendar_roomsGuest_promoHelptext}}" placeholder="{{localeObj.tf_1_Calendar_roomsGuest_promoHelptext}}"><br>
+      <span class="error-message txt-sm-jr" id="promoCode_error" role="alert" *ngIf="!isAccessCodeValid && !!accessCode" [innerHTML]="localeObj.tf_1_Calendar_roomsGuest_invalidPromoError"></span>
+     </span>
+    </span>
+    <a id="accessCode_link" class="control-focus txt-md-lr txt-black-three ls-x-sm editAccessCode" (click)="isMultiProp ? onAccessCodeChangeGetHotels(accessCode, guestSummary) : onAccessCodeChange(accessCode, guestSummary)" (keyup.enter)="$event.target.click()" tabindex="0" attr.aria-label="{{accessCodeStatus}}" attr.aria-description="press enter key to apply {{localeObj.tf_1_Calendar_roomsGuests_promoCode}}" role="button"><span [innerHTML]="accessCodeStatus | safeHtml"></span></a>
+  </div>
+</div>
+
+ <!-- Mobile guest-duration  -->
+<div class="bg-white align-items-center guest-duration d-flex d-md-none" *ngIf="availableRooms || isPromoSpecialsFlow || isCheckinSummaryAvailable || roomsListAvail">
+  <span class="d-flex flex-column {{RTL_Flag ? 'ml-10 text-right':'mr-20'}}">
+    <span class="control-focus los" id="r_checkin_summary_mobile" (click)="rateCal.openRateCalendar(guestSummary); storeService.setActiveModalElem('r_checkin_summary_mobile')" (keyup.enter)="$event.target.click()" tabindex="0" role="button" attr.aria-description="selected arrival date is {{getTranslatedDate(guestSummary.checkindate)}} and departure date is {{getTranslatedDate(guestSummary.checkoutdate)}},  press enter key if you want to edit">
+      <span class="txt-lg-jb txt-black-three ls-x-sm mr-10"  [innerHTML]="getTranslatedDate(guestSummary.checkindate) | uppercase | safeHtml"></span>
+      <i class="fa {{RTL_Flag ? 'fa-long-arrow-left mr-10' : 'fa-long-arrow-right ml-10'}}"></i>
+      <span class="txt-lg-jb txt-black-three ls-x-sm {{RTL_Flag ? 'mr-10' : 'ml-10'}}" [innerHTML]="getTranslatedDate(guestSummary.checkoutdate)| uppercase | safeHtml"></span>
+    </span>
+    <span class="separator d-inline-block bg-pg-three my-10"></span>
+    <span class="txt-md-jr ls-x-sm txt-black-three">
+      <span class="txt-md-jr ls-x-sm txt-black-three {{RTL_Flag ? 'pl-10 bl-black-three-1x' : 'pr-10 br-black-three-1x'}}"><span [innerHTML]="guestSummary.los | safeHtml"></span>&nbsp;<span [innerHTML]="nightVerbiage | safeHtml"></span></span>
+      <span class="txt-md-jr ls-x-sm txt-black-three {{RTL_Flag ? 'mr-10' : 'ml-10'}}"><span [innerHTML]="guestSummary.rooms || 1 | safeHtml"></span>&nbsp;<span [innerHTML]="roomVerbiage | safeHtml"></span><span [innerHTML]="localeObj.tf_3_MultiRoom_packageListing_comma || ',' | safeHtml"></span>&nbsp;<span [innerHTML]="adultsCount | safeHtml"></span>&nbsp;<span [innerHTML]="adultVerbiage | safeHtml"></span><span [innerHTML]="childVeriagewithCount | safeHtml"></span></span>
+    </span>
+  </span>
+  <a id="r_link_edit_mobile" href="#" class="control-focus txt-md-lr txt-black-three ls-x-sm" (click)="storeService.setActiveModalElem('r_link_edit_mobile'); rateCal.openRateCalendar(guestSummary)" role="button" attr.aria-label="{{localeObj.tf_2_RoomList_guestDuration_button_promoEdit}}" aria-description="press enter key if you want to edit"><span [innerHTML]="localeObj.tf_2_RoomList_guestDuration_button_promoEdit | safeHtml"></span></a>
+</div>
+
+<div class="d-block d-md-none d-xl-none mobilePromoField pl-3 pr-1 py-1" *ngIf="showAccessCode && accessCodePathValidation && isCheckinSummaryAvailable">
+  <div class = "promoFilter">
+    <span class="row">
+      <div class="txt-md-jr txt-black" [innerHTML]="localeObj.tf_1_Calendar_roomsGuests_promoCode | safeHtml"></div>
+      <div class="txt-md-jr mr-1">:</div>
+    </span>
+    <span class="d-flex mt-1">
+      <div *ngIf="!enableAccessCodeField" class="txt-lg-jb txt-black accessCode mt-1 {{RTL_Flag ? 'ml-3' : 'mr-3'}}"
+        [innerHTML]="accessCode | uppercase | safeHtml"></div>
+      <span class="accessCodeInput">
+        <input *ngIf="enableAccessCodeField" [(ngModel)]="accessCode" class="control-focus form-control txt-sm-jr {{RTL_Flag ? 'ml-3' : 'mr-3'}} access-code"
+          placeholder="{{localeObj.tf_1_Calendar_roomsGuest_promoPlaceHolder}}"><br>
+        <span class="error-message txt-sm-jr" *ngIf="!isAccessCodeValid"
+          [innerHTML]="localeObj.tf_1_Calendar_roomsGuest_invalidPromo_error"></span>
+      </span>
+      <a id="accessCode_link" class="control-focus txt-md-lr txt-black-three ls-x-sm editAccessCode"
+        (click)="isMultiProp ? onAccessCodeChangeGetHotels(accessCode, guestSummary) : onAccessCodeChange(accessCode, guestSummary)" tabindex="0" (keyup.enter)="$event.target.click()" attr.aria-label="{{accessCodeStatus}}" attr.aria-description="press enter key to apply {{localeObj.tf_1_Calendar_roomsGuests_promoCode}}" role="button"><span
+          [innerHTML]="accessCodeStatus | safeHtml"></span></a>
+    </span>
+  </div>
+</div>
+
+<app-ratecalendarlightbox #rateCal [checkinsummary]="guestSummary" (checkInSummaryChanged)="onCheckInSummaryChanged($event)" [isMultiProp]="isMultiProp" (multiPropertyCheckInSummaryChanged)="onMultiPropertyCheckInSummaryChanged($event)"></app-ratecalendarlightbox>

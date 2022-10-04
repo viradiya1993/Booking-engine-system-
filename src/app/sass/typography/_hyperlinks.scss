@@ -1,0 +1,21 @@
+@import "../../sass/variables/colors";
+
+.hyl-dark {
+  color: $black-three !important;
+  &:hover {
+    color: #2A6EBB !important;
+  }
+  &:visited {
+    color: $black-three !important;
+  }
+}
+
+.hyl-light {
+  color: white;
+  &:hover {
+    color: $sand-four;
+  }
+  &:visited {
+    color: white;
+  }
+}

@@ -1,0 +1,35 @@
+<div class="outlet-container mt-30 {{RTL_Flag ? 'text-right' : ''}}">
+  <h1 class="txt-xxx-lg-jb lh-32 txt-black-five mb-3"><strong [innerHTML]="localeObj.tf_5_Confirmation_manageBooking_manageBookingHeading | uppercase | safeHtml"></strong></h1>
+  <div class="mb-width">
+    <p [innerHTML]="localeObj.tf_5_Confirmation_manageBooking_manageBookingNote | safeHtml"></p>
+    <!-- <p [innerHTML]="localeObj.tf_5_Confirmation_manageBooking_reservationsCutoverNote | safeHtml"></p> -->
+    <div class="control-focus errDiv txt-lg-lr ls-x-sm txt-black" *ngIf="!isReservationValid" id="red-error" tabindex="0" triggers="focus" attr.aria-label="{{errorMsg}}">
+      <p class="contentClass" [innerHTML]="errorMsg | safeHtml"></p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="form-group row">
+      <label for="resIdInput" class="control-focus col-sm-3 p-0 txt-lg-lb txt-black-five ls-x-sm mb-label" [innerHTML]="localeObj.tf_5_Confirmation_manageBooking_reservationID | safeHtml"></label>
+      <div class="col-sm-6  p-0">
+        <input type="text" class="control-focus form-control txt-md-lr txt-black-three ls-x-sm" [(ngModel)]="reservationID" name="resIdInput" id="resIdInput" (focusout)="isReservationIdValid();resNumberTouched=true;">
+        <small class="error-msg" *ngIf="resNumberTouched && !isResIdValid" [innerHTML]="localeObj.tf_5_Confirmation_manageBooking_invalidReservationIDError | safeHtml"></small>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="emailInput" class="control-focus col-sm-3  p-0 txt-lg-lb txt-black-five ls-x-sm mb-label"><span [innerHTML]="localeObj.tf_5_Confirmation_manageBooking_emailID | safeHtml"></span></label>
+      <div class="col-sm-6  p-0">
+        <input type="text" class="control-focus form-control txt-md-lr txt-black-three ls-x-sm " [(ngModel)]="emailID" name="emailInput" id="emailInput" type="email" (keyup)="isEmailValid()" (focusout)="isEmailValid();emailInputTouched = true">
+        <small class="error-msg" *ngIf="emailInputTouched && isMailInvalid" [innerHTML]="localeObj.tf_5_Confirmation_manageBooking_invalidEmailAddressError | safeHtml"></small>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-3"></div>
+      <div class="col-sm-6  p-0">
+        <button class="control-focus btn mbs-button-primary enhance" type="button" [disabled]="!(isResIdValid && isSubmitButtonVisible)" (click)="routetomanagebooking()">
+          <span [innerHTML]="localeObj.tf_5_Confirmation_manageBooking_button_submit | uppercase | safeHtml"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

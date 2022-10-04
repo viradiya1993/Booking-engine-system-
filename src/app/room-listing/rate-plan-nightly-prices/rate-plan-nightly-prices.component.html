@@ -1,0 +1,29 @@
+<div *ngIf="totalPrice > 0" id="popover-nightly-rate-plan-{{index}}" class="control-focus Tooltip outer circle shapeborder circle-text outer-only" triggers="hover focus"
+  [popover]="tooltipTemplate" placement="bottom" #p="bs-popover" (document:click)="closeFix($event, p, collectPrice)" containerClass="tooltiptextCP rate-plan-nightly-prices"
+  container="body" tabindex="0" (keyup.enter)="$event.target.click()" role="link">i</div>
+<ng-template #tooltipTemplate>
+  <span class="tooltiptext">
+    <div *ngFor="let nightP of collectPrice" class="row">
+      <div class="txt-sm-lr txt-black-three ls-x-sm {{RTL_Flag ? 'ml-auto':'mr-auto'}}"> <span [innerHTML]="nightP.effectiveDateFormat | safeHtml"></span> </div>
+      <div class="txt-sm-lb txt-black-three ls-x-sm price {{RTL_Flag ? 'mr-auto':'ml-auto'}} pt-0">&nbsp;<span [innerHTML]="currCode | safeHtml"></span>&nbsp;<span [innerHTML]="(nightP.price + (addOnPrice / los))
+        | customPriceFormat : '' : currFilterValue | safeHtml"></span>
+      </div>
+    </div>
+    <div *ngIf="tax > 0" class="row border-bottom">
+      <div class="txt-sm-lr txt-black-three ls-x-sm w-50 {{RTL_Flag ? 'ml-auto':'mr-auto'}}" [innerHTML]="localeObj.tf_4_Checkout_priceSummery_taxAndServiceCharges | safeHtml"></div>
+      <div class="txt-sm-lb txt-black-three ls-x-sm price mt-auto {{RTL_Flag ? 'mr-auto':'ml-auto'}}"><span [innerHTML]="currCode | safeHtml"></span>&nbsp;<span [innerHTML]="tax | customPriceFormat: '':
+        currFilterValue | safeHtml"></span>
+      </div>
+    </div>
+    <div *ngIf="tax === 0" class="row border-bottom">
+      <div class="txt-sm-lr txt-black-three ls-x-sm {{RTL_Flag ? 'ml-auto':'mr-auto'}}" [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_inclusiveTaxes | safeHtml"></div>
+    </div>
+    <div class="row">
+      <div class="txt-lg-lb txt-black-three ls-x-sm {{RTL_Flag ? 'ml-auto pl-10':'mr-auto pr-10'}}" [innerHTML]="localeObj.tf_4_Checkout_priceSummery_total | titlecase | safeHtml"></div>
+      <div class="txt-lg-lb txt-black-three ls-x-sm price {{!RTL_Flag ? 'ml-auto':'mr-auto'}}"><span [innerHTML]="currCode | safeHtml"></span>&nbsp;<span [innerHTML]="(totalPrice) |
+        customPriceFormat: '' : currFilterValue | safeHtml"></span></div>
+    </div>
+    <p class="txt-sm-lr txt-black-three ls-x-sm mb-10" [innerHTML]="packagePriceDetails | safeHtml"></p>
+    <p class="txt-sm-lr txt-black-three ls-x-sm mb-10" *ngFor="let info of commentsAdded" [innerHTML]="info | safeHtml"></p>
+  </span>
+</ng-template>

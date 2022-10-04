@@ -1,0 +1,53 @@
+@import "../../sass/variables/colors";
+@import "../../sass/variables/font";
+
+.mbs-dropdown-primary {
+  position: relative;
+  .dropdown-toggle {
+    cursor: pointer;
+    padding: .75rem 1.5rem;
+    font-family: $font-secondary;
+    font-size: $font-size-medium;
+    color: $black-five !important;
+    letter-spacing: $letter-spacing-small;
+    font-weight: bold;
+    display: block;
+    position: relative;
+    &:after {
+      border: none;
+      background-image: url(/assets/icons/angle-down-br-grey.svg);
+      background-repeat: no-repeat;
+      width: 14px;
+      height: 14px;
+      vertical-align: middle;
+      position: absolute;
+      top: calc(50% - 5px);
+      right: 6px;
+    }
+  }
+  .dropdown-menu {
+    border: none;
+    border-radius: 0;
+    box-shadow: 0px 3px 5px 0 rgba(0, 0, 0, 0.1);
+    margin: 0;
+    min-width: auto;
+    width: 100%;
+    top: auto !important;
+    direction: ltr;
+    .dropdown-item {
+      font-family: $font-secondary;
+      font-size: $font-size-medium;
+      color: $black-three !important;
+      letter-spacing: $letter-spacing-x-small;
+    }
+  }
+  &.open {
+    background: white;
+    .dropdown-toggle {
+      box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.1);
+      &:after {
+        background-image: url(/assets/icons/angle-up-tan.svg);
+      }
+    }
+  }
+}

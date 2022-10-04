@@ -1,0 +1,113 @@
+<div class="collapse roomDetail" #roomDetails id="viewRoomDetail">
+  <div>
+    <div *ngIf="availableRoomRatePlans && availableRoomRatePlans.data != null && availableRoomRatePlans.data.length > 0">
+      <h5 class="txt-x-lg-lb lh-30 ls-1 txt-black-five {{RTL_Flag ? 'text-right':''}}" [innerHTML]="localeObj.tf_2_RoomList_ratePlans_chooseBedType | safeHtml"></h5>
+      <div class="row" id="noBorder">
+        <div *ngFor="let bedTypeRatePlan of selectedRoom.bedTypes; let i = index">
+          <div class="radio" (click)="setBedType(bedTypeRatePlan.bedTypeCode)">
+            <div class="mb-20" [ngClass]="{'radio-no-icon': bedTypeRatePlan.bedTypeImageURL === null,'radio-div': bedTypeRatePlan.bedTypeImageURL !== null ,'radio-div-selected': bedTypeRatePlan.bedTypeCode === bedtype}">
+              <label class="container d-flex lh-30">
+                <strong class="txt-lg-lb ls-1 txt-black-five" [innerHTML]="bedTypeRatePlan.bedTypeName | safeHtml"></strong>
+                <input class="control-focus" type="radio" [checked]="bedTypeRatePlan.bedTypeCode === bedtype" name="{{roomCode}}" value="{{bedTypeRatePlan.bedTypeCode}}">
+                <span class=" checkmark checkmark-{{bedTypeRatePlan.bedTypeCode}}"></span>
+              </label>
+              <div *ngIf="bedTypeRatePlan.bedTypeImageURL" for="option" class="beds">
+                <span>
+                  <img src="{{bedTypeRatePlan.bedTypeImageURL}}" style="height: 104px;padding-left: 25px;" alt="{{bedTypeRatePlan.bedTypeName}}">
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="multiroom-book p-0 d-flex flex-column align-items-center justify-content-center {{RTL_Flag ? 'mr-sm-auto':'ml-sm-auto'}}" *ngIf="isMultiRooms">
+          <div class="multiroom-book-inner">
+            <div>
+              <button class="control-focus btn mbs-button-primary" (click)="onMultiRoomSelected($event)" id="book">
+                <span [innerHTML]="localeObj.tf_3_MultiRoom_ratePlan_button_book | safeHtml"></span>
+              </button>
+            </div>
+            <div *ngIf="isNextRoomValid">
+              <small>
+                <b><span [innerHTML]="localeObj.tf_4_Checkout_addons_roomLc | safeHtml"></span>&nbsp;<span [innerHTML]="nextRoomNo + 1 | safeHtml"></span></b>:&nbsp;<span [innerHTML]="nextRoomAdults | safeHtml"></span>
+                <span *ngIf="nextRoomAdults === 1">&nbsp;<span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_adult | safeHtml"></span></span>
+                <span *ngIf="nextRoomAdults > 1">&nbsp;<span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_adults | safeHtml"></span></span>
+                <span *ngIf="nextRoomChildren > 0"><span [innerHTML]="localeObj.tf_3_MultiRoom_packageListing_comma || ',' | safeHtml"></span> <span [innerHTML]="nextRoomChildren | safeHtml"></span>
+                  <span *ngIf="nextRoomChildren === 1">&nbsp;<span [innerHTML]="localeObj.tf_2_RoomList_ratePlans_child | safeHtml"></span></span>
+                  <span *ngIf="nextRoomChildren > 1">&nbsp;<span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_children | safeHtml"></span></span>
+                </span>
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Choose Package -->
+      <h5 *ngIf="!isMultiRooms" class="txt-x-lg-lb ls-1 txt-black-five {{RTL_Flag ? 'text-right':''}}" [innerHTML]="localeObj.tf_2_RoomList_ratePlans_choosePackage | safeHtml"></h5>
+      <div *ngIf="availableRoomRatePlans && availableRoomRatePlans.data.length > 0 && !isMultiRooms">
+        <ul class="packageList" *ngFor="let bedTypeRatePlan of availableRoomRatePlans.data">
+          <li id="box" *ngFor="let ratePlan of bedTypeRatePlan.availableRatePlans;let i = index">
+            <div class="row rate-plan-card px-0" *ngIf="filteredRatePlan?.length === 0 ? true : filteredRatePlan.includes(ratePlan.name)">
+              <div class="col-lg-2 txt-lg-lb ls-1 txt-black-five py-3 {{RTL_Flag ? 'pl-0 pr-3':'pl-3 pr-0'}}" [innerHTML]="ratePlan.name | safeHtml"></div>
+              <div class="col-lg-5 px-3 pb-3 pt-lg-3 pt-md-0 pt-sm-0">
+                <div class="dprTagLine mt-0" id="dprTagLine1" *ngIf="isDpr1 && ratePlan.dprTagLine && ratePlan.dprTagLine.length > 0">
+                  <span class="sample"><img class="bell" src="/assets/icons/icon-noun-alert.png" alt="{{ratePlan.dprTagLine}}"></span>
+                  <span class="txt-sm-lr lh-24 mr-2 dprText" [innerHTML] = "ratePlan.dprTagLine | safeHtml"></span>
+                </div>
+                <div class="txt-lg-lr txt-black-five ls-1" [innerHTML]="ratePlan?.description"></div>
+                <!-- <ul>
+                  <li class="txt-lg-lr txt-black-five ls-1 circle-bullet" *ngFor="let desc of ratePlan.description">
+                    {{desc}}
+                  </li>
+                </ul> -->
+                <div><app-rate-plan-details [ratePlan]=ratePlan></app-rate-plan-details></div>
+                <div class="dprTagLine" id="dprTagLine2" *ngIf="isDpr2 && ratePlan.dprTagLine && ratePlan.dprTagLine.length > 0">
+                  <span class="sample"><img class="bell" src="/assets/icons/icon-noun-alert.png" alt="{{ratePlan.dprTagLine}}"></span>
+                  <span class="txt-sm-lr lh-24 dprText" [innerHTML] = "ratePlan.dprTagLine | safeHtml"></span>
+                </div>
+                <!-- <a class ="viewDetails" href="View Details Page">View details</a> -->
+              </div>
+              <div class="row col-lg-5 pricing p-3">
+                <div class="px-0 {{RTL_Flag ? 'ml-auto':'mr-auto'}}">
+                  <div class="rateplan-pricing discounted-price" *ngIf="getDiscountedRatePlanPrice(ratePlan)">
+                    <del class="txt-lg-lr ls-x-sm txt-black-three"><span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="getAvgRatePlanPrice(ratePlan)
+                      + ((ratePlan.lowestUnitAddOnPrice[currFilterValue] || 0) * guests/guestSummary.los) | customPriceFormat :
+                      '': currFilterValue | safeHtml"></span></del>
+                  </div>
+                  <div class="rateplan-pricing">
+                    <strong class="txt-x-lg-lb ls-1 txt-black">
+                      <!-- {{(ratePlan.discountedAveragePriceByCurrency[currFilterValue] || ratePlan.averagePriceByCurrency[currFilterValue])}}
+                        {{(ratePlan.lowestUnitAddOnPrice[currFilterValue] || 0)}}
+                        {{guests/guestSummary.los}} -->
+                      <span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="(getDiscountedRatePlanPrice(ratePlan) || ratePlan.formattedAveragePriceByCurrency[currFilterValue])
+                      + ((ratePlan.formattedLowestUnitAddOnPrice[currFilterValue] || 0) * guests/guestSummary.los) | customPriceFormat :'': currFilterValue | safeHtml"></span>
+                    </strong>
+                    <span class="txt-sm-lr ls-x-sm txt-black-three" [innerHTML]="localeObj.tf_2_RoomList_ratePlans_avgPerNightText | safeHtml" *ngIf="showAverageNightlyRate"></span>
+                    <span *ngIf="!showAverageNightlyRate">&nbsp;</span><span class="txt-sm-lr ls-x-sm txt-black-three" [innerHTML]="localeObj.tf_2_RoomList_rooms_label_perStay | safeHtml" *ngIf="!showAverageNightlyRate"></span>
+                    <app-rate-plan-nightly-prices [index]="roomCode + ratePlan.code" [ratePlan]=ratePlan></app-rate-plan-nightly-prices>
+                  </div>
+                  <div class="dprTagLine" id="dprTagLine3" *ngIf="isDpr3 && ratePlan.dprTagLine && ratePlan.dprTagLine.length > 0">
+                    <span class="sample"><img class="bell" src="/assets/icons/icon-noun-alert.png" alt="{{ratePlan.dprTagLine}}"></span>
+                    <span class="txt-sm-lr lh-24 dprText" [innerHTML] = "ratePlan.dprTagLine | safeHtml"></span>
+                  </div>
+                  <ng-template #popoverTemp><div [innerHTML]="(ratePlan.cancellationPolicy !== null && ratePlan.cancellationPolicy.length > 0) ? ratePlan.cancellationPolicy : '' | safeHtml"></div></ng-template>
+                  <div id="{{roomCode + ratePlan.code}}" triggers="hover focus" #p="bs-popover" (document:click)="closeFix($event, p, roomCode + ratePlan.code)"
+                    class="control-focus TooltipCP rateplan-pricing txt-x-sm-lr txt-black-three mb-3" [popover]="popoverTemp"
+                    placement="bottom" containerClass="tooltiptextCP select-room" container="body" *ngIf="(ratePlan.cancellationPolicy !== null && ratePlan.cancellationPolicy.length > 0)" [innerHTML]="localeObj.tf_2_RoomList_ratePlan_cancellationPolicy | safeHtml" tabindex="0" (keyup.enter)="$event.target.click()" attr.aria-label="{{(ratePlan.cancellationPolicy !== null && ratePlan.cancellationPolicy.length > 0) ? ratePlan.cancellationPolicy : ''}}" role="link">
+                  </div>
+                </div>
+                <div class="p-0 {{RTL_Flag === false ? 'ml-auto':'mr-auto'}} mbs-button-primary-wrapper">
+                  <!-- else directly go for card details  -->
+                  <button class="control-focus btn mbs-button-primary pull-right pull-right" (click)="onRoomSelected($event, ratePlan, bedTypeRatePlan)" id="r_btn_book_{{i}}" attr.aria-label="{{localeObj.tf_3_MultiRoom_ratePlan_button_book}}">
+                    <span [innerHTML]="localeObj.tf_3_MultiRoom_ratePlan_button_book | safeHtml" aria-hidden="true"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- <br> -->
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- open only for lion king package (lionKingPackageSelected)="onLionKingPackageSelected($eventData)" -->
+<app-add-ons #lionKingComponent (lionKingPackageSelected)="onLionKingPackageSelected($event)"></app-add-ons>

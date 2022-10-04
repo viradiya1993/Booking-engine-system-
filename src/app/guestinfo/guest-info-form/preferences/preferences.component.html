@@ -1,0 +1,309 @@
+<div class="prefDiv">
+  <div *ngIf="showPref && preferencesData && preferencesData.length > 0">
+    <div *ngFor="let roomPreferences of preferencesData; let i = index">
+      <h4 id="RoomPreference{{i}}" *ngIf="source !== 'confirmation' && roomPreferences && roomPreferences.length > 0"
+        class="mt-30 col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0">
+        <span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_room | safeHtml"></span>&nbsp;<span [innerHTML]="i+1 | safeHtml"></span>: <span [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_preferences | safeHtml"></span></h4>
+      <h4 *ngIf="source === 'confirmation' && roomIndex > -1 && roomPreferences && roomPreferences.length > 0"
+        class="col-sm-12 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0">
+        <!-- <span [innerHTML]="RoomType | safeHtml"></span>
+        <span [innerHTML]="roomIndex+1 | safeHtml"></span>: -->
+        <span [innerHTML]="RoomType | safeHtml"></span> - <span [innerHTML]="ViewType | safeHtml"></span>&nbsp;<span>(<span [innerHTML]="BedTypeName | safeHtml"></span>)</span>&nbsp;<span class="separetor-color">|</span>&nbsp;<span [innerHTML]="guestdetailsString[i] | safeHtml"></span>
+        <br><br>
+        <span [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_preferences | safeHtml"></span></h4>
+      <small *ngIf="roomPreferences && roomPreferences.length > 0" class="required control-label"><span [innerHTML]="localeObj.tf_4_Checkout_preferences_compulsoryFields | safeHtml"></span></small>
+      <div class="RoomPreference{{i}}" *ngIf="roomPreferences && roomPreferences.length > 0">
+        <div *ngFor="let preference of roomPreferences; let j = index">
+          <!-- Time based preferences-->
+          <div *ngIf="preference.preferenceType === 'time'">
+            <!-- prequestion starts -->
+            <div class="form-group row" *ngIf="preference.isPreQuestionRequired">
+              <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0">
+                <span [innerHTML]="preference.preQuestionText | safeHtml"></span><span class="error-msg" *ngIf="preference.requiredObj.require">*</span>
+              </label>
+              <span *ngFor="let preOption of preference.preQuestionOptions">
+                <label class="form-check mbs-radio-primary form-check-inline cursor-pointer" tabindex="0">
+                  <input class="control-focus form-check-input" type="radio"
+                    [checked]="preference.selected_preOptionID === preOption.optionId" id="preOption.optionId"
+                    (click)="updatePreQuestionData(i, preference, preOption, preference.preQuestionId)">
+                  <span class="radio mr-1"></span>
+                  <span [innerHTML]="preOption.optionValue | safeHtml"></span>
+                </label>
+              </span>
+            </div>
+            <!-- prequestion end -->
+            <!-- main question starts -->
+            <!-- <div class="form-group row" *ngIf="!preference.isPreQuestionRequired || (preference.isPreQuestionRequired && preference.selected_showMainQuestionValue)">
+              <label class="col-sm-4 ques-label col-form-label txt-lg-lb txt-black-five ls-x-sm p-0">
+                {{preference.questionText}}<span class="error-msg" *ngIf="preference.requiredObj.require">*</span>
+              </label>
+              <div class="col-sm-8 row pr-0 arrival-time">
+                <div class="col-sm-3 time-dropdown-menu mbs-dropdown-primary " dropdown>
+                  <a dropdownToggle class="dropdown-toggle" tabindex="0">
+                    {{preference.selected_time.time}}
+                  </a>
+                  <ul *dropdownMenu class="dropdown-menu">
+                    <li class="dropdown-item" *ngFor="let timeOpt of preference.timeOptArr" (click)="updateTime(i, timeOpt, preference.questionID)">
+                      {{timeOpt.time}}
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-sm-3 time-dropdown-menu ">
+                <ng-select name="ArrivalTimedd" [(ngModel)]="preference.selected_time.time" class="dropdown mbs-dropdown-primary custom"
+                  [items]="preference.timeOptArr" [multiple]="false" bindLabel="time" [closeOnSelect]="true"
+                  bindValue="time" (change)="updateTime(i, $event, preference.questionID)" [clearable]="false" [searchable]="false">
+                </ng-select>
+                </div>
+                <div class="col-sm-2 AMPM-dropdown-menu mbs-dropdown-primary mr-10" dropdown>
+                  <a dropdownToggle class="dropdown-toggle" tabindex="0">
+                    {{preference.selected_am_pm}}
+                  </a>
+                  <ul *dropdownMenu class="dropdown-menu">
+                    <li class="dropdown-item" *ngFor="let am_pm_Opt of preference.am_pm_Opt" (click)="updateTimeAMPM(i, am_pm_Opt, preference.questionID)">
+                      {{am_pm_Opt}}
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-sm-2 AMPM-dropdown-menu mbs-dropdown-primary mr-10">
+                <ng-select name="ArrivalAMPMdd" [(ngModel)]="preference.selected_am_pm" class="dropdown mbs-dropdown-primary custom"
+                  [items]="preference.am_pm_Opt" [multiple]="false" bindLabel="time" [closeOnSelect]="true"
+                  bindValue="time" (change)="updateTimeAMPM(i, $event, preference.questionID)" [clearable]="false" [searchable]="false">
+                </ng-select>
+                </div>
+                <div class="col-sm-7 px-0 arrival-time-info" *ngIf="preference.extraInformation">
+                  <small class="control-label">{{preference.extraInformation}}</small>
+                </div>
+              </div>
+            </div> -->
+            <div class="form-group row"
+              *ngIf="!preference.isPreQuestionRequired || (preference.isPreQuestionRequired && preference.selected_showMainQuestionValue)">
+              <label class="col-sm-4 ques-label col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="ArrivalTime">
+                <span [innerHTML]="preference.questionText"></span>
+                <span tabindex="0" class="error-msg" *ngIf="preference.requiredObj.require">*</span>
+              </label>
+              <div class="col-sm-8 row pr-0 arrival-time">
+                <div class="col-sm-3 time-dropdown-menu ">
+                  <ng-select name="ArrivalTimedd" [(ngModel)]="preference.selected_time.time"
+                    class="dropdown mbs-dropdown-primary custom" [items]="preference.timeOptArr" [multiple]="false"
+                    bindLabel="time" [closeOnSelect]="true" bindValue="time" [placeholder]="localeObj.tf_4_Checkout_preferences_preferencesHoursMinutes"
+                    (change)="updateTime(i, $event, preference.questionID)" [clearable]="false" [searchable]="false" [labelForId]="'ArrivalTime'">
+                  </ng-select>
+                </div>
+                <!-- <div class="col-sm-3 time-dropdown-menu mbs-dropdown-primary " dropdown>
+                  <a dropdownToggle class="dropdown-toggle" tabindex="0">
+                    {{preference.selected_time.time}}
+                  </a>
+                  <ul *dropdownMenu class="dropdown-menu">
+                    <li class="dropdown-item" *ngFor="let timeOpt of preference.timeOptArr"
+                      (click)="updateTime(i, timeOpt, preference.questionID)">
+                      {{timeOpt.time}}
+                    </li>
+                  </ul>
+                </div> -->
+                <div class="col-sm-7 px-0 arrival-time-info" *ngIf="preference.extraInformation">
+                  <small class="control-label" [innerHTML]="preference.extraInformation | safeHtml"></small>
+                </div>
+              </div>
+            </div>
+            <div class="row" *ngIf="!validationFailure && preference.requiredObj.require && !preference.requiredObj.changed">
+              <span class="col-sm-4"></span>
+              <small tabindex="0" class="col-sm-6 error-msg" [innerHTML]="localeObj?.tf_4_Checkout_preferences_preferenceReqError | safeHtml"></small>
+            </div>
+            <!-- main question end -->
+          </div>
+          <!-- Other preferences-->
+          <div *ngIf="preference.preferenceType === 'preference'">
+            <!-- prequestion starts -->
+            <div class="form-group row" *ngIf="preference.isPreQuestionRequired">
+              <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0">
+                <span [innerHTML]="preference.preQuestionText | safeHtml"></span><span class="error-msg" *ngIf="preference.requiredObj.require">*</span>
+              </label>
+              <span *ngFor="let preOption of preference.preQuestionOptions">
+                <label class="form-check mbs-radio-primary form-check-inline cursor-pointer" tabindex="0">
+                  <input class="control-focus form-check-input" type="radio"
+                    [checked]="preference.selected_preOptionID === preOption.optionId" id="preOption.optionId"
+                    (click)="updatePreQuestionData(i, preference, preOption, preference.preQuestionId)">
+                  <span class="radio mr-1"></span>
+                  <span [innerHTML]="preOption.optionValue | safeHtml"></span>
+                </label>
+              </span>
+            </div>
+            <!-- prequestion end -->
+            <!-- main question starts -->
+            <div class="form-group row" *ngIf="preference.questionType === 'freeText' || !preference.isPreQuestionRequired || (preference.isPreQuestionRequired && preference.selected_showMainQuestionValue)">
+              <label class="col-sm-4 ques-label col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" attr.for="PrefInput{{j}}">
+                <span tabindex="0" [innerHTML]="preference.questionText | safeHtml"></span><span class="error-msg" *ngIf="preference.requiredObj.require">*</span>
+              </label>
+              <div class="col-sm-6">
+                <!-- Free Text Type -->
+                <textarea attr.id="PrefInput{{j}}" class="form-control txt-md-lr txt-black-three ls-x-sm"
+                  *ngIf="preference.questionType === 'freeText'"
+                  (change)="updateFreeText($event, preference.questionID, i)"
+                  (blur)="checkBlankSpaceValidation($event.target.value, preference)"
+                  [(ngModel)]="preference.selected_optionValues" tabindex="0"></textarea>
+                  <span tabindex="0" class="error-msg" *ngIf="(validationFailure && preference.questionType === 'freeText' && preference.requiredObj && preference.requiredObj.showReqError)">{{preferenceErrorMessage}}</span>
+                <!-- Multiple Select Dropdown Type -->
+                <div attr.id="PrefInput{{j}}" *ngIf="preference.questionType==='multiple'">
+                  <!-- <ng-multiselect-dropdown [settings]="preference.settings" [data]="preference.options"
+                    (onSelect)="onMultiDropDownItemSelect($event, preference.questionID, i)"
+                    (onDeSelect)="onMultiDropDownItemDeSelect($event, preference.questionID, i)" tabindex="0"
+                    [(ngModel)]="preference.multiSelectOptions" [placeholder]="localeObj.tf_4_Checkout_preferences_noPreference">
+                  </ng-multiselect-dropdown> -->
+                  <ng-select name="MultiSelectdd" [(ngModel)]="preference.multiSelectOptions" placeholder="{{localeObj.tf_4_Checkout_preferences_noPreference}}" class="mbs-dropdown-primary custom"
+                    [items]="preference.options" [multiple]="true" [closeOnSelect]="false" bindLabel="optionValue"
+                    bindValue="id" (change)="onMultiDropDownItemSelect($event, preference.questionID, i)"
+                    [clearable]="true" [searchable]="false" labelForId="PrefInput{{j}}" [compareWith]="selectedPreferenceFn" [openOnEnter]="true" [tabIndex]="0" [clearOnBackspace]="true" [maxSelectedItems]="preference.settings.limitSelection">
+                    <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> 
+                      <span class="pl-2">{{item.optionLabel}}</span>
+                    </ng-template>
+                  </ng-select>
+                </div>
+                <!-- Single Select Dropdown Type -->
+                <!-- <div id="PrefInput" class="mbs-dropdown-primary" *ngIf="preference.questionType === 'single'" dropdown>
+                  <a *ngIf="preference.selected_optionValues === null || preference.selected_optionValues.length === 0"
+                    dropdownToggle class="dropdown-toggle" tabindex="0" [class.disabled]="preference.readOnly && preference.nonEditableOptionID.length > 0 ">
+                    {{localeObj.tf_4_Checkout_preferences_noPreference}}
+                  </a>
+                  <a *ngIf="preference.selected_optionValues !== null && preference.selected_optionValues.length > 0"
+                    dropdownToggle class="dropdown-toggle" tabindex="0" [class.disabled]="preference.readOnly && preference.nonEditableOptionID.length > 0">
+                    {{preference.selected_optionValues}}
+                  </a>
+                  <ul *dropdownMenu class="dropdown-menu occasion-dd">
+                    <li class="dropdown-item" *ngFor="let opt of preference.options" [value]="opt.optionValue" (click)="updateSingleSelect(i, preference.questionID, opt)">
+                      {{opt.optionValue}}
+                    </li>
+                  </ul>
+                </div> -->
+                <div *ngIf="preference.questionType === 'single'">
+                  <ng-select name="SingleSelectdd" [(ngModel)]="preference.selected_optionValues"
+                    placeholder="{{localeObj.tf_4_Checkout_preferences_noPreference}}" class="mbs-dropdown-primary custom"
+                    [items]="preference.options" [multiple]="false" bindLabel="optionValue" [closeOnSelect]="true"
+                    bindValue="optionValue" (change)="updateSingleSelect(i, preference.questionID, $event)"
+                    [clearable]="false" [searchable]="false" labelForId="PrefInput{{j}}"></ng-select>
+                </div>
+              </div>
+            </div>
+            <div class="row"
+              *ngIf="!validationFailure && preference.requiredObj.require && !preference.requiredObj.changed && !isValidText">
+              <span class="col-sm-4"></span>
+              <small tabindex="0" class="col-sm-6 error-msg" [innerHTML]="localeObj?.tf_4_Checkout_preferences_preferenceReqError | safeHtml"></small>
+            </div>
+            <!-- main question end -->
+          </div>
+        </div>
+        <div class="form-group row">
+          <span class="col-sm-4"></span>
+          <small class="col-sm-6 control-label" [innerHTML]="guestPreferenceDisclaimer | safeHtml"></small>
+        </div>
+        <div class="form-group row" *ngIf="showDoneBtn">
+          <span class="col-sm-4"></span>
+          <div class="col-sm-6">
+            <button class="control-focus btn mbs-button-primary enhance" type="button"
+              (click)="changePreference()"><span [innerHTML]="localeObj?.tf_1_Calendar_rateCalender_done | safeHtml"></span></button>
+          </div>
+        </div>
+      </div>
+
+<!-- start--  additional guest Section -->
+      <!-- <div class="form-group row" *ngIf="checkAddGuestNamesVisibility(i, true) && isRoomPrefsAvailable(roomPreferences)">
+        <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0"></label>
+        <div class="col-sm-8" ><a href="#" (click)="toggleAddtionalGuests(i)" (keyup.enter)="toggleAddtionalGuests(i)" [innerHTML]="localeObj.tf_4_Checkout_AdditionalGuests_link_add | safeHtml"></a></div>
+      </div> -->
+
+      <div class="form-group row" *ngIf="checkAddGuestNamesVisibility(i, true)">
+        <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0"></label>
+        <div class="col-sm-8" ><a href="#" (click)="toggleAddtionalGuests(i)" (keyup.enter)="toggleAddtionalGuests(i)" [innerHTML]="getMessage(localeObj.tf_4_Checkout_AdditionalGuests_link_add_perRoom, [i+1])"></a></div>
+      </div>
+
+      <div class="prefDiv_{{i}}">
+        <div *ngIf="displayAdditionalGuests && showAdditionalGuests[i] && toggleAddGuestsAddRemove[i] && addtionalGuestInfoByRoom[i] && addtionalGuestInfoByRoom[i].length > 0">
+          <div *ngFor="let guest of addtionalGuestInfoByRoom[i]; index as k">
+            <h4 class="mt-30 col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0">
+            <span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_room | safeHtml"></span>&nbsp;<span [innerHTML]="i+1 | safeHtml"></span>: <span [innerHTML]="localeObj.tf_4_Checkout_AdditionalGuests_label_guest | safeHtml"></span>&nbsp;<span>{{k + 2}}</span></h4>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="Room{{i}}Guest{{k + 2}}FirstName"> <span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_firstName | safeHtml"></span>
+                  <p class="txt-sm-lb ls-x-sm txt-br-grey d-inline-block">(<span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_asInPassport | safeHtml"></span>)</p>
+                </label>
+                <div class="col-sm-8" [ngClass]="{'error': isAddGuestFirstNameValid[i][k] !== undefined && !isAddGuestFirstNameValid[i][k]}" >
+                  <input class="form-control txt-md-lr txt-black-three ls-x-sm" [attr.maxlength]="firstNameMaxLength" [(ngModel)]="guest.first_name" name="guest.first_name" id="Room{{i}}Guest{{k + 2}}FirstName" 
+                    placeholder="{{localeObj.tf_4_Checkout_guestDetails_firstNameHelptext}}" tabindex="0" autocomplete="nope" (change)="isAddtionalGuestNameValid('firstName',guest.first_name, k, i)" aria-describedby="Room{{i}}Guest{{k + 2}}FirstName_Err">
+                  <small tabindex="0" id="Room{{i}}Guest{{k + 2}}FirstName_Err" class="error-msg ScrollToElement" *ngIf="isAddGuestFirstNameValid[i][k] !== undefined && !isAddGuestFirstNameValid[i][k]" [innerHTML]="isAddGuestFirstNameFieldError[i][k] | safeHtml"></small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="Room{{i}}Guest{{k + 2}}LastName">
+                  <span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_lastName | safeHtml"></span>
+                  <p class="txt-sm-lb ls-x-sm txt-br-grey d-inline-block">(<span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_asInPassport | safeHtml"></span>)</p>
+                 
+                </label>
+                <div class="col-sm-8" [ngClass]="{'error': isAddGuestLastNameValid[i][k] !== undefined && !isAddGuestLastNameValid[i][k]}" >
+                  <input class="form-control txt-md-lr txt-black-three ls-x-sm" [attr.maxlength]="lastNameMaxLength" [(ngModel)]="guest.last_name" name="guest.last_name" id="Room{{i}}Guest{{k + 2}}LastName"  
+                    placeholder="{{localeObj.tf_4_Checkout_guestDetails_lastNameHelptext}}" tabindex="0" autocomplete="nope" (change)="isAddtionalGuestNameValid('lastName',guest.last_name, k, i)" aria-describedby="Room{{i}}Guest{{k + 2}}LastName_Err">
+                  <small tabindex="0" id="Room{{i}}Guest{{k + 2}}LastName_Err" class="error-msg ScrollToElement" *ngIf="isAddGuestLastNameValid[i][k] !== undefined && !isAddGuestLastNameValid[i][k]" [innerHTML]="isAddGuestLasttNameFieldError[i][k] | safeHtml"></small>
+                </div>
+              </div>
+          </div>
+      </div>
+      </div>
+      <!-- <div class="form-group row" *ngIf="checkAddGuestNamesVisibility(i, false) && isRoomPrefsAvailable(roomPreferences)">
+        <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0"></label>
+        <div class="col-sm-8" ><a href="#" (click)="toggleAddtionalGuests(i)" (keyup.enter)="toggleAddtionalGuests(i)" [innerHTML]="localeObj.tf_4_Checkout_AdditionalGuests_link_remove | safeHtml"></a></div>
+      </div> -->
+
+      <div class="form-group row" *ngIf="checkAddGuestNamesVisibility(i, false)">
+        <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0"></label>
+        <div class="col-sm-8" ><a href="#" (click)="toggleAddtionalGuests(i, true)" (keyup.enter)="toggleAddtionalGuests(i,true)" [innerHTML]="getMessage(localeObj.tf_4_Checkout_AdditionalGuests_link_remove_perRoom, [i+1])"></a></div>
+      </div>
+<!-- end -- addtional guest section -->
+
+    </div>
+  </div>
+
+  <div *ngIf="!isPrefsAvailable() && (rooms && rooms.length > 0)">
+    <div *ngFor="let room of rooms; let i = index">
+        <!-- start--  additional guest Section -->
+        <div class="form-group row" *ngIf="checkAddGuestNamesVisibility(i, true)">
+          <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0"></label>
+          <div class="col-sm-8" ><a href="#" (click)="toggleAddtionalGuests(i)" (keyup.enter)="toggleAddtionalGuests(i)" [innerHTML]="getMessage(localeObj.tf_4_Checkout_AdditionalGuests_link_add_perRoom, [i+1])"></a></div>
+        </div>
+
+        <div class="prefDiv_{{i}}">
+          <div *ngIf="displayAdditionalGuests && showAdditionalGuests[i] && toggleAddGuestsAddRemove[i] && addtionalGuestInfoByRoom[i] && addtionalGuestInfoByRoom[i].length > 0">
+            <div *ngFor="let guest of addtionalGuestInfoByRoom[i]; index as k">
+              <h4 class="mt-30 col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0">
+              <span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_room | safeHtml"></span>&nbsp;<span [innerHTML]="i+1 | safeHtml"></span>: <span [innerHTML]="localeObj.tf_4_Checkout_AdditionalGuests_label_guest | safeHtml"></span>&nbsp;<span>{{k + 2}}</span></h4>
+                <div class="form-group row">
+                  <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="Room{{i}}Guest{{k + 2}}FirstName"> <span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_firstName | safeHtml"></span>
+                    <p class="txt-sm-lb ls-x-sm txt-br-grey d-inline-block">(<span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_asInPassport | safeHtml"></span>)</p>
+                  </label>
+                  <div class="col-sm-8" [ngClass]="{'error': isAddGuestFirstNameValid[i][k] !== undefined && !isAddGuestFirstNameValid[i][k]}" >
+                    <input class="form-control txt-md-lr txt-black-three ls-x-sm" [attr.maxlength]="firstNameMaxLength" [(ngModel)]="guest.first_name" name="guest.first_name" id="Room{{i}}Guest{{k + 2}}FirstName"  
+                      placeholder="{{localeObj.tf_4_Checkout_guestDetails_firstNameHelptext}}" tabindex="0" autocomplete="nope" (change)="isAddtionalGuestNameValid('firstName',guest.first_name, k, i)" aria-describedby="Room{{i}}Guest{{k + 2}}FirstName_Err">
+                    <small tabindex="0" id="Room{{i}}Guest{{k + 2}}FirstName_Err" class="error-msg ScrollToElement" *ngIf="isAddGuestFirstNameValid[i][k] !== undefined && !isAddGuestFirstNameValid[i][k]" [innerHTML]="isAddGuestFirstNameFieldError[i][k] | safeHtml"></small>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0" for="Room{{i}}Guest{{k + 2}}LastName">
+                    <span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_lastName | safeHtml"></span>
+                    <p class="txt-sm-lb ls-x-sm txt-br-grey d-inline-block">(<span [innerHTML]="localeObj.tf_4_Checkout_guestDetails_asInPassport | safeHtml"></span>)</p>
+                  
+                  </label>
+                  <div class="col-sm-8" [ngClass]="{'error': isAddGuestLastNameValid[i][k] !== undefined && !isAddGuestLastNameValid[i][k]}" >
+                    <input class="form-control txt-md-lr txt-black-three ls-x-sm" [attr.maxlength]="lastNameMaxLength" [(ngModel)]="guest.last_name" name="guest.last_name" id="Room{{i}}Guest{{k + 2}}LastName"  
+                      placeholder="{{localeObj.tf_4_Checkout_guestDetails_lastNameHelptext}}" tabindex="0" autocomplete="nope" (change)="isAddtionalGuestNameValid('lastName',guest.last_name, k, i)" aria-describedby="Room{{i}}Guest{{k + 2}}LastName_Err">
+                    <small tabindex="0" id="Room{{i}}Guest{{k + 2}}LastName_Err" class="error-msg ScrollToElement" *ngIf="isAddGuestLastNameValid[i][k] !== undefined && !isAddGuestLastNameValid[i][k]" [innerHTML]="isAddGuestLasttNameFieldError[i][k] | safeHtml"></small>
+                  </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="form-group row" *ngIf="checkAddGuestNamesVisibility(i, false)">
+          <label class="col-sm-4 col-form-label txt-lg-lb txt-black-five ls-x-sm p-0"></label>
+          <div class="col-sm-8" ><a href="#" (click)="toggleAddtionalGuests(i, true)" (keyup.enter)="toggleAddtionalGuests(i, true)" [innerHTML]="getMessage(localeObj.tf_4_Checkout_AdditionalGuests_link_remove_perRoom, [i+1])"></a></div>
+        </div>
+      <!-- end -- addtional guest section -->
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,103 @@
+@import "../../../sass/typography/font";
+
+.guest-duration {
+  padding: 30px 20px;
+  .separator {
+    width: 1px;
+    height: 28px;
+  }
+  &.d-md-none {
+    .separator {
+      width: 100%;
+      height: 1px;
+    }
+  }
+}
+
+.promo-guest-summary {
+  padding: 0px;
+}
+
+a {
+  text-decoration: underline;
+  margin-top: -5px;
+  font-family: $font-primary;
+  font-size: $font-size-medium;
+  color: $black-three;
+  letter-spacing: $letter-spacing-x-small;
+  &:hover {
+    color: $sand-three;
+    text-decoration: underline;
+  }
+  &:visited {
+    color: $black-three;
+  }
+}
+
+.accessCode {
+  margin-top: -2px;
+}
+
+.form-control {
+  width:auto;
+  border-radius: 8px !important;
+  margin-top:-6px;
+  @media only screen and (max-width: 576px) {
+    width: 250px;
+  }
+  @media only screen and (max-width: 320px) {
+    width: 210px;
+  }
+}
+
+.editAccessCode {
+  margin-top: 2px;
+}
+
+#accessCode_link {
+  cursor: pointer;
+}
+
+.error-message {
+  color: red;
+  text-align: left !important;
+  display: block;
+  padding: 7px;
+  position: relative;
+  top: -20px;
+}
+:host-context(body[dir="rtl"]) {
+  .error-message {
+    text-align: right !important;
+  }
+}
+
+.accessCodeInput {
+  height: 0px;
+}
+
+.mobilePromoField {
+  background-image: linear-gradient(to left, #FFF 0%, #FFF 100%);
+}
+
+.los {
+  cursor: pointer;
+}
+
+#guestDuration {
+  display: block;
+  @media only screen and (max-width: 767px) {
+    display: none !important;
+  }
+}
+
+.promo-multiprop {
+  padding: 0 20px 30px;
+  @media only screen and (max-width: 768px) {
+    padding: 0 20px 15px;
+  }
+}
+
+a:hover {
+  color: #2a6ebb;
+}

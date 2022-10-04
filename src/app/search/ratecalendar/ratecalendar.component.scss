@@ -1,0 +1,350 @@
+@import "../../../sass/variables/colors";
+.rate-calendar-inner-content {
+  border: 1px solid $white-six;
+  .left-panel {
+    width: 100%;
+    .monthlyCal {
+      height: 530px;
+      overflow-y: scroll;
+      .month {
+        &:first-child {
+          margin-top: 0 !important;
+        }
+      }
+      .pastDate,
+      .notAvailableDate {
+        color: #4B5050;
+        background: repeating-linear-gradient(-45deg, #eee, #eee 1px, #fff 2px, #fff 4px);
+        box-shadow: inset 1px 1px 0 #fff;
+        cursor: pointer;
+        pointer-events: none;
+        h5 {
+          color: $greyish;
+        }
+      }
+      .checkOutAllowed {
+        background-color: white;
+        margin: 0px;
+        cursor: auto !important;
+        pointer-events:visible !important;
+        h5 {
+          color: $greyish;
+        }
+      }
+      .notAvailableDay {
+        pointer-events: none;
+      }
+      .partOfSelection {
+        background-color: #deddd3;
+        margin: 0px;
+      }
+      .mandatoryToSelect {
+        color: red;
+      }
+      .hoverStyling {
+        background-color: #85beff54;
+        margin: 0px;
+      }
+      .notPartOfSelection {
+        cursor: pointer;
+        pointer-events: none;
+        h5 {
+          color: $greyish;
+        }
+        span {
+          color: $greyish;
+        }
+      }
+      .availableForSelection {
+        background-color: #85beff54;
+        margin: 0px;
+      }
+      .start-end-date {
+        color: white;
+        .text-muted-cal {
+          color: white;
+        }
+      }
+      .checkinNotAllowed {
+        color: #4B5050;
+        background: linear-gradient(to bottom right, #eee 50%, white 50%);
+        border: 1px solid #DCDCDC;
+        .text-muted-cal {
+          color: #303030;
+        }
+      }
+      .checkoutNotAllowed {
+        color: #4B5050;
+        background: linear-gradient(to top left, #eee 50%, white 50%);
+        border: 1px solid #DCDCDC;
+        .txt-black-two {
+          color: #303030;
+        }
+        .txt-warm-grey-two {
+          color: #717171;
+        }
+      }
+      .firstSelectedDate {
+        background-color: $warm-grey;
+        color: #fff;
+      }
+      .lastSelectedDate {
+        background-color: $warm-grey;
+        color: #fff;
+      }
+      .weekdays li {
+        width: 14.25%;
+        text-align: center;
+      }
+      /* Days (1-31) */
+      .days {
+        padding: 2px 0;
+        margin: 0;
+        li {
+          width: 14.25%;
+          height: 70px;
+          cursor: pointer;
+          span {
+            word-wrap: break-word;
+          }
+        }
+      }
+      .calendarCellContent {
+        height: 100%;
+      }
+    }
+    @media only screen and (max-width: 767px) {
+      .monthlyCal {
+        .days {
+          li {
+            span {
+              font-size: 10px;
+              padding: 0 1px !important;
+            }
+          }
+        }
+      }
+    }
+    @media only screen and (max-width: 350px) {
+      .monthlyCal {
+        .days {
+          li {
+            span {
+              font-size: 9px;
+              padding: 0 1px !important;
+            }
+          }
+        }
+      }
+    }
+    @media only screen and (min-width: 992px) {
+      width: 68%;
+    }
+  }
+  .right-panel {
+    margin: 0;
+    width: 100%;
+    border-top: 1px solid #dee2e6;
+    .rate-cal-counter {
+      padding-top: 5px;
+      .input-group-text {
+        background-color: white;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .form-control {
+        background-color: white;
+        border-right: none !important;
+        border-left: none !important;
+        margin-left: -2px;
+        margin-right: -2px;
+        text-align: center;
+      }
+    }
+    @media only screen and (min-width: 992px) {
+      width: 32%;
+      border-top: none;
+      border-left: 1px solid #dee2e6;
+    }
+  }
+}
+
+.modal-footer {
+  background: linear-gradient(to right, #e7e7e7, #f1f1f1 48%, white);
+  .mbs-button-primary {
+    width: 100%;
+    margin-bottom: 30px;
+    @media only screen and (min-width: 576px) {
+      width: auto;
+      margin-bottom: 0px !important;
+    }
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+  background: #2A6EBB;
+}
+
+/* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2A6EBB;
+}
+
+.rate-cal-counter-wrapper {
+  width: 50%;
+  @media only screen and (max-width: 375px) {
+    width: 100%;
+    .rate-cal-counter {
+      &.children {
+        .input-group {
+          &.col-md-10 {
+            width: 85%;
+          }
+        }
+        button {
+          width: 15%;
+        }
+      }
+    }
+  }
+}
+
+input.access-code, input.iata-code {
+  border-radius: 0.25rem !important;
+}
+
+.error-message {
+  color: red;
+  text-align: left !important;
+  display: block;
+  padding: 7px;
+  font-size: 14px !important;
+}
+
+:host-context(body[dir="rtl"]) {
+  .error-message {
+    text-align: right !important;
+  }
+}
+
+.txt-xx-sm-lr {
+  font-size: 10px;
+  @media only screen and (min-width: 350px) {
+    font-size: 12px;
+  }
+}
+
+.TooltipCP:hover .tooltiptextCP {
+  visibility: visible;
+}
+
+.rate-calendar-inner-content .left-panel .monthlyCal.min-calendar-months {
+  height: 420px;
+}
+
+.mobileView {
+  display: none;
+  @media only screen and (max-width: 768px) {
+    display: block;
+  }
+}
+
+.normalView {
+  @media only screen and (max-width: 768px) {
+    display: none;
+  }
+}
+
+.ratesShownInCurrencyMobileView {
+  display: none;
+  @media only screen and (max-width: 768px){
+    display: block;
+    margin-top: 32px;
+  }
+  @media only screen and (max-width: 320px){
+    display: block;
+    margin-top: 29px;
+    font-size: 14px;
+    margin-left: 0px !important;
+  }
+}
+
+.noCheckIn {
+  display: none;
+  @media only screen and (max-width: 768px){
+    display: block;
+    font-size: 16px;
+  }
+  @media only screen and (max-width: 320px){
+    display: block;
+    font-size: 14px;
+  }
+}
+
+.noCheckOut {
+  display: none;
+  @media only screen and (max-width: 768px){
+    display: block;
+    font-size: 16px;
+  }
+  @media only screen and (max-width: 320px){
+    display: block;
+    font-size: 14px;
+  }
+}
+
+br.conditional-break {
+  display: none;
+  @media only screen and (max-width: 768px){
+  display: block;
+  }
+}
+
+.circle-text {
+  text-align: center;
+  font: 18px Verdana, Geneva, sans-serif;
+}
+
+.outer {
+  background-color: white;
+  width: 12px;
+  height: 12px;
+  position: relative;
+  line-height: 1 !important;
+  display: inline-block;
+  padding-top: 0px !important;
+  font-size: 10px;
+  
+}
+
+.outer-only {
+  top: 1%;
+  left: 1%;
+}
+
+.circle {
+  border-radius: 50%;
+}
+
+.shapeborder {
+  border: 1px solid $brownish-grey;
+  color: $brownish-grey;
+}
+
+.refresh-calendar-rat, .refresh-calendar-rat:hover  {
+  font-weight: 100;
+  font-family: Lato;
+  font-size: 15px;
+  text-decoration: underline;
+  color: black;
+}
+.refresh-calendar-rat:hover {
+  color: #2A6EBB;
+}

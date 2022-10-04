@@ -1,0 +1,52 @@
+.mbs-button-primary-wrapper,
+.mbs-button-primary,
+.mbs-button-secondary {
+  width: 100%;
+  padding: 0px;
+  margin-bottom: 10px !important;
+  @media only screen and (min-width: 576px) {
+    width: 172px;
+    padding: 7px;
+    letter-spacing: 0.5px;
+  }
+}
+
+.cancel-booking-btn {
+  margin-bottom: 10px !important;
+  @media only screen and (max-width: 1290px) {
+    width: 100%;
+  }
+}
+
+.enhance  {
+  width: 100%;
+  @media only screen and (max-width: 576px) {
+    width: auto;
+  }
+
+}
+.cancel-dropdown-toggle {
+  border: 1px solid #ced4da !important;
+  height: 38px !important;
+  padding: 6px 22px 0px 10px !important;
+  font-weight: unset !important;
+  background: white;
+}
+
+.cancel-dropdown-menu {
+  // margin: 0px 15px;
+  border: 1px solid #ced4da !important;
+}
+
+.dropdown-item {
+  padding-left: 10px;
+  // text-align: center !important;
+}
+
+.mb-25 {
+  margin-bottom: 25px;
+}
+
+.hide {
+  display: none;
+}

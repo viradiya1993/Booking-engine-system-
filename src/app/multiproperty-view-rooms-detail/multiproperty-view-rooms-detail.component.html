@@ -1,0 +1,288 @@
+<ng-template #lightboxmodel>
+  <div id="hotel-details-modal">
+    <div class="modal-header">
+      <h4
+        [ngClass]="
+          hotelInfo
+            ? 'control-focus modal-title selected-title txt-md-lb lh-30 ls-1 txt-black-five px-20'
+            : 'control-focus modal-title txt-md-lb lh-30 ls-1 txt-black-five px-20'
+        "
+        (click)="viewDetails('hotelInfo')"
+        [innerHTML]="localeObj.tf_10_HotelDetails_Heading | safeHtml"
+        tabindex="0"
+        id="hd-modal-detailsTitle"
+        (keyup.enter)="$event.target.click()"
+      >
+      </h4>
+      <h4
+        [ngClass]="
+          gallery
+            ? 'control-focus modal-title selected-title txt-md-lb lh-30 ls-1 txt-black-five px-20'
+            : 'control-focus modal-title txt-md-lb lh-30 ls-1 txt-black-five px-20'
+        "
+        (click)="viewDetails('gallery')"
+        *ngIf="image_info.length > 0"
+        [innerHTML]="localeObj.tf_10_HotelDetails_Gallery | safeHtml"
+        tabindex="0"
+        id="hd-modal-galleryTitle"
+        (keyup.enter)="$event.target.click()"
+      >
+      </h4>
+      <button type="button" tabindex="0" id="hd-modal-closeBtn" class="control-focus close {{RTL_Flag ? 'mr-auto ml-0 pull-left':'ml-auto mr-0 pull-right'}}" aria-label="Close" (click)="closeFilter()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="hotel-details d-flex" *ngIf="hotelInfo; else elseBlock">
+      <agm-map
+        id="mapView"
+        [latitude]="hotel.latitude"
+        [longitude]="hotel.longitude"
+        [zoom]="15"
+        [zoomControl]="false"
+      >
+        <agm-marker
+          [latitude]="hotel.latitude"
+          [longitude]="hotel.longitude"
+          [visible]="false"
+        >
+          <agm-info-window [isOpen]="true">
+            <div class="marker-name txt-sm-jb">{{ hotel.name }}</div>
+          </agm-info-window>
+        </agm-marker>
+      </agm-map>
+      <div class="hotel-specification">
+        <div class="hotel-data d-flex">
+          <img
+            class="control-focus hotel-img mb-3 {{RTL_Flag ? 'ml-3':'mr-3'}}"
+            *ngIf="!!hotel.lead_photo.large else emptyImg"
+            src="{{ hotel.lead_photo.large }}" alt="Hotel Image"
+            tabindex="0"
+          />
+          <ng-template #emptyImg>
+            <img
+              class="control-focus hotel-img {{RTL_Flag ? 'ml-3':'mr-3'}} mb-3"
+              src="/assets/images/offers-blank.png"
+              alt="Hotel Alt Image"
+              tabindex="0"
+            />
+          </ng-template>
+          <div class="hotel-basic-info {{RTL_Flag ? 'text-right hotel-basic-info--rtl':''}}">
+            <div class="control-focus hotel-name txt-md-jb" tabindex="0" id="hd-modal-hotelName">{{ hotel.name }}</div>
+            <div class="control-focus hotel-rating pr-0" tabindex="0" id="hd-modal-starRating" *ngIf="displayStarRating" alt="{{propertyInfo.starRating}}">
+              <img src="/assets/multiproperty/star_full.svg" class="pr-1" attr.alt="Hotel star ratings {{i+1}}" *ngFor="let rating of [].constructor(hotel.rating); let i = index">
+                <svg viewBox="0 0 50 50" class="pr-1" *ngIf="splitStar !=='0%'">
+                  <defs><linearGradient id="split" x1="0" y1="0" x2="1" y2="0">
+                    <stop [attr.offset]="splitStar" stop-color="#868686"/>
+                    <stop [attr.offset]="splitStar" stop-color="#ffffff"/>
+                  </linearGradient></defs>
+                    <path d="M25 0l-8.44 15.423L0 19.098l11.342 13.208L9.55 50l15.45-7.26L40.452 50l-1.793-17.694L50 19.098l-16.56-3.675z" xmlns="http://www.w3.org/2000/svg" stroke="0" [attr.fill]="'url(#split)'" fill-rule="evenodd"/>
+                </svg>
+            </div>
+            <div class="control-focus hotel-address txt-sm-lr pt-1" tabindex="0" id="hd-modal-address">
+              {{ hotel.address }}
+            </div>
+            <div class="control-focus hotel-contact-details" tabindex="0" id="hd-modal-contact">
+              <div class="hotel-direct {{RTL_Flag ? 'mr-0':''}}">
+                <div class="hotel-direct-container row">
+                  <span class="row pr-1">
+                    <p class="txt-sm-lr mb-0" [innerHTML]="localeObj.tf_10_HotelDetails_hotelDirect | safeHtml"></p>
+                    <p class="txt-sm-lr mb-0">:</p>
+                  </span>
+                  <span class="txt-x-sm-lr bold">{{ hotel.phone_number }}</span>
+                </div>
+                <!-- <br class="mob-view-break"> -->
+                <div class="phone-icon-container">
+                  <img
+                    class="phone-icon"
+                    src="/assets/multiproperty/Phone_icon.png"
+                  />
+                </div>
+              </div>
+              <div class="hotel-reservation {{RTL_Flag ? 'mr-10':''}}">
+                <div class="hotel-reservation-container row">
+                  <span class="row pr-1">
+                    <p class="txt-sm-lr mb-0" [innerHTML]="localeObj.tf_10_HotelDetails_hotelReservation | safeHtml"></p>
+                    <p class="txt-sm-lr mb-0" >:</p>
+                  </span>
+                  <span class="txt-x-sm-lr bold">{{ hotel.phone_number }}</span>
+                </div>
+                <div class="phone-icon-container">
+                  <img
+                    class="phone-icon"
+                    src="/assets/multiproperty/Phone_icon.png"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="control-focus hotel-details-list {{RTL_Flag ? 'text-right':''}}" tabindex="0" id="hotel-details">
+          <div
+            class="hotel-features {{RTL_Flag ? 'mr-3':'ml-3'}}"
+            *ngIf="hotel.hotel_amenities.length > 0"
+            id="hotel-amentities"
+          >
+            <span class="txt-md-lb" [innerHTML]="localeObj.tf_10_HotelDetails_hotelFeatures | safeHtml"></span>:
+            <ul>
+              <li
+                class="feature circle-bullet txt-sm-lr ls-sm lh-24 {{RTL_Flag ? 'circle-bullet--rtl pl-5':'pr-5'}}"
+                *ngFor="let amenities of hotel.hotel_amenities"
+              >
+                {{ amenities }}
+              </li>
+            </ul>
+          </div>
+          <div
+            class=" hotel-room-includes ml-3"
+            *ngIf="hotel.common_room_amenities.length > 0"
+            id="hotel-roomAmentities"
+          >
+            <span class="txt-md-lb"[innerHTML]="localeObj.tf_10_HotelDetails_roomsInclude | safeHtml"></span>:
+            <ul>
+              <li
+                class="feature circle-bullet txt-sm-lr ls-sm lh-24 {{RTL_Flag ? 'circle-bullet--rtl pl-5':'pr-5'}}"
+                *ngFor="let roomAmenities of hotel.common_room_amenities"
+              >
+                {{ roomAmenities }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #elseBlock>
+      <div class="gallery-panel">
+        <div *ngIf="isImageSelected" class="hotelLargeImage">
+          <ngx-slick-carousel class="carousel" #slickModal1="slick-carousel" [config]="slideConfig1"
+          (init)="slickInit()" (afterChange)="afterChange($event)" (beforeChange)="beforeChange($event)">
+          <div ngxSlickItem *ngFor="let slide of image_info" class="slide">
+          <img
+            src="{{ selectedImage.extraLargeImageURL }}"
+            class="control-focus hotelSelectedImage"
+            alt="{{ hotel.name }}"
+            tabindex="0"
+            id="hotel-selectedImage"
+          />
+        </div>
+      </ngx-slick-carousel>
+          <!-- <div class="control-focus hotelSelectedCaption" *ngIf="!!selectedImage.name" tabindex="0"
+          id="hotel-selectedImageCaption">
+            {{ selectedImage.name }}
+          </div> -->
+        </div>
+        <div class="" name="threeSixtyDegreeView"></div>
+        <ngx-slick-carousel
+          class="carousel hd-slider"
+          #slickModal="slick-carousel"
+          [config]="slideConfig"
+          (init)="slickInit($event)"
+          (breakpoint)="breakpoint($event)"
+          (afterChange)="afterChange($event)"
+          (beforeChange)="beforeChange($event)"
+        >
+          <div ngxSlickItem *ngFor="let id=index; let slide of image_info" class="slide">
+            <img
+              src="{{ slide.thumbnailImageURL }}"
+              class="control-focus slider-image"
+              alt="Thumbnail"
+              [ngStyle]="{'opacity': slide.imageOpacity}"
+              (click)="slickModal.slickGoTo(id); imageSelected(slide, id)"
+              tabindex="0"
+              id="slider-image-{{id}}"
+            />
+          </div>
+        </ngx-slick-carousel>
+      </div>
+  </ng-template>
+
+    <div class="mobileView">
+      <accordion closeOthers="true" [isAnimated]="true" class="{{RTL_Flag ? 'text-right':''}}">
+        <accordion-group
+          #group
+          [isOpen]="hotelFeatures"
+          *ngIf= "!!hotel.hotel_amenities.length || !!hotel.common_room_amenities.length"
+        >
+          <div
+            accordion-heading
+            class="hotel-features-mobile txt-md-lb lh-30 ls-sm txt-black-five"
+          >
+            <span [innerHTML]="localeObj.tf_10_HotelDetails_hotelFeatures | safeHtml"></span>
+            <i
+              class="glyphicon {{RTL_Flag ? 'pull-left':'pull-right'}}"
+              [ngClass]="group?.isOpen ? 'fa fa-angle-up' : 'fa fa-angle-down'"
+            ></i>
+          </div>
+          <div id="grow">
+            <div id="measuringWrapper">
+              <div class="hotel-features-mobile">
+                <ul>
+                  <li
+                    class="feature circle-bullet txt-sm-lr ls-sm lh-24 {{RTL_Flag ? 'circle-bullet--rtl pl-5':'pr-5'}}"
+                    *ngFor="let amenities of hotel.hotel_amenities"
+                  >
+                    {{ amenities }}
+                  </li>
+                </ul>
+              </div>
+              <div class="hotel-room-includes-mobile"  *ngIf= "!!hotel.common_room_amenities.length">
+                <span class="txt-md-lb" [innerHTML]="localeObj.tf_10_HotelDetails_roomsInclude | safeHtml"></span>:
+                <ul>
+                  <li
+                    class="feature circle-bullet txt-sm-lr ls-sm lh-24 {{RTL_Flag ? 'circle-bullet--rtl pl-5':'pr-5'}}"
+                    *ngFor="let roomAmenities of hotel.common_room_amenities"
+                  >
+                    {{ roomAmenities }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </accordion-group>
+        <accordion-group
+          #group1
+          [isOpen]="gallery"
+          *ngIf="image_info.length > 0"
+        >
+          <div
+            accordion-heading
+            class="gallery-mobile txt-md-lb lh-30 ls-sm txt-black-five"
+          >
+            <span [innerHTML]="localeObj.tf_10_HotelDetails_Gallery | safeHtml"></span>
+            <i
+              class="{{RTL_Flag ? 'pull-left':'pull-right'}} glyphicon"
+              [ngClass]="group1?.isOpen ? 'fa fa-angle-up' : 'fa fa-angle-down'"
+            ></i>
+          </div>
+          <div id="grow2">
+            <div id="measuringWrapper2">
+              <div *ngIf="isImageSelected" class="hotelLargeImage">
+                <img
+                  src="{{ selectedImage?.propertyImageURL }}"
+                  class="mobileSelectedImage"
+                  alt="{{ hotel.name }}"
+                />
+              </div>
+              <ngx-slick-carousel
+                class="carousel"
+                #slickModal="slick-carousel"
+                [config]="slideConfig"
+                (init)="slickInit()"
+                (afterChange)="afterChange($event)"
+              >
+                <div ngxSlickItem *ngFor="let id=index;let slide of image_info" class="slide">
+                  <img
+                    src="{{ slide.thumbnailImageURL }}"
+                    class="slider-image"
+                    alt="Thumbnail"
+                    [ngStyle]="{'opacity': slide?.thumbnailImageURL === selectedImage?.thumbnailImageURL ? 0.4 : 1}" 
+                    (click)="imageSelected(slide, id)"
+                  />
+                </div>
+              </ngx-slick-carousel>
+            </div>
+          </div>
+        </accordion-group>
+      </accordion>
+    </div>
+  </div>
+</ng-template>

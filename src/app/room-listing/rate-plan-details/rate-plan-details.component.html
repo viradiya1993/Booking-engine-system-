@@ -1,0 +1,48 @@
+<ng-template #template>
+ <div id="rate-plan-details-modal">
+	<div class="modal-header {{RTL_Flag ? 'text-right':''}}">
+		<h5 class="modal-title txt-xxx-lg-jb lh-32 txt-black mb-3" [innerHTML]="ratePlanDetails.name | safeHtml" id="rpd-modal-title" tabindex="0" attr.aria-label="{{ratePlanDetails.name}}"></h5>
+		<button type="button" class="control-focus close pull-right" aria-label="Close" (click)="modalRef.hide()" id="rpd-modal-closeBtn" tabindex="0">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body {{RTL_Flag ? 'text-right':''}}">
+		<div class="txt-lg-lr txt-black-three ls-x-sm mb-2" [innerHTML]="ratePlanDetails.description" tabindex="0" attr.aria-label="{{ratePlanDetails.description}}"></div>
+		<!-- <ul class="p-0">
+			<li class="txt-lg-lr txt-black-three ls-x-sm circle-bullet mb-2" *ngFor="let descItem of ratePlanDetails.description">
+				{{descItem}}
+			</li>
+    </ul> -->
+
+    <div *ngIf="additionalPrivileges !== null" class="d-none d-md-block mb-20">
+      <div class="additional-privilege-heading txt-lg-lb lh-30 ls-1 txt-black-five mb-2" tabindex="0"><span [innerHTML]="localeObj.tf_3_MultiRoom_ratePlanDetails_additionalPrivilegesHeading | safeHtml" attr.aria-label="{{localeObj.tf_3_MultiRoom_ratePlanDetails_additionalPrivilegesHeading}}"></span></div>
+      <div class="row">
+        <div class="left-side-panel mr-10">
+          <div class="box-style" *ngFor="let feature of objectKeys(additionalPrivileges); let i = index">
+            <div [ngClass]="(selectedPrivilegeIndex === i)? 'selected-privilege-highlight':''" class="feature-style additional-privilege-heading txt-lg-lb lh-30 ls-sm txt-black-five" (click)="populatePrivileges(feature, i, $event.currentTarget)" [innerHTML]="feature | safeHtml" tabindex="0"></div>
+            <div class="arrow-right" *ngIf="i === selectedPrivilegeIndex"></div>
+          </div>
+        </div>
+        <div class="right-side-panel">
+          <div class="txt-lg-lr txt-black-three ls-x-sm mb-2" [innerHTML]="privilegeFeatures" tabindex="0" attr.aria-label="{{privilegeFeatures}}"></div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="additionalPrivileges !== null" class="d-block d-md-none mb-20">
+      <div class="additional-privilege-heading txt-lg-lb lh-30 ls-1 txt-black-five mb-2" tabindex="0"><span [innerHTML]="localeObj.tf_3_MultiRoom_ratePlanDetails_additionalPrivilegesHeading | safeHtml" attr.aria-label="{{localeObj.tf_3_MultiRoom_ratePlanDetails_additionalPrivilegesHeading}}"></span></div>
+      <accordion closeOthers="true">
+        <accordion-group #group [isOpen]="i === 0" *ngFor="let feature of objectKeys(additionalPrivileges); let i = index">
+          <div accordion-heading class="additional-privilege-heading txt-lg-lb lh-30 ls-sm txt-black-five" tabindex="0">
+            <span [innerHTML]="feature | safeHtml"></span>
+            <i class="pull-right glyphicon" [ngClass]="group?.isOpen ? 'fa fa-angle-up': 'fa fa-angle-down'"></i>
+          </div>
+          <div class="txt-lg-lr txt-black-three ls-x-sm mb-2" [innerHTML]="additionalPrivileges[feature]" tabindex="0" attr.aria-label="{{additionalPrivileges[feature]}}"></div>
+        </accordion-group>
+      </accordion>
+    </div>
+		<div class="terms-and-conditions txt-x-sm-lr txt-black-three ls-x-sm" [innerHTML]="localeObj.tf_4_Checkout_paymentMethodFooter_termsAndConditions | safeHtml" tabindex="0" id="rpd-modal-tnc" attr.aria-label="{{localeObj.tf_4_Checkout_paymentMethodFooter_termsAndConditions}}"></div>
+	</div>
+</div>
+</ng-template>
+<a *ngIf="ratePlanDescription" (click)="_storeSvc.setActiveModalElem(generateIDForViewDetails(ratePlan)); openModal(template)" (keyup.enter)="$event.target.click()" [attr.id]= generateIDForViewDetails(ratePlan) class ="control-focus txt-lg-lr txt-black-five ls-1 txt-underline hyl-dark viewDetails" tabindex="0" attr.aria-label="{{localeObj.tf_2_RoomList_ratePlanDetails_link_viewDetails}}" role="link"><span [innerHTML]="localeObj.tf_2_RoomList_ratePlanDetails_link_viewDetails | safeHtml"></span></a>

@@ -1,0 +1,26 @@
+<ng-template #template>
+  <div id="promo-bummer-modal">
+    <div class="modal-header" id="bummer">
+      <h5 id="bummer-title" tabindex="0" class="control-focus modal-title txt-xxx-lg-jb lh-32 txt-black mb-3" [innerHTML] = "localeObj.tf_4_Checkout_upgradeAddons_bummer | safeHtml"></h5>
+      <button type="button" id="bummer-closeBtn" tabindex="0" class="control-focus close pull-right" aria-label="Close" (click)="closeErrorPopUp()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="control-focus txt-lg-lr txt-black-three ls-x-sm pl-20" id="bummer-errorMsg" tabindex="0" [innerHTML] = "popUpErrorMsg | safeHtml"></div>
+      <div class="col-sm-12 modal-footer-btn mt-30">
+        <button class="control-focus btn mbs-button-primary enhance" id="bummer-constentBtn" tabindex="0" type="button" (click)="closeErrorPopUp()"><span [innerHTML] = "localeObj.tf_2_RoomList_rooms_button_back | safeHtml"></span></button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div class="Container cardList">
+  <div *ngIf="promoList && promoList.length > 1 && !showPromoDetails">
+    <app-promo-list [promoList]="promoList" [promoList$]="promoList" [isCheckInDateEntry]="isCheckInDateEntry" (isPromoSelected)="promoClickEventHandler($event)"></app-promo-list>
+  </div>
+
+  <div *ngIf="promoList && promoList.length === 1 || showPromoDetails">
+    <app-promo-details [isCheckInDateEntry]="isCheckInDateEntry" [selectedPromo]="selectedPromo" [searchTransactionId]="searchTransactionId"></app-promo-details>
+  </div>
+</div>

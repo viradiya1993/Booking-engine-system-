@@ -1,0 +1,7 @@
+@import "../mixins/typography";
+
+p {
+  @include p1();
+  color: $black-three;
+  letter-spacing: 0.025rem;
+}

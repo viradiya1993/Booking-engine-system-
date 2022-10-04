@@ -1,0 +1,22 @@
+<div class="mt-30 pt-30 text-center"><h4 [innerHTML] = "localeObj.tf_4_Checkout_alipay_redirecting_message | safeHtml"></h4></div>
+<form id="alipaysubmit" name="alipaysubmit" [action]="request_url" method="get">
+  <input type="hidden" name="sign" [value]="paramMap.sign"/>
+  <!-- <input type="hidden" name="body" [value]="paramMap.body" /> -->
+  <input type="hidden" name="trade_information" [value]="paramMap.trade_information" />
+  <input type="hidden" name="refer_url" [value]="paramMap.refer_url" />
+  <input type="hidden" name="_input_charset" [value]="paramMap._input_charset" />
+  <!-- <input type="hidden" name="product_code" [value]="paramMap.product_code" /> -->
+  <input type="hidden" name="total_fee" [value]="paramMap.total_fee" />
+  <input type="hidden" name="subject" [value]="paramMap.subject" />
+  <input type="hidden" name="sign_type" [value]="paramMap.sign_type" />
+  <input type="hidden" name="service" [value]="paramMap.service" />
+  <input type="hidden" name="notify_url" [value]="paramMap.notify_url" />
+  <input type="hidden" name="partner" [value]="paramMap.partner" />
+  <input type="hidden" name="out_trade_no" [value]="paramMap.out_trade_no" />
+  <input type="hidden" name="timeout_rule" [value]="paramMap.timeout_rule" />
+  <input type="hidden" name="currency" [value]="paramMap.currency" />
+  <input type="hidden" name="return_url" [value]="paramMap.return_url" />
+  <input type="hidden" name="order_gmt_create" [value]="paramMap.order_gmt_create" />
+  <input type="hidden" name="order_valid_time" [value]="paramMap.order_valid_time" />
+  <input type="submit" value="OK" style="display:none;">
+</form>

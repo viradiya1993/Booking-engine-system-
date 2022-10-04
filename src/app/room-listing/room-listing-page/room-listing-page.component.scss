@@ -1,0 +1,60 @@
+@import "../../../sass/variables/colors";
+.Container {
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  // background-image: linear-gradient(to left, #FCFCFC 0%, #EDEDED 80%);
+  @media only screen and (min-width: 1200px) {
+    padding: 0px 85px;
+  }
+}
+
+.errDiv {
+  background: $light-pink;
+}
+
+p.contentClass {
+  padding: 20px 10px 20px 10px;
+}
+
+.lightbox-contents {
+  padding: 15px;
+  background: white;
+  border: 1px solid $pinkish-grey-four;
+}
+
+.dropdown-toggle-filter {
+  border: 1px solid #ced4da !important;
+  font-weight: unset !important;
+}
+
+.formatButton {
+  background: none;
+  border: 0;
+  color: #002c5F;
+}
+
+.button {
+  background-color: white;
+  border: none;
+  color: grey;
+  outline: 0;
+}
+
+.button-primary {
+  width: 100%;
+  background: white;
+  border: 1px solid #ced4da;
+  border-radius: unset;
+}
+
+
+.currency-dropdown {
+  width: 115px;
+}
+
+.mbs-dropdown-primary {
+  .dropdown-item{
+    white-space:normal;
+  }
+}

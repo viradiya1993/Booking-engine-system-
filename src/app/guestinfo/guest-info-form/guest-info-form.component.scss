@@ -1,0 +1,198 @@
+@import "../../../sass/typography/font";
+
+
+.form-group {
+  padding: 10px 5px;
+  margin: 0px;
+  > * {
+    padding: 0 0 15px 0;
+    @media only screen and (min-width: 576px) {
+      padding: 0 15px;
+    }
+  }
+}
+
+.form-group p {
+  margin-bottom: 0px;
+}
+
+input.form-control::-webkit-input-placeholder { color: rgb(212, 212, 212); }
+input.form-control:-moz-placeholder { color: rgb(212, 212, 212); } /* FF 4-18 */
+input.form-control::-moz-placeholder { color: rgb(212, 212, 212); } /* FF 19+ */
+input.form-control:-ms-input-placeholder { color: rgb(212, 212, 212); } /* IE 10+ */
+
+input:focus::-webkit-input-placeholder { color:transparent; }
+input:focus:-moz-placeholder { color:transparent; } /* FF 4-18 */
+input:focus::-moz-placeholder { color:transparent; } /* FF 19+ */
+input:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
+
+.dropdown {
+  width: 100% !important;
+  height: 38px !important;
+  border: 0px !important;
+}
+
+.country-icon {
+  width: 19.25px;
+  height: 19.25px;
+}
+
+.country-small-icon {
+  width: 9.05px;
+  height: 9.05px;
+}
+
+.country-phone-code {
+  background-color: white;
+  border-color: #ced4da;
+}
+
+.scrollable-menu {
+  height: auto;
+  max-height: 175px;
+  overflow-x: hidden;
+}
+
+.country-code {
+  padding-right: 0px;
+  font-size: 12px;
+  width: 20%;
+  @media only screen and (max-width: 575px) {
+    width: 48%;
+  }
+}
+
+.country-code button {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.phone-number {
+  @media only screen and (max-width: 575px) {
+    width: 48%;
+    margin-left: auto;
+  }
+}
+
+input:invalid {
+  border: 1px solid rgb(247, 185, 185);
+}
+
+.selected-flag{
+  left: 0 !important;
+  width: 100%  !important;
+  right: 0 !important;
+  background: none !important;
+}
+
+ .flag-container{
+  width:100% !important;
+}
+ .selected-flag{
+  width: 100% !important;
+}
+.mbs-dropdown-primary{
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  height: 38px;
+  padding: 6px 24px 0px 10px;
+  font-weight: unset !important;
+  min-width: 70px;
+  background: white;
+  @media only screen and (min-width: 576px) {
+    margin-left: 15px;
+  }
+}
+
+.dropdown-toggle {
+  border: 1px solid #ced4da;
+  height: 38px;
+  padding: 6px 24px 0px 10px;
+  font-weight: unset !important;
+  min-width: 60px;
+  background: white;
+  @media only screen and (min-width: 576px) {
+    margin-left: 15px;
+  }
+}
+
+.dropdown-menu {
+  border: 1px solid #ced4da;
+  min-width: 60px;
+  width: 80%;
+  @media only screen and (min-width: 576px) {
+    margin: 0px 15px;
+  }
+}
+
+.dropdown-item {
+  padding-left: 10px;
+}
+
+.country-drop {
+  margin-left: 0px;
+}
+.country-menu {
+  width: 100%;
+  margin-left: 0px;
+  max-height: 300px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+.guest-info {
+  > h4 {
+    @media only screen and (max-width: 575px) {
+      font-size: 22px;
+    }
+  }
+}
+
+#callCode {
+  pointer-events: none !important;
+  cursor: none !important;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #2A6EBB;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #2A6EBB;
+}
+
+::ng-deep * >.ng-select.custom {
+  border:0px;
+  min-width: 60px;
+  border-radius: 0px!important;
+}
+::ng-deep * >.ng-select.custom .ng-select-container  {            
+  background-color: #fff;
+  border-radius: 0px !important;
+  border:1px solid #ced4da;
+  align-items: center;
+  cursor: pointer!important;
+}
+
+::ng-deep * >.ng-select.custom .ng-select-container .ng-value-container .ng-input>input{
+    cursor: pointer !important;
+   
+}
+::ng-deep * >.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input{
+  padding-right: 20px !important;
+}
+
+::ng-deep * >.ng-select.ng-select-disabled>.ng-select-container {
+  background-color: #e9ecef;
+  opacity: 1;
+}
+
+.ng-select.ng-select.ng-select-single.ng-select-filtered:not(.ng-select-opened) .ng-select-container.ng-has-value .ng-value-container .ng-value {
+  visibility: visible; 
+}

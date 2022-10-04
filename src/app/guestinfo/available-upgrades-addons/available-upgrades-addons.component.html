@@ -1,0 +1,171 @@
+<ng-template #template>
+  <div id="avail-upgrades-modal {{RTL_Flag ? 'text-right' : '' }}">
+    <div class="modal-header mb-10 {{RTL_Flag ? 'text-right' : '' }}">
+      <h5 class="modal-title text-uppercase txt-xxx-lg-jb txt-black d-none d-sm-block" [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_upgradePopHeading | safeHtml" tabindex="0" id="aua-modal-title"></h5>
+      <h5 class="modal-title text-uppercase txt-lg-jb txt-black d-block d-sm-none" [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_upgradePopHeading | safeHtml"></h5>
+      <button type="button" class="control-focus close pull-right" aria-label="Close" (click)="modalRef.hide();closeUpgradeModal()" tabindex="0" id="aua-modal-closeBtn">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <p class="txt-lg-lr txt-black-three ls-x-sm" [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_upgradePopDescription | safeHtml" tabindex="0"></p>
+    <p class="txt-lg-lr txt-black-three ls-x-sm"><span [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_upgradePopCurrentRoom | safeHtml" tabindex="0"></span>
+      <span tabindex="0"><b><span [innerHTML]="currentSelectedRoom.RoomDetails.roomType | safeHtml"></span><span *ngIf="currentSelectedRoom.RoomDetails.roomView">&nbsp;-&nbsp;<span [innerHTML]="currentSelectedRoom.RoomDetails.roomView | safeHtml"></span></span></b></span>
+    </p>
+    <div class="modal-body">
+      <p class="txt-lg-lr txt-black-three ls-x-sm"><b><span [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_upgradeChooseUpgrade | safeHtml" tabindex="0"></span></b></p>
+      <div class="row panel-details" *ngFor="let currAvailableUpgrade of currAvailableUpgrade; let i = index" (click)="onRoomChange(currAvailableUpgrade)" [ngClass]="{'radio-div-selected': currAvailableUpgrade === roomSelectedChecked}">
+        <div class="col-md-9 p-10">
+          <div class="row">
+            <div class="imgPanel {{RTL_Flag ? 'imgPanel--rtl' : '' }}">
+              <label class="control-focus imgPanel-label">
+                <input type="radio" class="control-focus" name="currAvailableUpgrade" [checked]="currAvailableUpgrade === roomSelectedChecked" value={{currAvailableUpgrade}} (change)="onRoomChange(currAvailableUpgrade)" tabindex="0">
+                <span class="checkmark checkmark-{{i}} {{RTL_Flag ? 'checkmark--rtl' : '' }}"></span>
+                <img src="{{currAvailableUpgrade.imageUrls[0].largeImageUrl}}" />
+              </label>
+            </div>
+            <div class="rt-Body {{RTL_Flag ? 'rt-body--rtl' : '' }}">
+              <div class="txt-x-lg-lb txt-black-five ls-1 lh-24" tabindex="0">
+                <span [innerHTML]="currAvailableUpgrade.roomType | safeHtml"></span><span *ngIf="currAvailableUpgrade.roomView">&nbsp;-&nbsp;<span [innerHTML]="currAvailableUpgrade.roomView | safeHtml"></span></span>
+              </div>
+              <div *ngIf="getRoomData(currAvailableUpgrade.roomCode)">
+                <p class="bookedRoomStatsColor txt-sm-lr lh-24 txt-bs" tabindex="0">
+                  <span [innerHTML]="getMessage(localeObj.tf_2_RoomList_rooms_roomBookedPeriod, [roomupdates.totalBooked,roomupdates.totalBooked>1?
+                      (localeObj.tf_4_Checkout_addons_roomsText | lowercase):(localeObj.tf_4_Checkout_addons_roomLc | lowercase),
+                      localeObj[roomupdates.timeSpan] || roomupdates.timeSpan]) | safeHtml"></span>
+                </p>
+              </div>
+              <div class="guestNumberDiv">
+                <p class="txt-lg-lr lh-24 txt-black mb-2 ls-sm" [innerHTML]="currAvailableUpgrade.occupancyDescription | safeHtml" tabindex="0"></p>
+              </div>
+              <div class="amenitiesDiv">
+                <ul class="noStyleForList pl-0">
+                  <li *ngFor="let service of currAvailableUpgrade.amenities">
+                    <div class="serviceDiv txt-md-lr lh-24 ls-sm txt-black-three">
+                      <img class="icon-service mr-2" src="{{service.thumbnailImageUrl}}" /><span [innerHTML]="service.name | safeHtml" tabindex="0"></span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div *ngIf="!currAvailableUpgrade.isBaseRoom" class="roomBookingUpdates txt-sm-lr lh-20 ls-x-sm txt-black-three mt-3" [innerHTML]="localeObj.tf_2_RoomList_rooms_allAmenitiesFromLowerTierRooms | safeHtml"></div>
+            </div>
+          </div>  
+        </div>
+        <div class="col-md-3 p-10 pricePanel">
+          <span class="txt-xx-lg-lb ls-x-sm txt-black-three" tabindex="0">
+            +<span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="currAvailableUpgrade.costOfUpgrade[currency] | customPriceFormat: '': currency | safeHtml"></span>
+          </span><span [innerHTML]="localeObj.tf_2_RoomList_rooms_perNight | safeHtml" tabindex="0"></span>
+        </div>
+      </div>
+
+      <div class="row rt-footer" *ngIf="roomSelected">
+        <div class="left-panel">
+          <div><span [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_upgradePopSelectRoom | safeHtml"></span>
+            <span tabindex="0"><b><span [innerHTML]="roomSelected.roomType | safeHtml"></span><span *ngIf="roomSelected.roomView">&nbsp;-&nbsp;<span [innerHTML]="roomSelected.roomView | safeHtml"></span></span></b></span>
+          </div>
+          <div><span [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_upgradePopCost | safeHtml"></span>
+            <span tabindex="0"><b>+<span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="roomSelected.costOfUpgrade[currency] | customPriceFormat: '': currency | safeHtml"></span><span [innerHTML]="localeObj.tf_2_RoomList_rooms_perNight | safeHtml"></span></b></span> 
+          </div>
+        </div>
+        <div class="right-panel">
+          <div class="right-panel-items">
+            &nbsp;<span [innerHTML]="getMessage(localeObj.tf_4_Checkout_upgradeAddons_upgradePopTotal,[guestSummary.los, guestSummary.los>1?(localeObj.tf_3_MultiRoom_checkinSummery_nightsLc |
+                lowercase):(localeObj.tf_2_RoomList_bookingSummery_night | lowercase)] ) | safeHtml" tabindex="0"></span>&nbsp;
+            <span class="txt-xx-lg-lb ls-x-sm txt-black-three" tabindex="0">
+              <span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="roomSelected.totalPrice[currency] | customPriceFormat: '': currency | safeHtml"></span>
+            </span>
+          </div>
+          <div class="right-panel-items">
+            <button id="g_btn_upgrade_popup" class="control-focus btn mbs-button-primary" (click)="upgradeRatePlan()" tabindex="0"><span [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_button_upgradePop | safeHtml"></span></button>
+          </div>
+          <div class="right-panel-items">
+            <small><span [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_upgradePopAlert | safeHtml"></span></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #bummer>
+  <div id="avail-upgrades-bummer-modal">
+    <div class="modal-header">
+      <h5 id="bummer" class="control-focus modal-title txt-xxx-lg-jb lh-32 txt-black mb-3" tabindex="0" [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_bummer | safeHtml"></h5>
+      <button id="bummer-closeBtn" type="button" class="control-focus close pull-right" tabindex="0" aria-label="Close" (click)="closeBummerModal(bummerType)">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="control-focus txt-lg-lr txt-black-three ls-x-sm pl-20" id="bummer-errMsg" tabindex="0" [innerHTML]="errorMsg | safeHtml"></div>
+      <div class="col-sm-12 modal-footer-btn mt-30">
+        <button class="control-focus btn mbs-button-primary enhance" id="bummer-errConsentBtn" type="button" tabindex="0" (click)="closeBummerModal(bummerType)"><span [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_button_proceed | safeHtml"></span></button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div class="row" *ngIf="(availableRoomUpgrade.length > 0 && isAvailable)">
+  <strong>
+    <h4 class="txt-xxx-lg-jb txt-black-five m-0 header" [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_availableUpgrades | safeHtml"></h4>
+  </strong>
+</div>
+
+<div class="mbs-card pl-0 {{RTL_Flag ? 'text-right' : '' }}" *ngIf="(availableRoomUpgrade.length > 0 && isAvailable)">
+  <ng-container *ngFor="let availableUpgrade of availableRoomUpgrade;  let i = index">
+    <div *ngIf="availableUpgrade !== null">
+      <div class="row">
+        <div *ngIf=isMultiRoom class="col-sm-4 rate-cal-search-header txt-md-lb txt-black">
+          <p>&nbsp;<span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_room | uppercase | safeHtml"></span><span [innerHTML]="i + 1 | safeHtml"></span>&nbsp;</p>
+        </div>
+      </div>
+      <!-- <div class="px-20" *ngIf="upgradeSelectedError[i]">
+        <div class="py-20 errDiv txt-lg-lr ls-x-sm txt-black">
+          <p class="contentClass">{{localeObj.room_upgrade_error}}</p>
+        </div>
+      </div> -->
+      <div class="row">
+        <div class="col-sm-4">
+          <p class="txt-lg-lb txt-black-five ls-x-sm" [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_upgradeHeading | safeHtml"></p>
+        </div>
+        <div class="col-sm-8">
+          <div class="toogle-panel" *ngIf="!upgradeSelected[i]">
+            <p class="txt-lg-lr txt-black-three ls-x-sm" [innerHTML]="getMessage(localeObj.tf_4_Checkout_upgradeAddons_upgradeDetail,[currCode, (availableUpgrade[0].costOfUpgrade[currency] | customPriceFormat: '': currency)]) | safeHtml"></p>
+            <button id="g_btn_upgrade" class="control-focus btn mbs-button-secondary text-uppercase" (click)="store.setActiveModalElem('g_btn_upgrade'); openUpgradeModal(template,availableUpgrade,i)">
+              <span [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_button_upgrade | safeHtml"></span>
+            </button>
+          </div>
+          <div class="toogle-panel" *ngIf="upgradeSelected[i]">
+            <p id="booked" class="txt-lg-lr ls-x-sm txt-md-green">
+              <span [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_upgradeDetailPost | safeHtml"></span>
+              <span><b><span [innerHTML]="upgradeSelectedRoom[i].roomType | safeHtml"></span><span *ngIf="upgradeSelectedRoom[i].roomView">&nbsp;-&nbsp;<span [innerHTML]="upgradeSelectedRoom[i].roomView | safeHtml"></span></span></b></span>
+            </p>
+            <p class="txt-lg-lr txt-black-three ls-x-sm">
+              <span [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_button_upgradePost | safeHtml"></span>
+              <span class="txt-lg-lb txt-black"><b><span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="(upgradeSelectedRoom[i].totalCost[currency] * totalnight) | customPriceFormat: '': currency | safeHtml"></span></b></span>
+            </p>
+            <div class="control-focus pb-10"><small><span [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_upgradeAlert | safeHtml"></span>&nbsp;<a (click)="gotoPreferences(i)"><span [innerHTML]="localeObj.tf_Generic_preferencesText | safeHtml"></span></a></small></div>
+            <div><button id="g_btn_undo_upgrade" class="control-focus btn mbs-button-secondary" (click)="undoUpgrade(i)"><span [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_button_undoUpgrade | safeHtml"></span></button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- <br>
+  <div class="row">
+    <div class="col-sm-4">
+      <strong>
+        <p>Breakfast add-on</p>
+      </strong>
+    </div>
+    <div class="col-sm-6">
+      <div  class="toogle-panel" *ngIf="breakfast">
+        <p>Enjoy a buffet breakfast at RISE, Adrift, or Spango for only S$60 more per guest, per day.</p>
+        <button class="button" (click)="toogleBreakFast()">SELECT NUMBER OF GUEST</button>
+      </div>
+      <div class="toogle-panel" *ngIf="!breakfast">
+        <p  id="booked">You room booking now includes the buffet breakfast add-on.</p>
+        <p>S$120(1 guest for 2 days) <a href="">Edit</a> </p>
+        <button class="button" (click)="toogleBreakFast()">REMOVE ADD-ON</button>
+      </div>
+    </div>
+      </div> -->

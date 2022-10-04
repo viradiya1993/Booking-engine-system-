@@ -1,0 +1,112 @@
+<!-- <app-loader></app-loader> -->
+<!-- Spinner for scripts -->
+<ngx-spinner
+  bdColor="rgba(255, 255, 255, 0.8)"
+  color="#c1c1c1"
+  size="default"
+  type="ball-spin-clockwise-fade-rotating"
+>
+</ngx-spinner>
+<ngx-spinner
+  bdColor="rgba(255, 255, 255, 1)"
+  color="#c1c1c1"
+  size="medium"
+  type="ball-spin-clockwise-fade-rotating"
+  name="reservationLoader"
+>
+  <p class="loading-message" [innerHTML]="localeObj.tf_04_Checkout_LoaderMsg | safeHtml"></p>
+</ngx-spinner>
+
+<ng-container *ngIf="propertyInfoAvailable && proceed">
+  <app-header [localeObj]="localeObj" [isMultiPropertyPage]="isMultiPropertyPage"></app-header>
+
+  <section class="placeholder-section pt-2">
+    <div>
+      <div *ngIf="showDiv" class="Container row">
+        <div
+          id="h_link_search"
+          class="control-focus d-flex align-items-center step-search bold-text-and-cursor-pointer"
+          (click)="gotoStep($event, $event.currentTarget, 'search')" attr.aria-label="{{localeObj.tf_Header_Menu_search}} page"
+          (keyup.enter)="$event.target.click()"
+        >
+          <div class="outer-circle-search outer circle shapeborder-selected">
+            <div
+              class="d-flex justify-content-center align-items-center inner-circle-search inner circle shapeborder-selected circle-text"
+            >
+              1
+            </div>
+          </div>
+          <div
+            class="label-text step-search-label"
+            [innerHTML]="localeObj.tf_Header_Menu_search | safeHtml"
+          ></div>
+        </div>
+        <div
+          id="h_link_select"
+          class="control-focus d-flex align-items-center step-select-room"
+          (click)="gotoStep($event, $event.currentTarget, 'select-room')" attr.aria-label="{{localeObj.tf_3_MultiRoom_banner_chooseRoom}} page"
+          (keyup.enter)="$event.target.click()"
+        >
+          <div
+            class="outer-circle-select-room outer circle shapeborder circle-text"
+          >
+            <div
+              class="d-flex justify-content-center align-items-center inner-circle-select-room"
+            >
+              2
+            </div>
+          </div>
+          <div
+            class="label-text step-select-room-label"
+            [innerHTML]="
+              localeObj.tf_3_MultiRoom_banner_chooseRoom | titlecase | safeHtml
+            "
+          ></div>
+        </div>
+        <div
+          id="h_link_guest"
+          class="control-focus d-flex align-items-center step-guest-info"
+          (click)="gotoStep($event, $event.currentTarget, 'guest-info')" attr.aria-label="{{thirdStepperLabel}} page"
+          (keyup.enter)="$event.target.click()"
+        >
+          <div
+            class="outer-circle-guest-info outer circle shapeborder circle-text"
+          >
+            <div
+              class="d-flex justify-content-center align-items-center inner-circle-guest-info"
+            >
+              3
+            </div>
+          </div>
+          <div
+            class="label-text step-guest-info-label"
+            [innerHTML]="thirdStepperLabel | safeHtml"
+          ></div>
+        </div>
+        <div
+          id="h_link_confirmation"
+          class="control-focus d-flex align-items-center step-confirmation" attr.aria-label="{{localeObj.tf_Header_Menu_confirmation}} page"
+        >
+          <div
+            class="outer-circle-confirmation outer circle shapeborder circle-text"
+          >
+            <div
+              class="d-flex justify-content-center align-items-center inner-circle-confirmation"
+            >
+              4
+            </div>
+          </div>
+          <div
+            class="label-text"
+            [innerHTML]="localeObj.tf_Header_Menu_confirmation | safeHtml"
+          ></div>
+        </div>
+      </div>
+      <router-outlet></router-outlet>
+    </div>
+  </section>
+
+  <!-- placeholder section end -->
+  <app-footer [localeObj]="localeObj"></app-footer>
+</ng-container>
+<app-alternate-property></app-alternate-property>

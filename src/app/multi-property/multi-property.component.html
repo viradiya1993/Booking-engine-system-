@@ -1,0 +1,434 @@
+<div class ="row multiproperty-container">
+
+  <div class="{{showMap === true ? 'col-md-8' : 'col-md-12'}} {{RTL_Flag ? 'text-right pl-md-0':'pr-md-0'}} pt-4" [ngClass]="(mobileView && showMap) ? 'hideHotelDetails' : ''">
+    <!-- Check-in/out input field -->
+    <div class="calendar-input-section d-flex {{showMap === true ? 'col-md-9' : 'col-md-6'}} {{RTL_Flag ? 'mr-md-35':'ml-md-35'}}" [ngClass]="(mobileView && !showMap) ? 'col-md-9' : ''" *ngIf="!isCheckinSummaryAvailable">
+      <p class="hotelAvail-txt" [innerHTML]="localeObj.tf_00_MultiProperty_hotelAvailability | safeHtml" tabindex="0"></p>
+      <button class="selectDates-btn control-focus" [innerHTML]="localeObj.tf_00_MultiProperty_selectDates | safeHtml"
+      (click)="resetMultiPropertyPageInfo();rateCal.openRateCalendar(GuestSummary)" tabindex="0" (keyup.enter)="$event.target.click()"></button>
+     </div>
+    <!-- End Check-in/out input field -->
+
+    <!-- User-selected Check-in Summary -->
+    <!-- <button (click)="rateCal.openRateCalendar(GuestSummary)"> click me!</button> -->
+    <app-ratecalendarlightbox #rateCal [checkinsummary]="GuestSummary" [isMultiProp]="true" (multiPropertyCheckInSummaryChanged)="onMultiPropertyCheckInSummaryChanged($event)" (checkInSummaryChanged)="onCheckInSummaryChanged($event)"></app-ratecalendarlightbox>
+    <!-- User-selected Check-in Summary -->
+    <div class="guest-duration p-0 {{RTL_Flag ? 'mr-3':'ml-3'}}">
+      <app-guestduration [isMultiProp]="true" [showMap]="showMap" [isCheckinSummaryAvailable]="isCheckinSummaryAvailable" (multiPropertyCheckInSummaryChanged)="onMultiPropertyCheckInSummaryChanged($event)"></app-guestduration>
+    </div>
+
+    <div class="mobile-filters d-lg-none my-3" *ngIf="!showMap">
+      <button class="btn button-primary multiprop-filters" (click)="openFiltersModal(lightboxmodel)">
+        <i class="fa fa-sliders {{RTL_Flag ? 'ml-2':'mr-2'}}" aria-hidden="true"></i>
+        <span [innerHTML]="localeObj.tf_2_RoomList_filterDropdown_filter | safeHtml"></span>
+      </button>
+
+      <div class="multiprop-filters enable-map px-4" *ngIf="!showMap" (click)="mobileMapToggle(showMap)" tabindex="0" (keyup.enter)="$event.target.click()">
+        <div class="row filter-type">
+          <img class="showMap-icon" src="/assets/multiproperty/noun_Map_3485501.svg" alt="map-icon">
+          <span class="{{RTL_Flag ? 'mr-2':'ml-2'}}"
+            [innerHTML]="localeObj.tf_00_MultiPropertyFilter_showMap | safeHtml"
+          ></span>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="total-prop" 
+      [innerHTML]="getMessage(localeObj.tf_8_MultiProperty_text_loctotalNoOfProperties, 
+      [selectedLocPropNum.length, (selectedLocPropNum.length > 1 ? localeObj.tf_8_MultiProperty_text_properties : localeObj.tf_8_MultiProperty_text_property), selectedLocation]) | safeHtml">
+    </h3>
+
+    <app-multi-property-filter class="d-none d-lg-block" *ngIf="hotelLoc.length > 0" 
+      [hotelData]="hotelData" 
+      [locationsAvail]="hotelLoc"
+      [ratingAvail]="ratingAvail"
+      [(showMap)]="showMap" 
+      (updateCurrency)="updateCurr($event)"
+      [displayFilters]="displayFilters"
+      (updateLocationFilterValue)="updateLocationFilterVal($event)"
+      (updateRatingFilterValue)="updateRatingFilterVal($event)"
+      (updateSortOrder)="updatePriceSortOrder($event)"
+    ></app-multi-property-filter>
+
+    <div class="mobileView-filter d-flex flex-row">
+      <ng-template #lightboxmodel>
+        <div class="room-filters">
+          <div class="modal-header mb-30">
+            <h4 class="modal-title txt-x-lg-lb lh-30 ls-1 txt-black-five">Apply Filters</h4>
+            <button type="button" class="close pull-right" aria-label="Close" (click)="closeFilter()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="lightbox-contents">
+              <form>
+                <div class="mbs-dropdown-primary" dropdown [ngClass]="{'d-none': !displayFilters.displayLocationFilter}">
+                  <a dropdownToggle class="dropdown-toggle dropdown-toggle-filter">
+                    <span [innerHTML]="locationSelection | safeHtml"></span>
+                  </a>
+                  <ul *dropdownMenu class="dropdown-menu">
+                    <li class="dropdown-item" *ngFor="let location of hotelLoc" [value]="location.text"
+                      (click)="updateHotelLocation(location)" tabindex="0" (keyup.enter)="$event.target.click()">
+                      <span [innerHTML]="location.text | safeHtml"></span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="mbs-dropdown-primary pt-10" dropdown [ngClass]="{'d-none': !displayFilters.displayStarRating}">
+                  <a dropdownToggle class="dropdown-toggle dropdown-toggle-filter">
+                    <span [innerHTML]="ratingSelection.view | safeHtml"></span>
+                  </a>
+                  <ul *dropdownMenu class="dropdown-menu">
+                    <li class="dropdown-item" #t *ngFor="let rating of hotelRating" [value]="rating"
+                      (click)="updateRatingSelection(rating)">
+                      <span [innerHTML]="rating | safeHtml"></span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="row pt-10 d-block d-sm-flex">
+                  <div class="currency currency-modal-filter filter d-flex align-items-center mx-auto">
+                    <div class="label txt-md-lr ls-sm txt-br-grey mr-10"><span>Currency</span> :</div>
+                    <div class="mbs-dropdown-primary currency-dropdown" dropdown>
+                      <a dropdownToggle class="dropdown-toggle dropdown-toggle-filter px-10">
+                        <span [innerHTML]="currencySelection.code | safeHtml"></span>
+                      </a>
+                      <ul *dropdownMenu class="dropdown-menu">
+                        <li class="dropdown-item px-10 currency-name" *ngFor="let currency of currencies"
+                          [value]="currency.code" (click)="updateCurrencySelection(currency)">
+                          <span [innerHTML]="currency.code | safeHtml"></span>&nbsp;(<span
+                            [innerHTML]="currency.symbol | safeHtml"></span>)
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="mt-3 mt-sm-0 sortBy-modal-filter sort-by filter d-flex align-items-center ml-auto"
+                    (click)="toggleSortOrder()">
+                    <div class="txt-md-lr ls-sm txt-br-grey mr-10"><span>Sort By</span>:</div>
+                    <div class="txt-md-lb ls-sm txt-black-five pl-20 mr-10 cursor-pointer">Price</div>
+                    <button class="formatButton pb-0 cursor-pointer">
+                      <div *ngIf="sortOrder; then thenBlock else elseBlock"> </div>
+                      <ng-template #elseBlock>
+                        <i class="fa fa-long-arrow-up"></i>
+                      </ng-template>
+                      <ng-template #thenBlock>
+                        <i class="fa fa-long-arrow-down"></i>
+                      </ng-template>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn mbs-button-primary w-100 mt-3" type="button" (click)="applyFilters()" id="done">
+              <span>DONE</span>
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+
+    <div class="desktopView row" id="outletContainer">
+      <div [ngClass]="!showMap ? 'col-md-12':'col-md-12'" *ngIf="listView">
+        <div *ngIf="!showMap" class="d-none d-lg-block"><hr></div>
+        <div [ngClass]="hotelSelected === hotel.name ? 'hotel-view selected-view': 'hotel-view'"
+          *ngFor=" let id = index; let hotel of hotelData | locationFilter : {currVal: locationFilterView, defVal: localeObj.tf_8_MultiProperty_allLocationFilter } : {currVal: ratingFilterView, defVal: localeObj.tf_8_MultiProperty_allRatingsFilter } | hotelsSort : currencyCode : isSortOrderAsc"
+          id="hotel-{{id}}">
+          <div class="details {{!showMap ? 'd-flex descriptiveView': ''}}"
+            id="{{hotel.hotelCode}}" (click)="onHotelSelected(hotel.name, hotel)" (mouseover)="onHotelSelected(hotel.name, hotel)">
+            <div *ngIf="hotel.leadPhoto && hotel.leadPhoto.large"
+              class="hotel-info py-20"
+              [ngClass]="!showMap ? 'col-md-3': 'col-md-5'"
+            >
+              <div class="position-relative" (click)="openGallery(lightboxmodelGallery, hotel)" tabindex="0" (keyup.enter)="$event.target.click()">
+                <img class="hotel-img" src="{{hotel.leadPhoto.large}}" alt="Hotel Image">
+                <div class="hotel-img-all">
+                  <img class="px-1" src="/assets/multiproperty/gallery.svg" alt="Hotel Image">
+                  {{localeObj.tf_8_MultiProperty_allImages}}
+                </div>
+              </div>
+              <div class="dprTagLine" id="dprTagLine-Multiprop1" *ngIf=" hotel.tagline && hotel.tagline.length > 0 && isDpr7 && isCheckinSummaryAvailable" tabindex="0" (keyup.enter)="$event.target.click()">
+                <span class="sample"><img class="bell" src="/assets/icons/icon-noun-alert.png" alt="Alert Icon"></span>
+                <span class="txt-sm-lr lh-24 mr-2 dprText" [innerHTML] = "hotel.tagline | safeHtml"></span>
+              </div>
+            </div>
+            <div *ngIf="!(hotel.leadPhoto && hotel.leadPhoto.large)"
+              class="hotel-info py-20"
+              [ngClass]="!showMap ? 'col-md-3': 'col-md-5'"
+            >
+              <img class="hotel-img" src = "/assets/images/hotel-Image.png" alt="Hotel Image">
+              <div class="dprTagLine" id="dprTagLine-Multiprop1" *ngIf=" hotel.tagline && hotel.tagline.length > 0 && isDpr8 && isCheckinSummaryAvailable" tabindex="0">
+                <span class="sample"><img class="bell" src="/assets/icons/icon-noun-alert.png" alt="Alert Icon"></span>
+                <span class="txt-sm-lr lh-24 mr-2 dprText" [innerHTML] = "hotel.tagline | safeHtml"></span>
+              </div>
+            </div>
+            <div [ngClass]="!showMap ? 'hotel-detail-summary col-md-6' : 'hotel-detail-summary col-md-7'">
+              <div class="summary-section">
+                <div class="hotel-header-info" id="{{hotel.name}}">
+                  <h5 class="hotel-name px-0" attr.aria-label="{{hotel.name}}" tabindex="0">{{hotel.name}}</h5>
+                  <div class="hotel-location d-inline txt-sm-lr">
+                    <span *ngIf="hotel.address.street1">{{hotel.address.street1}}</span>
+                    <span *ngIf="hotel.address.city">, {{hotel.address.city}}</span>
+                    <span *ngIf="hotel.address.state">, {{hotel.address.state}}</span>
+                    <span *ngIf="hotel.address.country">, {{hotel.address.country}}</span>
+                    <span *ngIf="hotel.address.zip_code">, {{hotel.address.zip_code}}</span>
+                  </div>
+                  <div class="hotel-rating pr-0" *ngIf="displayFilters.displayStarRating">
+                    <img src="/assets/multiproperty/star_full.svg" class="pr-1" attr.alt="hotel star ratings {{i+1}}" *ngFor="let rating of [].constructor(hotel.hotelRating); let i = index">
+                    <svg viewBox="0 0 50 50" class="pr-1" *ngIf= "hotel.splitStar !== '0%'">
+                      <defs><linearGradient id="a" x1="0" y1="0" x2="1" y2="0">
+                        <stop [attr.offset]="hotel.splitStar" stop-color="#868686"/>
+                        <stop [attr.offset]="hotel.splitStar" stop-color="#ffffff"/>
+                      </linearGradient></defs>
+                      <path d="M25 0l-8.44 15.423L0 19.098l11.342 13.208L9.55 50l15.45-7.26L40.452 50l-1.793-17.694L50 19.098l-16.56-3.675z" xmlns="http://www.w3.org/2000/svg" stroke="0" fill="url(#a)" fill-rule="evenodd"/>
+                    </svg>
+                  </div>
+                  <p class="bookedRoomStatsColor txt-sm-lr lh-24 txt-bs mb-0 mt-1" *ngIf="!!hotel.roomBooked && displayUrgencyMessage">
+                    <span [innerHTML] = "getMessage(localeObj.tf_2_RoomList_rooms_roomBookedPeriod, [hotel.roomBooked.totalBooked,hotel.roomBooked.totalBooked>1?
+                      (localeObj.tf_4_Checkout_addons_roomsText | lowercase):(localeObj.tf_4_Checkout_addons_roomLc | lowercase),
+                      localeObj.tf_Generic_twentyFourHours]) | safeHtml"></span>
+                  </p>
+                  <div class="dprTagLine" id="dprTagLine-Multiprop2" *ngIf=" hotel.tagline && hotel.tagline.length > 0 && isDpr11 && isCheckinSummaryAvailable" tabindex="0">
+                    <span class="sample"><img class="bell" src="/assets/icons/icon-noun-alert.png" alt="Alert Icon"></span>
+                    <span class="txt-sm-lr lh-24 mr-2 dprText" [innerHTML] = "hotel.tagline | safeHtml"></span>
+                  </div>
+                </div>
+                <div class="hotel-description mt-2" *ngIf="hotel.shortDescription?.length > 145; else elseBlock">
+                  {{hotel.shortDescription}}</div>
+                <!-- <ng-template #elseBlock>
+                  <div class=" hotel-description mt-2">{{hotel.description}}</div>
+                </ng-template> -->
+                <!-- <ng-container #elseBlock> -->
+                  <div class="hotel-description mt-2" *ngIf="hotel.description && hotel.description.length >= 145 && !expanded[id]">
+                    {{hotel.description.substr(0, 145)}}
+                    <span *ngIf="!expanded[id]" (click)="expanded[id] = true" [innerHTML]="localeObj.tf_8_MultiProperty_text_showMore"></span>
+                  </div>
+                  <div class="hotel-description mt-2" *ngIf="expanded[id]">
+                    {{hotel.description}} - <span (click)="expanded[id] = false" [innerHTML]="localeObj.tf_8_MultiProperty_text_showLess"></span>
+                  </div>
+                <!-- </ng-container> -->
+              </div>
+              <div class="d-flex flex-row mt-1" *ngIf="hotel.hotelAmenities.length > 0 || hotel.commonAmenities.length > 0">
+                <div class="col amenity-label" *ngIf="hotel.hotelAmenities.length > 0">
+                  <div [innerHTML]="localeObj.tf_8_MultiProperty_text_Property_Amenities | safeHtml"></div>
+                </div>
+                <div class="col amenity-label" *ngIf="hotel.commonAmenities.length > 0">
+                  <div [innerHTML]="localeObj.tf_8_MultiProperty_text_Common_Amenities | safeHtml"></div>
+                </div>
+              </div>
+
+              <div class="d-flex flex-row mt-1" *ngIf="hotel.hotelAmenities.length > 0 || hotel.commonAmenities.length > 0">
+                <div class="col" *ngIf="hotel.hotelAmenities.length > 0">
+                  <div class="row">
+                    <div class="d-flex flex-column" *ngFor="let amenity of hotel.hotelAmenities | slice: 0:maxAmenitiesShown; let i=index;">
+                      <ng-template #popoverTemp>{{amenity.name}}</ng-template>
+                      <img *ngIf="amenity.thumbnailImageUrl" id="{{amenity.name}}" triggers="hover focus"
+                        #p="bs-popover" (document:click)="closeFix($event, p, amenity.name)" [popover]="popoverTemp"
+                        class="TooltipCP hotel-amenity" placement="top" containerClass="tooltiptextCP multiprop-amenity"
+                        container="body" [alt]="amenity.name" src="{{amenity.thumbnailImageUrl}}" tabindex="0"
+                        role="link" attr.aria-label="{{amenity.name}}">
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="hotel.hotelAmenities.length && hotel.commonAmenities.length > 0" class="hotel-amenities-seperator"></div>
+                <div class="col" *ngIf="hotel.commonAmenities.length > 0">
+                  <div class="row">
+                    <div class="d-flex flex-column" *ngFor="let amenity of hotel.commonAmenities | slice: 0:maxAmenitiesShown;">
+                      <ng-template #popoverTemp>{{amenity.name}}</ng-template>
+                      <img *ngIf="amenity.thumbnailImageUrl" id="{{amenity.name}}" triggers="hover focus"
+                        #p="bs-popover" (document:click)="closeFix($event, p, amenity.name)" [popover]="popoverTemp"
+                        class="TooltipCP hotel-amenity" placement="top" containerClass="tooltiptextCP multiprop-amenity"
+                        container="body" [alt]="amenity.name" src="{{amenity.thumbnailImageUrl}}" tabindex="0"
+                        role="link" attr.aria-label="{{amenity.name}}">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="showMap" class=" hotel-booking">
+                <button id="r_btn_view_rooms_{{id}}" class="btn mbs-button-primary" [ngClass]="{'disabled-hotel':!(hotel.available)}" type="button" (click)="viewHotel(hotel)" [disabled]="!hotel.available || (iataPresent && !hotel.validIataCode)" aria-labelledby="available-button" *ngIf="iataPresent ? (hotel.validIataCode && hotel.available) : hotel.available">
+                  <span [innerHTML]="localeObj.tf_9_MultiProperty_button_ViewRooms | safeHtml" id="available-button" aria-hidden="true">
+                  </span>
+                </button>
+                <button id="r_btn_view_rooms_{{id}}" class="btn mbs-button-primary" [ngClass]="{'disabled-hotel':!(hotel.available)}" type="button" (click)="viewHotel(hotel)" [disabled]="!hotel.available || (iataPresent && !hotel.validIataCode)" aria-labelledby="unavilable-button" *ngIf="!hotel.available || (iataPresent && !hotel.validIataCode)">
+                <span [innerHTML]="localeObj.tf_9_MultiProperty_button_Unavailable | safeHtml" id="unavilable-button" aria-hidden="true"></span>
+                </button>
+                <div *ngIf="hotel.available" class=" hotel-pricing d-flex mt-2">
+                  <div class="striked-out-price hotel-discounted-price ">
+                    <div class=" hotel-price-from txt-x-sm-lr" [ngClass]="getStrikeOffPrice(hotel) ? 'txt-warm-grey-four' : 'txt-black-three'" [innerHTML]="localeObj.tf_9_MultiProperty_text_from | safeHtml"></div> &nbsp;
+                    <div *ngIf="getStrikeOffPrice(hotel) && isCheckinSummaryAvailable" class="txt-x-sm-lr txt-warm-grey-four">
+                      <s>{{currCode}}{{getStrikeOffPrice(hotel) | customPriceFormat: '1.0-2': currencyCode}}</s>
+                    </div>
+                  </div> &nbsp; &nbsp;
+                  <div class=" hotel-price" tabindex="0"><b>{{currCode}}{{getLeadOffPrice(hotel) | customPriceFormat: '1.0-2': currencyCode}}<span *ngIf="showAverageNightlyRate" [innerHTML]="localeObj.tf_2_RoomList_rooms_perNight | safeHtml"></span>
+                    <span *ngIf="!showAverageNightlyRate" [innerHTML]="localeObj.tf_2_RoomList_rooms_label_perStay | safeHtml"></span>
+                  </b></div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="!showMap" Class="col-md-3" [ngClass]="hotel.available ? 'hotel-price-panel' : ''">
+              <div *ngIf="hotel.available" class="hotel-pricing-list-view mt-2">
+                  <h5 class="txt-lg-lr lh-30 ls-sm txt-black d-inline-block d-sm-block align-middle m-0 mr-1">From</h5>
+                  <div class="d-flex d-inline-block">
+                  <div class="striked-out-price hotel-discounted-price "> 
+                  <div *ngIf="getStrikeOffPrice(hotel) && isCheckinSummaryAvailable" class="txt-warm-grey-four txt-lg-lr lh-24 ls-x-sm">
+                    <s>{{currCode}}{{getStrikeOffPrice(hotel) | customPriceFormat: '1.0-2': currencyCode}}</s>
+                  </div>
+                </div>
+                <div class=" hotel-price d-flex d-inline-block lh-30">
+                  <strong class="txt-x-lg-lb lh-30 txt-black ls-1">{{currCode}}{{getLeadOffPrice(hotel) | customPriceFormat: '1.0-2': currencyCode}}</strong>
+                  <span class="txt-sm-lr lh-30 txt-warm-grey-four ls-x-sm">
+                    <span *ngIf="showAverageNightlyRate" [innerHTML]="localeObj.tf_2_RoomList_rooms_perNight | safeHtml"></span>
+                    <span *ngIf="!showAverageNightlyRate" [innerHTML]="localeObj.tf_2_RoomList_rooms_label_perStay | safeHtml"></span>
+                </span>
+                </div>
+              </div>
+              </div>
+              <button id="r_btn_view_rooms_{{id}}" *ngIf="iataPresent ? (hotel.validIataCode && hotel.available) : hotel.available" class="view-hotels-btn btn mbs-button-primary mt-3" [ngClass]="{'disabled-hotel': !(iataPresent ? (hotel.validIataCode && hotel.available) : hotel.available)}" 
+              type="button" (click)="viewHotel(hotel)" [disabled]="!(iataPresent ? (hotel.validIataCode && hotel.available) : hotel.available)" 
+              [innerHTML]="localeObj.tf_9_MultiProperty_button_ViewRooms | safeHtml">
+              </button>
+              <button id="r_btn_view_rooms_{{id}}" *ngIf="!hotel.available || (iataPresent && !hotel.validIataCode)" class="view-hotels-btn btn mbs-button-primary" [ngClass]="{'disabled-hotel':!(hotel.available)}" type="button" (click)="viewHotel(hotel)" [disabled]="!hotel.available || (iataPresent && !hotel.validIataCode)" 
+              [innerHTML]="localeObj.tf_9_MultiProperty_button_Unavailable | safeHtml">
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Gallery images modal -->
+    <ng-template #lightboxmodelGallery>
+      <div class="room-details">
+        <div class="modal-header mb-30">
+          <h4 class="modal-title txt-x-lg-lb lh-30 ls-1 txt-black-five" [innerHTML]="hotelInfo.name | safeHtml"></h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="lightbox-contents row" *ngIf="hotelInfo !== undefined">
+            <div class="left-panel-expanded">
+              <div class="roomLargeImage imgContainer mb-3"
+                [ngStyle]="!selectedImage.urls.large ? {'display':'none'} : {'display':'block'}">
+                <ngx-slick-carousel class="carousel" #slickModal1="slick-carousel" [config]="slideConfig1"
+                  (init)="slickInit($event)" (afterChange)="afterChange($event)" (beforeChange)="beforeChange($event)">
+                  <div ngxSlickItem *ngFor="let slide of hotelInfo.imageInfo" class="slide">
+                    <img src="{{selectedImage.urls.large}}" alt="{{hotelInfo.name}}" />
+                  </div>
+                </ngx-slick-carousel>
+              </div>
+
+              <ngx-slick-carousel class="carousel horizontal-slider" #slickModal="slick-carousel" [config]="slideConfig"
+                (init)="slickInit($event)" (afterChange)="afterChange($event)" (beforeChange)="beforeChange($event)">
+                <div ngxSlickItem *ngFor="let slide of hotelInfo.imageInfo; let i = index;" class="slide"
+                  (click)="slickModal.slickGoTo(i);imageSelected(slide, i);">
+                  <span class="imageIndex">{{i}}</span>
+                  <img src="{{ slide.urls.thumb_jumbo }}" class="slider-image"
+                    alt="{{slide.alt_text ? slide.alt_text: 'Hotel Image' }}"
+                    [ngStyle]="{'opacity': slide.imageOpacity}"
+                    (click)="slickModal.slickGoTo(i);imageSelected(slide, i);">
+                </div>
+              </ngx-slick-carousel>
+              <!-- <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig" (init)="slickInit($event)" (afterChange)="afterChange($event)">
+                <div ngxSlickItem *ngFor="let slide of hotelInfo.imageInfo" class="slide">
+                  <img src="{{ slide.urls.thumb_jumbo }}" class="slider-image" alt="{{slide.alt_text ? slide.alt_text: 'Hotel Image' }}" [ngStyle]="{'opacity': slide.urls.thumb_jumbo === selectedImage.urls.thumb_jumbo ? 0.4 : 1}"
+                  (click)="imageSelected(slide)">
+                </div>
+              </ngx-slick-carousel> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+  <div [ngClass]="!listView ?'hotel-map col-md-12':'hotel-map col-md-4 px-0'" *ngIf="showMap">
+    <div [ngClass]="scrollClass" id="mySticky">
+      <button class="map-view btn btn-light" id="mapDisplay" (click)="dispMap(true)">&#10007;</button>
+      <div class="d-flex map-inputbox" id="map-input" dir="ltr">
+        <i class="fa fa-map-marker"></i>
+        <input
+          id="pac-input"
+          class="controls"
+          type="text"
+          placeholder="Find distance or Search Near by"
+        />
+      </div>
+      <agm-map *ngIf="initialLoad" id="map" #gm [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" [zoomControl]="true" [fitBounds]="true" [usePanning]="true" (mapReady)="onMapReady($event)">
+        <agm-marker *ngFor="let coord of hotelData; let i = index" [latitude]="coord.latitude" [agmFitBounds]="true"
+          class="map-marker" [longitude]="coord.longitude" [iconUrl]="coord.icon" [visible]="false"
+          [markerClickable]="true" attr.aria-label="{{coord.name}}">
+          <agm-info-window [disableAutoPan]="false" #infoWindow [isOpen]="true">
+            <div *ngIf="coord.available; else coordUnavailable"
+              [ngClass]="(selectedHotel.latitude === coord.latitude)?'info-panel loc-selected':'info-panel loc-cluster'" tabindex="0">
+              <div class="d-flex flex-column">
+                <button class="map-marker-btn" *ngIf="selectedHotel.latitude === coord.latitude && expandMapwindow" (click)="closeWindow()" tabindex="0">x</button>
+                <img class="map-marker-img" *ngIf="selectedHotel.latitude === coord.latitude && expandMapwindow && !!coord.leadPhoto.large" src="{{coord.leadPhoto.large}}" alt="Hotel Image">
+                <img class="map-marker-img" *ngIf="selectedHotel.latitude === coord.latitude && expandMapwindow && !(!!coord.leadPhoto.large)" src = "/assets/images/hotel-Image.png" alt="Hotel Image">
+              </div>
+              <div class="p-2" (click)="onMarkerClick(coord, coord.name)">
+                <div class="marker-name txt-sm-jb" *ngIf="selectedHotel.latitude === coord.latitude && expandMapwindow" tabindex="0" att.aria-label="Hotel {{coord.name}}">{{coord.name}}</div>
+                <div class="alignment-container d-flex">
+                  <div>
+                    <div *ngIf="coord.available" class="marker-pricing txt-sm-jb" tabindex="0" attr.aria-label="Hotel price {{currCode}}{{getLeadOffPrice(coord) | customPriceFormat: '1.0-2': currencyCode}} {{localeObj.tf_2_RoomList_rooms_perNight}}">
+                      {{currCode}}{{getLeadOffPrice(coord) | customPriceFormat: '1.0-2': currencyCode}}
+                      <span [innerHTML]="localeObj.tf_2_RoomList_rooms_perNight | safeHtml"></span>
+                    </div>
+                    <div class="marker-rating pr-0" *ngIf="displayFilters.displayStarRating" tabindex="0">
+                      <img src="/assets/multiproperty/star_full.svg" class="pr-1" attr.alt="Hotel star ratings {{i+1}}" *ngFor="let rating of [].constructor(coord.hotelRating); let i = index">
+                      <svg viewBox="0 0 50 50" class="pr-1" *ngIf= "coord.splitStar !== '0%'">
+                        <defs><linearGradient id="a-{{i}}" x1="0" y1="0" x2="1" y2="0">
+                          <stop [attr.offset]="coord.splitStar" stop-color="#868686"/>
+                          <stop [attr.offset]="coord.splitStar" stop-color="#ffffff"/>
+                        </linearGradient></defs>
+                        <path d="M25 0l-8.44 15.423L0 19.098l11.342 13.208L9.55 50l15.45-7.26L40.452 50l-1.793-17.694L50 19.098l-16.56-3.675z" xmlns="http://www.w3.org/2000/svg" stroke="0" [attr.fill]="'url(#a-'+ i +')'" fill-rule="evenodd"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <button *ngIf="selectedHotel.latitude === coord.latitude && expandMapwindow" id="map_btn_view_rooms" [ngClass]="{'disabled-map-view-hotel-btn':!(coord.available)}" class="btn mbs-button-primary" type="button" (click)="viewHotel(coord)" [disabled]="!coord.available || (iataPresent && !coord.validIataCode)" tabindex="0" attr.aria-label="{{!coord.available ? localeObj.tf_9_MultiProperty_button_Unavailable : localeObj.tf_9_MultiProperty_button_ViewRooms}}">
+                    <span *ngIf="iataPresent ? (coord.validIataCode && coord.available) : coord.available" [innerHTML]="localeObj.tf_9_MultiProperty_button_ViewRooms | safeHtml"></span>
+                    <span *ngIf="!coord.available || (iataPresent && !coord.validIataCode)" [innerHTML]="localeObj.tf_9_MultiProperty_button_Unavailable | safeHtml"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <ng-template #coordUnavailable>
+              <div class="unavailableLoc">
+                <p class="unavailableLoc-txt" [innerHTML]="localeObj.tf_9_MultiProperty_button_Unavailable | safeHtml"></p>
+              </div>
+            </ng-template>
+          </agm-info-window>
+        </agm-marker>
+      </agm-map>
+    </div>
+    <!-- <div class="mapped-hotel mt-0 mx-0" *ngIf="!listView">
+      <div class=" brief d-flex flex-row">
+        <img class=" p-2 hotel-img" src="{{selectedHotel.leadPhoto.large}}">
+        <div class=" p-1 basic-info">
+          <div class="hotel-name px-0 txt-sm-lr">{{selectedHotel.name}}</div>
+          <div class="hotel-location txt-br-grey txt-x-sm-lr">{{selectedHotel.address.street1}}</div>
+          <div class="marker-rating pr-0" *ngIf="displayFilters.displayStarRating">
+            <img src="/assets/multiproperty/star_full.svg" class="pr-1" alt="Star" *ngFor="let rating of [].constructor(selectedHotel.hotelRating)">
+            <svg viewBox="0 0 50 50" class="pr-1">
+              <defs><linearGradient id="a" x1="0" y1="0" x2="1" y2="0">
+                <stop [attr.offset]="selectedHotel.splitStar" stop-color="#868686"/>
+                <stop [attr.offset]="selectedHotel.splitStar" stop-color="#ffffff"/>
+              </linearGradient></defs>
+              <path d="M25 0l-8.44 15.423L0 19.098l11.342 13.208L9.55 50l15.45-7.26L40.452 50l-1.793-17.694L50 19.098l-16.56-3.675z" xmlns="http://www.w3.org/2000/svg" stroke="0" fill="url(#a)" fill-rule="evenodd"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="hotel-description txt-sm-jr px-2 pb-0"
+        *ngIf="selectedHotel.short_description?.length > 145; else dataBlock">
+        {{selectedHotel.short_description}}</div>
+      <ng-template #dataBlock>
+        <div class="hotel-description txt-sm-jr px-2 pb-0">{{selectedHotel.description}}</div>
+      </ng-template>
+      <div class = "ml-2 mr-2">
+        <button id="r_btn_view_rooms" class="btn mbs-button-primary mb-2" type="button" (click)="viewHotel(selectedHotel)">
+          <span [innerHTML]="localeObj.tf_9_MultiProperty_button_ViewRooms | safeHtml"></span>
+        </button>
+      </div>
+    </div> -->
+  </div>
+</div>

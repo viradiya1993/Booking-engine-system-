@@ -1,0 +1,234 @@
+<h4 class="txt-xxx-lg-jb txt-black-five m-0 header {{RTL_Flag ? 'text-right' : ''}}"  [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_heading | safeHtml"></h4>
+<div class="mbs-card {{RTL_Flag ? 'text-right' : ''}}">
+  <div class="row align-items-center flex-column flex-md-row">
+    <div class="col-md-4 p-0" tabindex="0" id="payment-method">
+      <label class="txt-lg-lb txt-black-five ls-x-sm" [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_preferrePaymentMode | safeHtml"></label>
+    </div>
+    <!-- <div class="row col-md-8 payment-icons flex-column flex-sm-row" [ngStyle]= "paymentMethods.length > 3 ?{'justify-content': 'space-between'}: null">
+      <div class = "payment-method-container" *ngFor="let cardType of paymentMethods; let i=index">
+        <label *ngIf="paymentMethodsFlagList[cardType.code]" class="{{getLabelClassesForCard(cardType.code)}}" tabindex="0">
+          <input class="form-check-input" type="radio" [(ngModel)]="paymentType" name="inlineRadioOptions" id="{{'inlineRadio' + i}}"
+          value="{{cardType.code}}" (change)="cardTypeValidation()">
+          <span class="{{getSpanClassesForCard(cardType.code)}}"></span>
+          <img class="form-check-label payment-option" src="{{cardType.thumbnailImageURL}}">
+        </label>
+      </div>
+    </div> -->
+    <div class="col-md-8 d-flex payment-icons flex-sm-row flex-wrap">
+      <div class="payment-method-container" *ngFor="let cardType of paymentMethods; let i=index">
+        <label *ngIf="paymentMethodsFlagList[cardType.code]" class="{{getLabelClassesForCard(cardType.code)}}" for="{{cardType.name}}">
+          <input class="control-focus form-check-input" type="radio" [(ngModel)]="paymentType" name="inlineRadioOptions" id="{{cardType.name}}" value="{{cardType.code}}" (change)="cardTypeValidation()" (keyup.enter)="cardTypeValidation()">
+          <span class="control-focus {{getSpanClassesForCard(cardType.code)}} " tabindex="0" (keyup.enter)="cardTypeValidationOnEnter($event)" (keyup.Space)="cardTypeValidationOnEnter($event)" attr.aria-label="{{cardType.name}}" role="radio"></span>
+          <img class="{{getImgClassesForCard(cardType.code)}}" src="{{cardType.thumbnailImageURL}}" alt="{{cardType.name}}">
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="row align-items-center flex-column flex-md-row" *ngIf="isMcpEnabled && showPreferredCurrency">
+      <div class="col-md-4 p-0">
+          <label class="txt-lg-lb txt-black-five ls-x-sm" for="preferrredCurrency">{{localeObj.tf_4_Checkout_paymentMethod_prefCurrency}}</label>
+      </div>
+      <div class="row col-md-8 mbs-dropdown-primary flex-column flex-sm-row">
+            <ng-select name="preferredCurrency" [(ngModel)]="preferredCurrency" class="dropdown custom" [items]="supportedCurrenciesList" [multiple]="false" bindLabel="code" [closeOnSelect]="true" bindValue="code" [clearable]="false" [searchable]="true" (change)="updateSelectedPaymentCurrency($event)" [labelForId]="'preferrredCurrency'"></ng-select>
+      </div>
+  </div>
+
+  <span class="col-sm-8"><small class="error-msg ScrollToElement" *ngIf="!isCardSelected" [innerHTML]="cardTypeError | safeHtml"></small></span>
+  <div class="tab row" *ngIf="ifCardTypepayment() || ManualCreditCard || !isLinkToPaymentGateway">
+    <form class="visa" [formGroup]="creditCardForm">
+      <!-- <div class="row">
+        <div class="col-sm-4">
+          <label>Preferred Currency</label>
+        </div>
+        <div class="col-sm-8">
+          <select class="dropdown form-conrol input-sm">
+            <option value='01'>SGD</option>
+          </select>
+        </div>
+      </div> -->
+      <div class="form-group row">
+        <div class="col-sm-4 p-0">
+          <label for="name" class="txt-lg-lb txt-black-five ls-x-sm" [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_cardHolderName | safeHtml"></label>
+        </div>
+        <div class="col-sm-8" [ngClass]="{'error': !isNameValid}">
+          <input type="text" class="control-focus form-control input-sm txt-md-lr txt-black-three ls-x-sm" formControlName="name" name="Name on Card" id="name"
+            autocomplete="off" [attr.maxlength]="100" placeholder="{{localeObj.tf_4_Checkout_paymentMethod_cardholderNameHelptext}}" (keyup)="onKeyUpCommon('name')" (change)="isCardNameValid('name')"
+            tabindex="0" attr.aria-label="{{localeObj.tf_4_Checkout_paymentMethod_cardHolderName}}" autocomplete="off">
+          <small tabindex="0" class="error-msg ScrollToElement" *ngIf="!isNameValid" [innerHTML]="nameFieldError | safeHtml"></small>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-4 p-0">
+          <label for="cc-number" class="txt-lg-lb txt-black-five ls-x-sm" [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_cardNumber | safeHtml"></label>
+        </div>
+        <div class="col-sm-8" [ngClass]="{'error': !isCardNumberValid}">
+          <input type="tel" name="cc-number" class="control-focus col-sm-9 form-control txt-md-lr txt-black-three ls-x-sm cc-number {{RTL_Flag === false ? 'text-left': 'text-right'}}" autocomplete="off" tabindex="0" dir="ltr"
+            id="cc-number" placeholder="{{cardNumberPlaceHolderString}}" (keyup)="onCreditCardKeyUp($event)" (keypress)="onKeyPress($event)" (focusout)="onCardNumberChange()" (cut)="$event.preventDefault()"
+            (copy)="$event.preventDefault()" (paste)="$event.preventDefault()" attr.aria-label="{{localeObj.tf_4_Checkout_paymentMethod_cardNumber}}">
+        </div>
+        <br *ngIf="!isCardNumberValid"><br *ngIf="!isCardNumberValid">
+        <div class="row col-sm-12" *ngIf="!isCardNumberValid">
+          <div class="col-sm-4"></div>
+          <div class="row col-sm-8">
+            <small  tabindex="0" class="error-msg ScrollToElement" [innerHTML]="cardNumberError | safeHtml"></small>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-4 p-0">
+          <label class="txt-lg-lb txt-black-five ls-x-sm" [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_expirationDate | safeHtml" for="expiryMonths"></label>
+        </div>
+        <div class="row col-sm-8">
+          <!-- <div class="mbs-dropdown-primary mr-10" dropdown>
+            <a dropdownToggle class="dropdown-toggle" tabindex="0">
+              {{selectedMonth|| selectedMonthDefault}}
+            </a>
+            <ul *dropdownMenu class="dropdown-menu">
+              <li class="dropdown-item" *ngFor="let month of monthsToPopulate" [value]="month" (click)="selectMonthChangeHandler($event)">
+                {{month}}
+              </li>
+            </ul>
+          </div> -->
+          <div class="mbs-dropdown-primary {{RTL_Flag ? 'mr-0' : 'mr-10'}}">
+            <ng-select name="ExpiryMonthsdd" [(ngModel)]="selectedMonth" [ngModelOptions]="{standalone: true}" placeholder="{{localeObj.tf_4_Checkout_paymentMethod_ccMonthExpiryHelptext}}" class="dropdown custom {{RTL_Flag ? 'mr-0' : ''}}"
+              [items]="monthsToPopulate" [multiple]="false" bindLabel="name" [closeOnSelect]="true" bindValue="name" notFoundText="{{localeObj.tf_4_Checkout_paymentMethod_ccMonthExpiryHelptext}}"
+              (change)="selectMonthChangeHandler($event)" [clearable]="false" [labelForId]="'expiryMonths'" attr.aria-label="{{selectedMonth ? 'Selected Month ' + selectedMonth : 'Select Expiry Month'}}" tabindex="0">
+            </ng-select>
+          </div>
+          <!-- <div *ngIf="yearsToPopulate" class="mbs-dropdown-primary" dropdown>
+            <a dropdownToggle class="dropdown-toggle" tabindex="0">
+              {{selectedYear || selectedYearDefault}}
+            </a>
+            <ul *dropdownMenu class="dropdown-menu">
+              <li class="dropdown-item" *ngFor="let year of yearsToPopulate" [value]="year" (click)="selectYearChangeHandler($event)">
+                {{year}}
+              </li>
+            </ul>
+          </div> -->
+          <div *ngIf="yearsToPopulate" class="mbs-dropdown-primary expiry-date">
+            <ng-select name="ExpiryYearsdd" [(ngModel)]="selectedYear" [ngModelOptions]="{standalone: true}" placeholder="{{localeObj.tf_4_Checkout_paymentMethod_ccExpiryYearHelptext}}" class="dropdown custom"
+              [items]="yearsToPopulate" [multiple]="false" bindLabel="name" [closeOnSelect]="true" bindValue="name" notFoundText="{{localeObj.tf_4_Checkout_paymentMethod_ccExpiryYearHelptext}}"
+              (change)="selectYearChangeHandler($event)" [clearable]="false" [labelForId]="'expiryYear'" attr.aria-label="{{selectedYear ? 'Selected Year ' + selectedYear : 'Select Expiry Year'}}" tabindex="0">
+            </ng-select>
+          </div>
+        </div>
+        <div class="row col-sm-12">
+          <div class="col-sm-4"></div>
+          <div class="row col-sm-8">
+            <small  tabindex="0" class="error-msg ScrollToElement" *ngIf="(selectedYear < checkOutYear) || (selectedYear == currentYear && selectedMonth < currentMonth + 1) || (selectedYear == checkOutYear && selectedMonth < checkOutMonth + 1) || !isExpMonthValid || !isExpYearValid">
+              <span [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_invalidExpirationDate | safeHtml"></span>
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row" *ngIf="displayCvv">
+        <div class="col-sm-4 p-0">
+          <label class="txt-lg-lb txt-black-five ls-x-sm" [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_CVV | safeHtml"></label>
+        </div>
+        <div class="col-sm-8" [ngClass]="{'error': !isCvvNumberValid}">
+          <input type="tel" class="control-focus col-sm-2 form-control txt-md-lr txt-black-three ls-x-sm cvv " required formControlName="cvv"
+           autocomplete="off" tabindex="0" pattern="CVV_REGEX" [attr.maxlength]="maxCvvLength"
+            id="cvv-number" placeholder="{{cvvPlaceHolderString}}" (keypress)="onCvvKeyPress($event)" (keyup)="restrictCvvNumbers($event)" (focusout)="onCvvNumberChange($event)">
+        </div>
+        <br *ngIf="!isCvvNumberValid"><br *ngIf="!isCvvNumberValid">
+        <div class="row col-sm-12" *ngIf="!isCvvNumberValid">
+          <div class="col-sm-4"></div>
+          <div class="row col-sm-8">
+            <small  tabindex="0" class="error-msg ScrollToElement" [innerHTML]="cvvNumberError | safeHtml"></small>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <div class="form-group control-focus" *ngIf = "isPaymentMethodSelected" tabindex="0">
+    <hr class="p-0">
+    <label class="txt-lg-lb ls-x-sm txt-black-five d-flex payment-options">
+      <div class="d-flex flex-column w-100">
+        <span class="txt-sm-lb ls-x-sm" *ngIf="showPaymentOptions">
+          <input type="radio" name="paymentOption" [(ngModel)]="paymentOption" value="payNow" *ngIf="isPayNowSet()" id="pay_now" /> &nbsp;<label *ngIf="isPayNowSet()" class="mb-0 ml-2 txt-lg-lb" [innerHTML]="payNowRadioLabel"></label>&nbsp;&nbsp;
+        </span>
+        <span class="d-flex ml-4">
+          <div>
+            <span [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_totalAmount | safeHtml"></span>:
+          <span *ngIf="!showDefaultPrice" class="pl-10 txt-xx-lg-lb ls-xx-sm txt-black-three"><span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="totalamount |
+          customPriceFormat: '': currFilterValue | safeHtml"></span></span>
+
+          <span *ngIf="showDefaultPrice && !showPreferredCurrency" class="pl-10 txt-xx-lg-lb ls-xx-sm txt-black-three"><span [innerHTML]="defCurrCode | safeHtml"></span><span [innerHTML]="defTotalPrice |
+          customPriceFormat: '': defCurrFilterValue | safeHtml"></span></span>
+          <span *ngIf="showDefaultPrice && !showPreferredCurrency" class="pl-10 txt-sm-lr txt-black-three ls-x-sm"><span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="totalamount |
+          customPriceFormat: '': currFilterValue | safeHtml"></span></span>
+
+          <span *ngIf="showDefaultPrice && showPreferredCurrency" class="pl-10 txt-xx-lg-lb ls-xx-sm txt-black-three">
+              <span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="totalamount |
+              customPriceFormat: '': currFilterValue | safeHtml"></span>
+          </span>
+          <span *ngIf="showDefaultPrice && showPreferredCurrency" class="pl-10 txt-sm-lr txt-black-three ls-x-sm">
+              <span [innerHTML]="defCurrCode | safeHtml"></span><span [innerHTML]="defTotalPrice |
+              customPriceFormat: '': defCurrFilterValue | safeHtml"></span>
+        </span>
+      </div>
+
+      </span>
+      <div  class="ml-4" *ngIf="!isRT4ModifyFlowEnabled">
+        <span *ngIf="showStayandPay && policyText" class="pl-10 pb-10 txt-sm-lb">(<span [innerHTML]="policyText | safeHtml"></span>)</span>
+        <span *ngIf="!showStayandPay && ManualCreditCard && localeObj.tf_4_Checkout_paymentMethod_manualformCurrencyMsg" class="pl-10 pb-10 txt-x-sm-li txt-br-grey manualcc-charge-msg">(<span [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_manualformCurrencyMsg | safeHtml"></span><span [innerHTML]="defCurrFilterValue | safeHtml"></span>)</span>
+      </div> 
+      <div *ngIf="showDefaultPrice && !showPreferredCurrency" class="txt-sm-lr ml-4 txt-black-three ls-x-sm">
+        <small><span [innerHTML]="getMessage(localeObj.tf_4_Checkout_paymentMethod_priceChargedInCurrencyNote, [currFilterValue,defCurrFilterValue ]) | safeHtml"></span></small>
+      </div> 
+      <p class="txt-x-sm-li txt-x-sm-lr ml-4 txt-br-grey" *ngIf="localeObj.tf_4_Checkout_paymentMethod_incTaxServiceCharges">(<span [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_incTaxServiceCharges | safeHtml"></span>)</p>
+      </div>
+      <div class="seperator mx-3" *ngIf="showPaymentOptions && isPayLaterSet()"></div>
+      <div class="txt-sm-lb ls-x-sm w-100" *ngIf="showPaymentOptions">
+        <input type="radio" name="paymentOption" [(ngModel)]="paymentOption" value="payLater" *ngIf="isPayLaterSet()" id="pay_later" />&nbsp;<label class="mb-0 ml-2 txt-lg-lb pay-later" *ngIf="isPayLaterSet()" [innerHTML]="payLaterRadioLabel"></label>
+        <p class ="txt-sm-lr ml-4" *ngIf="isPayLaterSet()" [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_radioLable_payLaterText | safeHtml"></p>
+      </div>
+    </label>
+  </div>
+
+  <div class="tab row" *ngIf="paymentType === 'ali'">
+    <!-- <p>Redirecting to Alipay gateway. Please wait...</p> -->
+  </div>
+
+</div>
+<div class="mbs-card" *ngIf="isManageBookingFlow && ifCardTypeAlipay() ">
+  <div>
+    <div class="row">
+      <div class="col-md-4 p-0">
+          <label class="txt-lg-lb txt-black-five ls-x-sm" [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_preferrePaymentMode | safeHtml"></label>
+      </div>
+      <div class="col-sm-2  p-0">
+        <label class="mbs-radio-primary form-check form-check-inline cursor-pointer">
+          <input [(ngModel)]="paymentType" class="" type="radio" name="inlineRadioOptions2"
+            id="inlineRadio2" value="{{CARD_TYPE.ALI}}" (change)="cardTypeValidation()">
+          <span class="control-focus radio mr-1"></span>
+          <img class="form-check-label payment-option" src="/assets/Payment/alipay-logo.png" alt="Alipay">
+        </label>
+      </div>
+      <!-- <div class="col-sm-10  p-0">
+        <label class="txt-lg-lb ls-x-sm txt-black-five" [innerHTML]="Alipay | safeHtml"></label>
+      </div> -->
+    </div>
+  </div>
+  <div class="form-group">
+    <hr class="p-0">
+    <label class="txt-lg-lb ls-x-sm txt-black-five">
+      <span [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_totalAmount | safeHtml"></span>:
+      <span *ngIf="!showDefaultPrice" class="pl-10 txt-xx-lg-lb ls-xx-sm txt-black-three" ><span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="totalamount |
+      customPriceFormat: '': currFilterValue | safeHtml"></span></span>
+      <span *ngIf="showDefaultPrice" class="pl-10 txt-xx-lg-lb ls-xx-sm txt-black-three" ><span [innerHTML]="defCurrCode | safeHtml"></span><span [innerHTML]="defTotalPrice |
+      customPriceFormat: '': defCurrFilterValue | safeHtml"></span></span>
+      <span *ngIf="showDefaultPrice" class="pl-10 txt-sm-lr txt-black-three ls-x-sm" ><span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="totalamount |
+      customPriceFormat: '': currFilterValue | safeHtml"></span></span>
+    </label>
+    <p class="txt-x-sm-li txt-br-grey" *ngIf="localeObj.tf_4_Checkout_paymentMethod_incTaxServiceCharges">(<span [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_incTaxServiceCharges | safeHtml"></span>)</p>
+  </div>
+</div>
+<div class="payment-error-message" *ngIf="paymentType === CARD_TYPE.ALI && alipay_rate_change_warning" [innerHTML]="alipay_rate_change_warning | safeHtml"></div>
+<div class="payment-error-message" *ngIf="checkForMPGSALertText() && mpgs_charge_msg" [innerHTML]="mpgs_charge_msg | safeHtml"></div>
+<div id="red-error "class="text-danger txt-lg-lb txt-black-five ls-x-sm payment-error-message" *ngIf="errorFound" [innerHTML]="errorMsg | safeHtml"></div>

@@ -1,0 +1,30 @@
+<!-- <div class="outlet-container {{RTL_Flag ? 'text-right' : 'text-left'}}">
+  <div class="mt-30">
+    <h4 class="control-focus modal-title txt-xxx-lg-jb lh-32 txt-black mb-3 text-uppercase" tabindex="0" [innerHTML]="localeObj.tf_99_technicalDifficultyError | safeHtml"></h4>
+  </div>
+  <br>
+  <div class="mt-30">
+    <h6 class="control-focus txt-lg-lr ls-x-sm txt-black-three lh-26" tabindex="0" [innerHTML]="localeObj.tf_99_systemErrorPage | safeHtml"></h6>
+  </div>
+  <div class="lh-24 mt-30">
+    <h6 class="txt-lg-lr ls-x-sm txt-black-three lh-26">
+      <a class="control-focus txt-md-lr txt-black-three hyl-dark txt-underline" href='#' tabindex="0"  (click)="redirectPage()" (keyup.enter)="$event.target.click()"> <span [innerHTML]="localeObj.tf_Header_Commons_roomsAndSuitesDisplay | safeHtml"></span></a>
+    </h6>
+  </div>
+</div> -->
+
+
+<ng-template #genericError data-backdrop="static" data-keyboard="false">
+  <div id="genericError-modal">
+    <div class="outlet-container text-center py-4">
+      <div class="control-focus internal-server">
+        <b class="error-code">500</b>
+        <br/>
+        Internal server error!</div>
+      <div>
+        <h6 class="control-focus txt-lg-lr ls-x-sm txt-black-three lh-26 error-text" tabindex="0" [innerHTML]="localeObj.tf_99_systemErrorPage | safeHtml"></h6>
+        <button class="control-focus txt-black-three hyl-dark mbs-button-secondary mt-30 px-5" href='#' tabindex="0"  (click)="redirectPage()" (keyup.enter)="$event.target.click()" [innerHTML]="localeObj.tf_Header_Commons_roomsAndSuitesDisplay | safeHtml"></button>
+      </div>
+    </div>
+  </div>
+</ng-template>

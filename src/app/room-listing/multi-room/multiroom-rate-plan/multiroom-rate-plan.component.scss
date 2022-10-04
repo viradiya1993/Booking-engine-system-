@@ -1,0 +1,126 @@
+.card {
+  box-shadow: 5px 5px #21252930;
+  margin-bottom: 40px;
+  margin-top: 10px;
+  margin-left: 50px;
+  margin-right: 50px;
+  padding-top: 15px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px; 
+  width: 1400px;
+}
+
+ul {
+  list-style-type: none;
+}
+
+li {
+  li::before {
+    content: "•";
+    color: #e2c67c
+  }
+}
+
+a {
+  color: black;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.fa-angle-left {
+  font-size: 20px;
+}
+
+a {
+  color: black;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+ul {
+  list-style-type: none;
+}
+
+span.strikedPrice {
+  text-decoration: line-through;
+}
+
+.vl {
+  border-left: 2px solid #002c5F;
+  height: 50px;
+  float: left;
+  padding-right: 15px;
+  height: 100%;
+}
+
+:host-context(body[dir="rtl"]) {
+  .vl {
+    border-left: none!important;
+    border-right: 2px solid #D0AF68;
+    padding-right: 0;
+    padding-left: 15px;
+    float: right;
+  }
+}
+
+.TooltipCP:hover {
+  cursor: pointer;
+}
+
+.TooltipCP {
+  position: relative;
+  display: inline-block;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.TooltipCP .tooltiptextCP {
+  visibility: hidden;
+  width: 260px;
+  line-height: 18px;
+  background-image: linear-gradient(to right, #f3f3f3, #f6f6f6 48%, #ffffff);
+  box-shadow: 0px 2px 7.6px 0.4px rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  padding: 15px 10px;
+  position: absolute;
+  z-index: 120;
+  top: 36px;
+  left: -40px;
+}
+
+.TooltipCP .tooltiptextCP::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 15%;
+  border-width: 15px;
+  border-style: solid;
+  border-color: transparent transparent #f6f6f6 transparent;
+}
+
+.TooltipCP:hover .tooltiptextCP {
+  visibility: visible;
+}
+
+div.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
+.Container {
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400; 
+  background-image: linear-gradient(to left, #FCFCFC 0%, #EDEDED 80%);
+  @media only screen and (min-width: 1200px) {
+    padding: 0px 85px;
+  }
+}
+
+:host-context(body[dir="rtl"]) {
+  .price-summary-total-label {
+    text-align: right;
+  }
+}

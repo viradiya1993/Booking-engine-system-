@@ -1,0 +1,76 @@
+::-webkit-scrollbar {
+  width: 6px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #2A6EBB;
+  border-radius: 10px;
+  height: 120px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #2A6EBB;
+}
+
+.viewDetails {
+  padding-left: 15px;
+  cursor: pointer;
+}
+
+.additional-privilege-heading {
+  cursor: pointer;
+}
+
+.fa-arrow-up {
+  color: #2A6EBB;
+}
+
+.fa-angle-down:before {
+  content: "\f107";
+  color: black;
+}
+
+.left-side-panel {
+  padding: 0px;
+  width: 25%;
+  text-align: left;
+}
+
+.right-side-panel {
+  border-top: none;
+  padding: 15px 25px 15px 25px;
+  margin: 0;
+  border-left: 1px solid #e9ecef;
+  width: calc(100% - 25% - 10px);
+  text-align: left;
+}
+
+.feature-style {
+  background: white;
+  padding: 10px;
+  border: 0.5px solid #e7e7e7;
+  width: calc(100% - 12px);
+}
+
+.arrow-right {
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid #002c5F;
+}
+
+.box-style {
+  display: flex;
+  align-items: center;
+}
+
+.selected-privilege-highlight {
+  border-right: 2px solid #002c5F;
+}

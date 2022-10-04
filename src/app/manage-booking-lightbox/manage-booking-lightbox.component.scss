@@ -1,0 +1,117 @@
+@import "../../sass/variables/colors";
+
+.lightbox-contents {
+  background-color: #fff;
+}
+
+.modal-title {
+  text-transform: uppercase;
+}
+
+input {
+  border-radius: 5px !important;
+}
+.card {
+  border-radius: 0rem;
+  padding: 20px;
+  width: 100%;
+  flex-direction: row;
+  @media only screen and (max-width:990px) {
+      flex-direction: column-reverse;
+  }
+}
+
+.mb-width {
+  max-width: 800px;
+}
+h1 {
+  font-size: 22px;
+  @media only screen and (min-width: 768px) {
+    font-size: 54px;
+  }
+}
+
+.mbs-button-primary-wrapper,
+.mbs-button-primary,
+.mbs-button-secondary {
+  width: 100%;
+  margin-bottom: 10px !important;
+  @media only screen and (min-width: 576px) {
+    width: auto;
+  }
+}
+
+hr.hr-large {
+  width: 100%;
+  color: $white-seven;
+}
+
+hr.hr-thick {
+  margin-right: 15px;
+  border-top: 2px solid $pinkish-grey-two;
+}
+
+.vertical-center {
+  align-items: center; 
+}
+
+.errDiv {
+  background-color: $light-pink;
+}
+.contentClass {
+  padding: 20px 10px 20px 10px;
+}
+
+.mb-label {
+  text-align: center;
+}
+.form-group {
+  padding: 10px 5px;
+  margin: 0px;
+  > * {
+    padding: 0 0 15px 0;
+    @media only screen and (min-width: 576px) {
+      padding: 0 15px;
+    }
+  }
+}
+
+.manageBookingPolicy {
+  width: 50%;
+  border-left: 3px solid #002c5F;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 40px;
+  @media only screen and (max-width: 1199px) {
+    padding-right: 0px;
+  }
+  @media only screen and (max-width: 990px) {
+    border-left: 0px;
+    width:100%;
+    padding: 0px;
+  }
+}
+
+.manageBookingForm {
+  width: 100%;
+  @media only screen and (max-width: 1199px) {
+    font-size: 18px !important;
+  }
+  label {
+    @media only screen and (max-width: 1199px) {
+      margin: 5px;
+      font-size: 18px !important;
+    }
+    @media only screen and (max-width:575px) {
+      text-align: start !important;
+    }
+  }
+  input {
+    @media only screen and (max-width: 1199px) {
+      font-size: 14px !important;
+    }
+    @media only screen and (max-width: 990px) {
+        width:auto;
+    }
+  }
+}

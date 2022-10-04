@@ -1,0 +1,73 @@
+@import "../../../sass/variables/colors";
+h1 {
+  font-size: 22px;
+  @media only screen and (min-width: 768px) {
+    font-size: 55px;
+  }
+}
+
+.fa-long-arrow-right {
+  font-size: 19px;
+  color: $greyish-brown-two;
+}
+
+.mbs-button-primary-wrapper,
+.mbs-button-primary,
+.mbs-button-secondary {
+  width: 100%;
+  margin-bottom: 10px !important;
+  @media only screen and (min-width: 576px) {
+    width: auto;
+  }
+}
+.enhance-your-stay-button {
+  width: 100%;
+  @media only screen and (min-width: 576px) {
+    width: auto;
+  } 
+}
+
+.cancel-booking-button {
+  width: 100%;
+  margin-bottom: 0px !important;
+  margin-top: 20px;
+  @media only screen and (min-width: 576px) {
+    width: auto;
+    margin-top: 0px !important;
+  }
+}
+
+.confirm-page-button {
+  margin-left: 0px !important;
+  @media only screen and (min-width: 768px) {
+    margin-left: 10px !important;
+  }
+}
+
+.guest-details {
+  padding: 20px 25px;
+  background-color: $white-three;
+  margin-top: 1rem;
+  @media only screen and (min-width: 576px) {
+    margin-top: 0;
+  }
+}
+
+hr.hr-large {
+  width: 100%;
+  color: $white-seven;
+}
+
+hr.hr-thick {
+  margin-right: 15px;
+  border-top: 2px solid $pinkish-grey-two;
+}
+
+.vertical-center {
+  align-items: center; 
+}
+
+
+p.contentClass {
+  padding: 20px 10px 20px 10px;
+}

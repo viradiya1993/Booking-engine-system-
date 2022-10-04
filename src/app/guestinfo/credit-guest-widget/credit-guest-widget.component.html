@@ -1,0 +1,256 @@
+<div class="widget align-self-start max-width-credit sticky" *ngIf="ratePlan !== undefined">
+  <div class="pricePanel clearfix {{RTL_Flag ? 'text-right' : ''}}">
+    <div class="info">
+      <strong class="txt-lg-jb ls-x-sm" [innerHTML]="getTranslatedDate(objCheckin?.checkindate) | uppercase | safeHtml"></strong>
+      <i class="{{RTL_Flag ? 'fa-long-arrow-left' : 'fa-long-arrow-right'}} fa"></i>
+      <strong class="txt-lg-jb ls-x-sm" [innerHTML]="getTranslatedDate(objCheckin?.checkoutdate) | uppercase | safeHtml"></strong>
+      <a id = "g_link_date" class="control-focus txt-md-lr txt-black-three ls-x-sm pull-right hyl-dark txt-underline pr-0" href="#" (click)="_storeSvc.setActiveModalElem('g_link_date'); _storeSvc.updateIs3DSCrediCardFlag(undefined);rateCal.openRateCalendar(objCheckin)"><span [innerHTML]="localeObj.tf_4_Checkout_checkinSummery_link_edit | safeHtml"></span></a>
+      <div class="txt-lg-jr txt-black-three ls-x-sm my-10" *ngIf="objCheckin">
+        <span [innerHTML]="objCheckin?.los | safeHtml"></span>&nbsp;<span *ngIf="+objCheckin.los === 1" [innerHTML]="localeObj.tf_2_RoomList_bookingSummery_night | safeHtml"></span><span *ngIf="+objCheckin.los > 1" [innerHTML]="localeObj.tf_4_Checkout_checkoutSummery_nights | safeHtml"></span>&nbsp;|&nbsp;<span [innerHTML]="objCheckin?.rooms | safeHtml"></span>&nbsp;<span *ngIf="+objCheckin.rooms === 1" [innerHTML]="localeObj.tf_4_Checkout_addons_roomLc | safeHtml"></span>
+        <span *ngIf="+objCheckin.rooms > 1" [innerHTML]="localeObj.tf_4_Checkout_addons_roomsText | safeHtml"></span>
+      </div>
+      <div *ngIf="!multiRoom">
+        <div class="txt-lg-lb txt-black ls-x-sm mt-30">
+          <span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_room | uppercase | safeHtml"></span>&nbsp;1:&nbsp;<span [innerHTML]="guestdetailsString[0] | safeHtml"></span>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="roomImagePanel">
+            <img src="{{selectedImage}}" alt="Room Photo"/>
+          </div>
+        </div>
+        <div>
+          <div class="row py-10">
+            <div class="{{RTL_Flag ? 'ml-auto ' : 'mr-auto'}}" tabindex="0">
+              <span class="txt-lg-lb txt-black-three ls-x-sm"><span [innerHTML]="roomType | safeHtml"></span><span *ngIf="roomView">&nbsp;-&nbsp;<span [innerHTML]="roomView | safeHtml"></span></span></span>
+              <br>
+              <span class="txt-md-lr txt-black-three ls-x-sm">(<span [innerHTML]="bedTypeName | safeHtml"></span>)</span>
+            </div>
+            <div class="{{RTL_Flag ? 'mr-auto ' : 'ml-auto'}}">
+              <a id = "g_link_edit_room" class="control-focus txt-md-lr txt-black-three ls-x-sm pull-right hyl-dark txt-underline" href='#' (click)="onCheckInSummaryChanged(null)"><span [innerHTML]="localeObj.tf_4_Checkout_checkinSummery_link_edit | safeHtml"></span></a>
+            </div>
+          </div>
+          <div class="row pt-10">
+            <div class="txt-md-lr txt-black-three ls-x-sm {{RTL_Flag ? 'ml-auto ' : 'mr-auto'}}" tabindex="0">
+              <span [innerHTML]="ratePlan.name | safeHtml"></span><br *ngIf="selectedPackage !== undefined">
+            </div>
+            <div class="txt-md-lb txt-black-three ls-x-sm text-right {{RTL_Flag ? 'mr-auto ' : 'ml-auto'}}" tabindex="0">
+              <span [innerHTML]="currCode | safeHtml"></span>
+              <span [innerHTML]="packagePrice | customPriceFormat: '': currFilterValue | safeHtml"></span>
+              <!-- <span [innerHTML]="packagePrice | safeHtml"></span> -->
+            </div>
+          </div>
+          <div *ngFor="let addon of addonsList[0]?.NOT_SPECIFIED">
+            <span class="row pt-10" *ngIf="addon.numberOfUnit > 0">
+            <div class="txt-md-lr txt-black-three ls-x-sm {{RTL_Flag ? 'ml-auto ' : 'mr-auto'}}" tabindex="0">
+              <span [innerHTML]="addon.name | safeHtml"></span><br>
+            </div>
+            <div class="txt-md-lb txt-black-three ls-x-sm text-right {{RTL_Flag ? 'mr-auto ' : 'ml-auto'}}" tabindex="0">
+              <span [innerHTML]="currCode | safeHtml"></span>
+              <span *ngIf ="!!addon.guestCurrencyPreTaxAmount"[innerHTML]="addon.guestCurrencyPreTaxAmount | customPriceFormat: '': currFilterValue | safeHtml"></span>
+              <span *ngIf ="!(!!addon.guestCurrencyPreTaxAmount)" [innerHTML]="addon.preTaxAmount | customPriceFormat: '': currFilterValue | safeHtml"></span>
+            </div>
+          </span>
+          </div>
+          <div class="txt-md-lr txt-black-three ls-x-sm" *ngIf="selectedPackage !== undefined">
+            <div><span [innerHTML]="selectedPackage.Category | safeHtml"></span>&nbsp;(<span [innerHTML]="selectedPackage.NoOfSeats | safeHtml"></span>&nbsp;<span [innerHTML]="selectedPackage.NoOfSeats>1
+                ? localeObj.tf_3_MultiRoom_packageListing_tickets : localeObj.tf_3_MultiRoom_packageListing_ticket | safeHtml"></span>)
+            </div>
+            <div [innerHTML]="getTransformedDate(selectedPackage.ShowTime) | safeHtml"></div>
+          </div>
+          <div *ngIf="tax > 0" class="row pt-20 pb-10">
+            <div class="txt-md-lr txt-black-three ls-x-sm {{RTL_Flag ? 'ml-auto ' : 'mr-auto'}}" tabindex="0" [innerHTML]="localeObj.tf_4_Checkout_priceSummery_taxAndServiceCharges | safeHtml"></div>
+            <div class="txt-md-lb txt-black-three ls-x-sm text-right {{RTL_Flag ? 'mr-auto ' : 'ml-auto'}}" tabindex="0">
+              <span [innerHTML]="currCode | safeHtml"></span>
+              <span [innerHTML]="tax + (ratePlan.packageAddOnTaxesByCurrency[currFilterValue] || 0) | customPriceFormat: '': currFilterValue | safeHtml"></span>
+              <!-- <span [innerHTML]="tax | safeHtml"></span> -->
+            </div>
+          </div>
+          <div *ngIf="tax > 0 && isTaxbreakdownEnabled && showTaxBreakDown">
+            <div *ngIf="!showTaxDetails" class="row pb-10 cursor-pointer">
+              <div class="txt-x-sm-lr txt-underline hyl-dark txt-black-three ls-x-sm {{RTL_Flag ? 'ml-auto ' : 'mr-auto'}}" tabindex="0" (click)="taxBreakDown()" (keyup.enter)="$event.target.click()">
+                <i>+</i>
+                <i [innerHTML]="localeObj?.tf_5_Confirmation_bookingInfo_showTaxDetails | safeHtml"></i>
+              </div>
+            </div>
+            <div *ngIf="showTaxDetails" class="row pb-10 cursor-pointer">
+              <div class="txt-x-sm-lr txt-underline hyl-dark txt-black-three ls-x-sm {{RTL_Flag ? 'ml-auto ' : 'mr-auto'}}" tabindex="0" (click)="taxBreakDown()" (keyup.enter)="$event.target.click()">
+                <i>-</i>
+                <i [innerHTML]="localeObj?.tf_5_Confirmation_bookingInfo_hideTaxDetails | safeHtml"></i>
+              </div>
+            </div>
+            <div *ngIf="showTaxDetails">
+              <div *ngFor="let tax of taxes" class="row pb-10 {{RTL_Flag ? 'mr-auto ' : 'ml-auto'}} cursor-pointer">
+                <div class="txt-x-sm-lr txt-black-three ls-x-sm {{RTL_Flag ? 'ml-auto ' : 'mr-auto'}} " tabindex="0" *ngIf="tax.taxAmount[currency] > 0">
+                  {{tax.name}}
+                  <ng-template #popoverTaxDetails>
+                    <div>{{tax.description}}</div>
+                  </ng-template>
+                  <i id="c_link_tax_details" *ngIf="tax.description" triggers="hover focus" #p="bs-popover"
+                    [popover]="popoverTaxDetails" placement="bottom"
+                    containerClass="tooltiptextCP credit-guest-widget" container="body" class="control-focus TooltipCP cursor-pointer ml-1 hyl-dark txt-underline txt-x-sm-lr ls-x-sm txt-black-three"
+                    [innerHTML]="localeObj?.tf_5_Confirmation_bookingInfo_TaxDetails | safeHtml" tabindex="0"
+                    (keyup.enter)="$event.target.click()" attr.aria-label="{{tax.description}}" role="link">
+                  </i>
+                </div>
+                <div class="txt-x-sm-lb txt-black-three ls-x-sm text-right {{RTL_Flag ? 'mr-auto ' : 'ml-auto'}}" tabindex="0" *ngIf="tax.taxAmount[currency] > 0">
+                  <span [innerHTML]="currCode | safeHtml"></span>
+                  <span [innerHTML]="tax.taxAmount[currency] | customPriceFormat: '': currFilterValue | safeHtml"></span>
+                </div>
+            </div>
+            </div>
+          </div>
+          <div *ngIf="tax === 0" class="row pt-20 pb-10">
+            <div class="txt-md-lr txt-black-three ls-x-sm {{RTL_Flag ? 'ml-auto ' : 'mr-auto'}}" tabindex="0" [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_inclusiveTaxes | safeHtml"></div>
+          </div>
+          <div class="row bottomLine">
+          </div>
+          <div class="row py-10">
+            <div class="txt-md-lb txt-black-three ls-x-sm {{RTL_Flag ? 'ml-auto ' : 'mr-auto'}}" tabindex="0" [innerHTML]="localeObj.tf_4_Checkout_priceSummery_totalLc | safeHtml"></div>
+            <div class="txt-md-lb txt-black-three ls-x-sm text-right {{RTL_Flag ? 'mr-auto ' : 'ml-auto'}}" tabindex="0">
+              <span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="totalPrice| customPriceFormat: '': currFilterValue | safeHtml"></span>
+              <!-- <div *ngIf="showDefaultPrice">
+                <span class="pt-10 txt-sm-lr txt-black-three ls-x-sm"><span [innerHTML]="defCurrCode | safeHtml"></span><span [innerHTML]="defaultTotalPrice| customPriceFormat: '': defCurrencyFilter | safeHtml"></span></span>
+              </div> -->
+            </div>
+          </div>
+          <ng-template #popoverTemp><div [innerHTML]="ratePlan.cancellationPolicy | safeHtml" tabindex="0"></div></ng-template>
+          <div id="{{ratePlan.code}}" triggers="hover focus" #p="bs-popover" (document:click)="closeFix($event, p, ratePlan.code)" [popover]="popoverTemp"
+            placement="bottom" containerClass="tooltiptextCP credit-guest-widget" container="body" class="control-focus TooltipCP txt-x-sm-lr txt-black-three ls-x-sm pull-right"
+            *ngIf="ratePlan?.cancellationPolicy" tabindex="0" [innerHTML]="localeObj.tf_4_Checkout_priceSummery_paymentAndCancellationPolicy | safeHtml" (keyup.enter)="closeFix($event, p, ratePlan.code)" role="link">
+          </div>
+          <div class="pt-10 pull-right text-right w-100" tabindex="0">
+            <span class="txt-x-sm-lr ls-x-sm txt-black-three" [innerHTML]="localeObj.tf_2_RoomList_rooms_ratesAndAvailabilityChanges | safeHtml"></span>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="multiRoom" class="multi-room-credit-widget">
+        <div *ngFor="let room of selectedRoomList; let i=index">
+          <accordion class="panel" closeOthers="true">
+            <accordion-group #group [isOpen]="selectedIndex == i">
+              <div accordion-heading class="acc-heading" (click)="changeIndex(i)" (keyup.enter)="changeIndex(i)">
+                <div class="txt-lg-lb txt-black ls-x-sm mt-30">
+                  <span tabindex="0" [innerHTML]="localeObj.tf_1_Calendar_rateCalender_room | uppercase | safeHtml"></span>&nbsp;<span [innerHTML]="i+1 | safeHtml"></span>:&nbsp;<span [innerHTML]="guestdetailsString[i] | safeHtml"></span>
+                  <i class="{{RTL_Flag ? 'pull-left' : 'pull-right'}} glyphicon" [ngClass]="group?.isOpen ? 'fa fa-angle-up': 'fa fa-angle-down'" tabindex="0" (click)="changeIndex(i)"></i>
+                </div>
+              </div>
+              <div class="">
+                <div class="row">
+                  <div class="roomImagePanel" tabindex="0">
+                    <img *ngIf="room.RoomDetails !== undefined" src="{{room.RoomDetails.largeImageUrl}}" alt="Room Photo"/>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-8 {{RTL_Flag ? 'text-right' : ''}}">
+                    <span class="txt-lg-lb txt-black-three ls-x-sm" tabindex="0">
+                      <span [innerHTML]="room.RoomDetails?.roomType | safeHtml"></span> - <span [innerHTML]="room.RoomDetails?.roomView | safeHtml"></span>
+                    </span>
+                    <br>
+                    <span class="txt-md-lr txt-black-three ls-x-sm" tabindex="0">(<span [innerHTML]="room.BedTypeName | safeHtml"></span>)</span>
+                  </div>
+                  <div class="col-sm-4 {{RTL_Flag ? 'pl-0' : ''}}">
+                    <a id="g_link_edit_room" tabindex="0" class="control-focus txt-md-lr txt-black-three ls-x-sm {{RTL_Flag ? 'pull-left' : 'pull-right'}} hyl-dark txt-underline" href='#' (click)="onCheckInSummaryChanged(null, room.RoomCode, i)" (keyup.enter)="onCheckInSummaryChanged(null, room.RoomCode, i)"><span [innerHTML]="localeObj.tf_4_Checkout_checkinSummery_link_edit  | safeHtml"></span></a>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="txt-md-lr txt-black-three ls-x-sm {{RTL_Flag ? 'ml-auto ' : 'mr-auto'}}" tabindex="0" [innerHTML]="room?.RatePlan?.name | safeHtml"></div>
+                  <div *ngIf="showDefaultPrice" tabindex="0" class="txt-md-lb txt-black-three ls-x-sm text-right pr-0 {{RTL_Flag ? 'mr-auto ' : 'ml-auto'}}">
+                    <span [innerHTML]="currCode | safeHtml"></span>
+                    <!-- <span [innerHTML]=" (room?.Pricing?.PackagePrice + room?.Pricing?.TotalAddonPrice)| customPriceFormat: '': currFilterValue | safeHtml"></span> -->
+                    <span [innerHTML]=" (room?.Pricing?.RoomRateAddonPrice)| customPriceFormat: '': currFilterValue | safeHtml"></span>
+
+                  </div>
+                  <div *ngIf="!showDefaultPrice" tabindex="0" class="txt-md-lb txt-black-three ls-x-sm text-right pr-0 {{RTL_Flag ? 'mr-auto ' : 'ml-auto'}}">
+                    <!-- <span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]=" (room?.Pricing?.DefPackagePrice + room?.Pricing?.DefTotalAddonPrice)| customPriceFormat: '': currFilterValue | safeHtml"></span> -->
+                    <span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]=" (room?.Pricing?.DefRoomRateAddonPrice)| customPriceFormat: '': currFilterValue | safeHtml"></span>
+                  </div>
+                </div>
+                <div *ngFor="let addon of addonsList[i]?.NOT_SPECIFIED">
+                  <span class="row pt-10" *ngIf="addon.numberOfUnit > 0">
+                  <div class="txt-md-lr txt-black-three ls-x-sm {{RTL_Flag ? 'ml-auto ' : 'mr-auto'}}" tabindex="0">
+                    <span [innerHTML]="addon.name | safeHtml"></span><br>
+                  </div>
+                  <div class="txt-md-lb txt-black-three ls-x-sm text-right {{RTL_Flag ? 'mr-auto ' : 'ml-auto'}}" tabindex="0">
+                    <span [innerHTML]="currCode | safeHtml"></span>
+                    <span *ngIf ="!!addon.guestCurrencyPreTaxAmount"[innerHTML]="addon.guestCurrencyPreTaxAmount | customPriceFormat: '': currFilterValue | safeHtml"></span>
+                    <span *ngIf ="!(!!addon.guestCurrencyPreTaxAmount)" [innerHTML]="addon.preTaxAmount | customPriceFormat: '': currFilterValue | safeHtml"></span>
+                  </div>
+                </span>
+                </div>
+                <div *ngIf="(room.Pricing.FormattedTax || room.addonFormattedTax || room.packageAddonsTax) > 0" class="row pt-10" >
+                  <div class="txt-md-lr txt-black-three ls-x-sm {{RTL_Flag ? 'ml-auto ' : 'mr-auto'}}" tabindex="0"><span [innerHTML]="localeObj.tf_4_Checkout_priceSummery_taxAndServiceCharges | safeHtml"></span></div>
+                  <div class="txt-md-lb txt-black-three ls-x-sm text-right pr-0 {{RTL_Flag ? 'mr-auto ' : 'ml-auto'}}" tabindex="0">
+                    <span [innerHTML]="currCode | safeHtml"></span>
+                    <span [innerHTML]="room.Pricing.FormattedTax + room.addonFormattedTax + room.packageAddonsTax | customPriceFormat: '': currFilterValue | safeHtml"></span>
+                  </div>
+                </div>
+                <div *ngIf="room.Pricing.FormattedTax === 0" class="row pt-10" tabindex="0">
+                  <div class="txt-md-lr txt-black-three ls-x-sm {{RTL_Flag ? 'ml-auto ' : 'mr-auto'}}" [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_inclusiveTaxes | safeHtml"></div>
+                </div>
+                <div *ngIf="room.Pricing.FormattedTax > 0 && isTaxbreakdownEnabled && showTaxBreakDown">
+                  <div *ngIf="!room.multiRoomTaxBreakDown" class="row pb-10 pt-10 cursor-pointer" tabindex="0">
+                    <div class="txt-x-sm-lr txt-underline hyl-dark txt-black-three ls-x-sm {RTL_Flag ? 'ml-auto ' : 'mr-auto'}}" (click)="multiResTaxBreakDown(i)" (keyup.enter)="multiResTaxBreakDown(i)">
+                      <i>+</i>
+                      <i [innerHTML]="localeObj?.tf_5_Confirmation_bookingInfo_showTaxDetails | safeHtml"></i>
+                    </div>
+                  </div>
+                  <div *ngIf="room.multiRoomTaxBreakDown" class="row pb-10 pt-10 cursor-pointer" tabindex="0">
+                    <div class="txt-x-sm-lr txt-underline hyl-dark txt-black-three ls-x-sm {{RTL_Flag ? 'ml-auto ' : 'mr-auto'}}" (click)="multiResTaxBreakDown(i)" (keyup.enter)="multiResTaxBreakDown(i)">
+                      <i>-</i>
+                      <i [innerHTML]="localeObj?.tf_5_Confirmation_bookingInfo_hideTaxDetails | safeHtml"></i>
+                    </div>
+                  </div>
+                  <div *ngIf="room.multiRoomTaxBreakDown">
+                    <div *ngFor="let tax of room.RatePlan.taxBreakDown" tabindex="0" class="row pb-10 {{RTL_Flag ? 'mr-3 ' : 'ml-3'}} cursor-pointer">
+                      <div class="txt-x-sm-lr txt-black-three ls-x-sm {{RTL_Flag ? 'ml-auto ' : 'mr-auto'}}" tabindex="0" *ngIf="tax.taxAmount[currency] > 0">{{tax.name}}
+                        <ng-template #popoverTaxDetails>
+                          <div>{{tax.description}}</div>
+                        </ng-template>
+                        <i id="c_link_tax_details" *ngIf="tax.description" triggers="hover focus" #p="bs-popover"
+                          [popover]="popoverTaxDetails" placement="bottom"
+                          containerClass="tooltiptextCP credit-guest-widget" container="body" class="control-focus TooltipCP cursor-pointer ml-1 hyl-dark txt-underline txt-x-sm-lr ls-x-sm txt-black-three"
+                          [innerHTML]="localeObj?.tf_5_Confirmation_bookingInfo_TaxDetails | safeHtml" tabindex="0"
+                          (keyup.enter)="$event.target.click()" attr.aria-label="{{tax.description}}" role="link">
+                        </i>
+                      </div>
+                      <div class="txt-x-sm-lb txt-black-three ls-x-sm text-right {{RTL_Flag ? 'mr-auto ' : 'ml-auto'}}" tabindex="0" *ngIf="tax.taxAmount[currency] > 0">
+                        <span [innerHTML]="currCode | safeHtml"></span>
+                        <span [innerHTML]="tax.taxAmount[currency] | customPriceFormat: '': currFilterValue | safeHtml"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="txt-md-lr txt-black-three ls-x-sm" tabindex="0" *ngIf="selectedPackage !== undefined"><span [innerHTML]="room?.Packages[0]?.Category | safeHtml"></span>&nbsp;(<span [innerHTML]="room?.Packages[0]?.NoOfSeats | safeHtml"></span> <span [innerHTML]="room?.Packages[0]?.NoOfSeats>1
+                    ? localeObj.tf_3_MultiRoom_packageListing_tickets : localeObj.tf_3_MultiRoom_packageListing_ticket | safeHtml"></span>)
+                </div>
+                <div class="txt-md-lr txt-black-three ls-x-sm" tabindex="0" *ngIf="selectedPackage !== undefined"><span [innerHTML]="getTransformedDate(room?.Packages[0]?.ShowTime) | safeHtml"></span></div>
+              </div>
+            </accordion-group>
+          </accordion>
+        </div>
+        <br>
+        <div id="widget-bottom">
+          <div class="row">
+            <div class="txt-md-lb txt-black-three ls-x-sm {{RTL_Flag ? 'ml-auto ' : 'mr-auto'}}" tabindex="0" [innerHTML]="localeObj.tf_4_Checkout_priceSummery_total | safeHtml"></div>
+            <div class="txt-md-lb txt-black-three ls-x-sm text-right pr-0 {{RTL_Flag ? 'mr-auto ' : 'ml-auto'}}" tabindex="0">
+              <span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="totalPriceSum| customPriceFormat: '': currFilterValue | safeHtml"></span>
+              <div *ngIf="showDefaultPrice">
+                <span class="pt-10 txt-sm-lr txt-black-three ls-x-sm {{RTL_Flag ? 'pull-left ' : ''}}"><span [innerHTML]="defCurrCode | safeHtml"></span><span [innerHTML]="defaultTotalPrice| customPriceFormat: '': defCurrencyFilter | safeHtml"></span></span>
+              </div>
+            </div>
+          </div>
+          <ng-template #popoverTemp><div [innerHTML]="ratePlan.cancellationPolicy | safeHtml" tabindex="0"></div></ng-template>
+          <div id="cancellation_policy" triggers="hover focus" #p="bs-popover" (document:click)="closeFix($event, p, 'cancellation_policy')" [popover]="popoverTemp"
+            placement="bottom" containerClass="tooltiptextCP credit-guest-widget" container="body" class="control-focus pt-10 TooltipCP txt-x-sm-lr txt-black-three ls-x-sm pull-right"
+            *ngIf="ratePlan?.cancellationPolicy" [innerHTML]="localeObj.tf_4_Checkout_priceSummery_paymentAndCancellationPolicy | safeHtml" (keyup.enter)="closeFix($event, p, 'cancellation_policy')" tabindex="0">
+          </div>
+          <div class="pt-10 pull-right text-right w-100" tabindex="0">
+            <span class="txt-x-sm-lr ls-x-sm txt-black-three" [innerHTML]="localeObj.tf_2_RoomList_rooms_ratesAndAvailabilityChanges | safeHtml"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-ratecalendarlightbox #rateCal [checkinsummary]="objCheckin" (checkInSummaryChanged)="onCheckInSummaryChanged($event) " (checkAvailableUpgrades)="checkAvailableUpgradesEvent()" (rateToWidget)="reloadGuestPreference()"></app-ratecalendarlightbox>

@@ -1,0 +1,254 @@
+@import "../../../sass/variables/colors";
+.img-thumbnail {
+  max-width: 165px;
+}
+
+.left-panel {
+  width: 100%;
+  margin-bottom: 0px;
+  > div {
+    &:first-child {
+      margin-bottom: 0px;
+    }
+  }
+} 
+.right-panel {
+  border-top: 1px solid #e9ecef;
+  padding: 0px;
+  width: 100%;
+  margin: 0;
+  @media only screen and (min-width: 1200px) {
+    border-top: none;
+    border-left: 1px solid #e9ecef;
+    width: calc(100% - 750px);
+  }
+}
+
+.card-header {
+  display: none;
+}
+
+.fa-arrow-up {
+  color: #2A6EBB;
+}
+
+.fa-angle-down:before {
+  content: "\f107";
+  color: black;
+}
+
+h5 {
+  font-family: 'Garamond', sans-serif;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.lightbox-contents {
+  background: white;
+  border: 1px solid $pinkish-grey-four;
+}
+
+.left-panel {
+  padding: 0px;
+  width: 100%;
+  @media only screen and (min-width: 1200px) {
+    width: 750px;
+    margin-bottom: 10px;
+  }
+}
+
+.card {
+  border-radius: 0rem !important;
+  border: 0rem !important;
+}
+
+.card-body {
+  padding: 0rem;
+}
+
+.card-header {
+  background-color: white !important;
+}
+
+.room-feature-heading {
+  cursor: pointer;
+  i {
+    font-size: 28px;
+    color: $tan;
+  }
+}
+
+.modal-footer {
+  display: none;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+  background: #2A6EBB;
+  border-radius: 10px;
+  height: 120px;
+}
+
+/* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2A6EBB;
+}
+
+.tandcposition {
+  margin-left: auto;
+  margin-right: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  bottom: 200%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.view-room-details-link a {
+  text-decoration: underline;
+}
+
+.slider-image {
+  padding: 0px 5px 5px 5px;
+}
+
+.roomLargeImage {
+  margin-bottom: 0px !important;
+}
+
+::ng-deep *>.slick-prev:before {
+  @media only screen and (min-width: 992px) {
+    color: $sand-brown;
+    opacity: 1;
+    z-index: 9999;
+  }
+}
+
+::ng-deep *>.slick-next:before {
+  @media only screen and (min-width: 992px) {
+    color: $sand-brown;
+    opacity: 1;
+    z-index: 9999;
+  }
+}
+
+.slide img {
+  cursor: pointer;
+}
+
+.left-panel-expanded {
+  padding: 0px;
+  width: 100%;
+  @media only screen and (min-width: 1200px) {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+
+.slideImage{
+  width: 100%;
+}
+.iframeClass {
+  max-width: 100%;
+  margin-bottom: -6px;
+  }
+.horizontal-slider-child{
+  margin-top: 10px !important;
+}
+
+.roomLargeImage{
+  margin-bottom: 0px !important;
+}
+.imageIndex{
+  visibility: hidden;
+}
+
+.horizontal-slider{
+  @media only screen and (min-width: 992px) {
+   margin-left: 0.8%;
+  }  
+}
+
+::ng-deep{ 
+  .nav-btn {
+    position: absolute;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+    top: -148% !important;
+    background-color:#f2f3f4;
+    opacity: 0.9;
+   @media only screen and (min-width: 992px) {
+     top: -159% !important;
+ }
+}
+.prev-slide.slick-disabled,
+.next-slide.slick-disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+  .next-slide, .slick-next {
+     right: -1px;
+     position: absolute;
+     height: 40px;
+     width: 40px;
+     background: #f2f3f4 !important;
+     z-index: 99999;
+     &::before {
+       content: "\f061";
+       font-family: "FontAwesome";
+       font-size: 22px;
+       color: $sand-brown;
+       padding: 3px 10px;
+     }
+   }
+   .next-slide{
+    @media only screen and (min-width: 992px) {
+       right:5px !important;
+     }
+    } 
+  .prev-slide, .slick-prev {
+     left: -1px;
+     position: absolute;
+     height: 40px;
+     width: 40px;
+     background: #f2f3f4 !important;
+     z-index: 99999;
+     &::before {
+       content: "\f060";
+       font-family: "FontAwesome";
+       font-size: 22px;
+       color: $sand-brown;
+       padding: 3px 10px;
+     }
+   }
+   .prev-slide{
+    @media only screen and (min-width: 992px) {
+       left:-5px !important;
+     }
+    }
+    .expanded-panel-slick {
+      @media only screen and (min-width: 1200px) {
+        max-width: 814px;
+      }
+      @media only screen and (min-width: 992px) {
+        max-width: 814px;
+      }
+    }      
+ }

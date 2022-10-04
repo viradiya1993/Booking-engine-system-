@@ -1,0 +1,42 @@
+.disable-pointer-events {
+  pointer-events: none;
+}
+
+.enable-pointer-events {
+  pointer-events: auto;
+}
+
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+
+.error {
+  input {
+    border-bottom: 2px solid $brick;
+  }
+}
+
+.error-msg {
+  font-family: $font-secondary;
+  font-size: $font-size-small;
+  color: $brick;
+  letter-spacing: $letter-spacing-x-small;
+}
+
+img {
+  max-width: 100%;
+}
+
+.ltr {
+  direction: ltr!important;
+}

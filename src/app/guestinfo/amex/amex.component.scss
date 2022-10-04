@@ -1,0 +1,26 @@
+@import "../../../sass/variables/colors";
+@import "../../../sass/variables/font";
+
+.mbs-button-primary {
+  background-color: $sand;
+  min-width: 145px;
+  min-height: 50px;
+  background-image: url(/assets/backgrounds/button-primary.png);
+  color: $black-four;
+  text-shadow: 0 1px 1px $white-60;
+  &:hover {
+    background: $sand-brown;
+    background-image: url(/assets/backgrounds/button-primary-hover.png);
+  }
+  &.disabled,
+  &:disabled {
+    &:hover {
+      background-color: $sand;
+      background-image: url(/assets/backgrounds/button-primary.png);
+    }
+  }
+}
+
+.text{
+   font-family: $font-secondary; 
+}

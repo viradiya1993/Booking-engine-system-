@@ -1,0 +1,184 @@
+<ng-template #lightboxmodel pr-0>
+  <div class="modal-header">
+    <h4 class="modal-title txt-xxx-lg-jb lh-32 txt-black mb-3 text-uppercase" *ngIf="packageData" [innerHTML]="selectedRatePlanName || packageData.addOnName | safeHtml"></h4>
+    <button type="button" class="control-focus close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="lightbox-contents content row" *ngIf="packageData !== undefined">
+      <div class="left-panel" *ngIf="!showSeatPlan">
+        <div class="d-lg-inline-block d-xl-block">
+          <p class="txt-lg-lb ls-x-sm txt-black-three m-0" [innerHTML]="packageData.addOnName | safeHtml"></p>
+          <!-- <p class="txt-sm-lr ls-x-sm txt-black-three m-0">{{totatSeatselected}} {{localeObj.tf_4_Checkout_addons_seats}}</p> -->
+          <img src="{{packageData.imageUrl}}" class="img-thumbnail mt-2 d-block mx-auto" alt="Thumbnail" />
+        </div>
+
+        <div class="d-lg-inline-block d-xl-block">
+          <!-- <p class="txt-lg-lb ls-x-sm txt-black-three m-0">{{selectedRoomData.RoomDetails.roomType}}</p>
+          <p class="txt-sm-lr ls-x-sm txt-black-three m-0">
+            {{guestSummary.los}} {{localeObj.tf_4_Checkout_addons_nights}} | {{localeObj.tf_1_Calendar_rateCalender_room}} 1:{{guestSummary.guests[0].adults}} {{localeObj.adults_lc}},
+            {{guestSummary.guests[0].children}} {{localeObj.tf_2_RoomList_ratePlans_child}} {{guestSummary.los}} {{localeObj.tf_4_Checkout_addons_nights}} | {{localeObj.tf_1_Calendar_rateCalender_room}}
+            1:{{guestSummary.guests[0].adults}} {{localeObj.tf_1_Calendar_rateCalender_adults}}, {{guestSummary.guests[0].children}} {{localeObj.tf_2_RoomList_ratePlans_child}}
+          </p> -->
+          <!-- <img src="{{selectedRoomData.RoomDetails.thumbnailJumboImageUrl}}" class="img-thumbnail mt-2 d-block mx-auto" alt="Thumbnail"
+          /> -->
+          <small>
+            <p class="txt-sm-jr ls-x-sm txt-black-three mr-10">
+              <span [innerHTML]="guestSummary.los | safeHtml"></span>&nbsp;<span [innerHTML]="nightVerbiage | safeHtml"></span>&nbsp;|&nbsp;<span [innerHTML]="guestSummary.rooms || 1 | safeHtml"></span>&nbsp;<span [innerHTML]="roomVerbiage | safeHtml"></span><span [innerHTML]="localeObj.tf_3_MultiRoom_packageListing_comma || ',' | safeHtml"></span>&nbsp;<span [innerHTML]="totalAdults | safeHtml"></span>&nbsp;<span [innerHTML]="adultVerbiage | safeHtml"></span><span [innerHTML]="childVerbiage | safeHtml"></span>
+            </p>
+          </small>
+        </div>
+      </div>
+      <div class="right-panel" [ngClass]="{'showing-seating-plan': showSeatPlan}">
+        <div class="row text-justify">
+          <h6 class="txt-lg-lr ls-x-sm txt-black-three lh-26" [innerHTML]="packageData.description | safeHtml"></h6>
+        </div>
+        <br />
+        <div class="form-group row align-items-center">
+          <ng-container *ngIf="!isMultiRoom">
+            <label class="pl-0 col-form-label txt-lg-lb ls-x-sm txt-black-five mr-0 mr-sm-3" [innerHTML]="localeObj.tf_2_RoomList_addons_ticketsCount | safeHtml" for="tickets"></label>
+            <div class="tickets-dropdown">
+              <!-- <select id="totalSeats" #showSeats class="form-control txt-md-lr ls-x-sm txt-black-three" [(ngModel)]="seatsSelected[0]"
+                (change)="showSeatsSelected(showSeats.value, 0)">
+                <option *ngFor="let seats of seatsRequiredArray.get(0)" [value]="seats">{{seats}}</option>
+              </select> -->
+
+              <div *ngIf="seatsRequiredArray.get(0)" class="mbs-dropdown-primary dropdown-menu-addon">
+                <!-- <a dropdownToggle class="dropdown-toggle dropdown-toggle-addon">
+                  {{seatsSelected[0]}}
+                </a>
+                <ul *dropdownMenu class="dropdown-menu dropdown-menu-addon">
+                  <li class="dropdown-item" *ngFor="let seats of seatsRequiredArray.get(0)" [value]="seats" (click)="showSeatsSelected(seats, 0)">
+                    {{seats}}
+                  </li>
+                </ul> -->
+                <ng-select name="Ticketsdd" [(ngModel)]="seatsSelected[0]" class="dropdown  mbs-dropdown-primary custom"
+                  [items]="seatsRequiredArray.get(0)" [multiple]="false" bindLabel="seats" [closeOnSelect]="true"
+                  bindValue="seats" (change)="showSeatsSelected($event, 0)" [clearable]="false" [searchable]="false" [labelForId]="'tickets'">
+                </ng-select>
+              </div>
+              <small class="alert-danger" *ngIf="seatsUnavailableError"><span [innerHTML]="localeObj.tf_4_Checkout_addons_totalAvailableSeatsCount | safeHtml"></span>
+                <span [innerHTML]="noOfMaxAvailable | safeHtml"></span></small>
+            </div>
+          </ng-container>
+          <div *ngIf="isMultiRoom">
+            <label class="col-form-label txt-lg-lb ls-x-sm txt-black-five mr-0 mr-sm-3" [innerHTML]="localeObj.tf_2_RoomList_addons_ticketsCount | safeHtml"></label>
+            <ul class="roomTicket" *ngFor="let seatsArray of getValues(seatsRequiredArray);let index=index">
+              <label class="pl-0 col-form-label txt-lg-lb ls-x-sm txt-black-five mr-0 mr-sm-3" for="multiRoomTickets">
+                &nbsp;<span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_room | uppercase | safeHtml"></span>
+                <span [innerHTML]="index + 1 | safeHtml"></span>
+              </label>
+              <div class="tickets-dropdown">
+                <div *ngIf="seatsRequiredArray.get(index)" class="mbs-dropdown-primary dropdown-menu-addon">
+                  <!-- <a dropdownToggle class="dropdown-toggle dropdown-toggle-addon">
+                    {{seatsSelected[index]}}
+                  </a>
+                  <ul *dropdownMenu class="dropdown-menu dropdown-menu-addon">
+                    <li class="dropdown-item" *ngFor="let seats of seatsRequiredArray.get(index)" [value]="seats" (click)="showSeatsSelected(seats, index)">
+                      {{seats}}
+                    </li>
+                  </ul> -->
+                  <ng-select name="MultiRoomTicketsdd" [(ngModel)]="seatsSelected[index]"
+                    class="dropdown  mbs-dropdown-primary custom" [items]="seatsRequiredArray.get(index)"
+                    [multiple]="false" bindLabel="seats" [closeOnSelect]="true" bindValue="seats"
+                    (change)="showSeatsSelected($event, index)" [clearable]="false" [searchable]="false" [labelForId]="'multiRoomTickets'">
+                  </ng-select>
+                </div>
+              </div>
+            </ul>
+            <small class="alert-danger" *ngIf="seatsUnavailableError"><span [innerHTML]="localeObj.tf_4_Checkout_addons_totalAvailableSeatsCount | safeHtml"></span>
+              <span [innerHTML]="noOfMaxAvailable | safeHtml"></span></small>
+            <p class="txt-sm-lr ls-x-sm txt-black-three m-0"><span [innerHTML]="localeObj.tf_4_Checkout_addons_ticketsCount | safeHtml"></span>
+              <span [innerHTML]="totatSeatselected | safeHtml"></span>
+              <span [innerHTML]="localeObj.tf_4_Checkout_addons_seats | safeHtml"></span></p>
+          </div>
+        </div>
+        <div class="form-group row align-items-center">
+          <label
+            class="pl-0 col-form-label txt-lg-lb ls-x-sm txt-black-five mr-0 mr-sm-3" [innerHTML]="localeObj.tf_4_Checkout_addons_dateAndTime | safeHtml" for="date"></label>
+          <div class="tickets-dropdown">
+            <!-- <select id="dateAndTime" #showTime class="form-control txt-md-lr ls-x-sm txt-black-three" (change)="showTimeSelected(showTime.value)"
+              [(ngModel)]="selectedShowTime">
+              <option *ngFor="let salType of optionsData" [value]="salType.addOnDateTime">{{salType.addOnDateTime}}</option>
+            </select> -->
+            <div *ngIf="optionsData" class="mbs-dropdown-primary dropdown-menu-addon">
+              <!-- <a dropdownToggle class="dropdown-toggle dropdown-toggle-addon">
+                {{getFromattedTimeSlot(selectedShowTime)}}
+              </a>
+              <ul *dropdownMenu class="dropdown-menu dropdown-menu-addon">
+                <li  class="dropdown-item" *ngFor="let salType of optionsData" [value]="salType.addOnDateTime" (click)="showTimeSelected(salType.addOnDateTime)">
+                  {{getFromattedTimeSlot(salType.addOnDateTime)}}
+                </li>
+              </ul> -->
+              <ng-select name="Datesdd" [(ngModel)]="selectedShowTimeLabel"
+                class="dropdown  mbs-dropdown-primary custom" [items]="optionsData" [multiple]="false"
+                bindLabel="addOnDateTimeLabel" [closeOnSelect]="true" bindValue="addOnDateTimeLabel"
+                (change)="showTimeSelected($event)" [clearable]="false" [searchable]="false" [labelForId]="'date'">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row align-items-center">
+          <label for="seatCategory" class="pl-0 col-form-label txt-lg-lb ls-x-sm txt-black-five mr-0 mr-sm-3" [innerHTML]="localeObj.tf_4_Checkout_addons_seatCategory | safeHtml" for="seats"></label>
+          <div class="mr-3 tickets-dropdown">
+            <!-- <select id="seatCategory" #showCateg class="form-control txt-md-lr ls-x-sm txt-black-three" [(ngModel)]="selectedCategory"
+              (change)="showCategorySelected(showCateg.value)">
+              <option *ngFor="let salType of selectedCategoryData.categoryType" [value]="salType">{{salType}}</option>
+            </select> -->
+            <div *ngIf="selectedCategoryData.categoryType" class="mbs-dropdown-primary dropdown-menu-addon">
+              <!-- <a dropdownToggle class="dropdown-toggle dropdown-toggle-addon">
+                {{selectedCategory}}
+              </a>
+              <ul *dropdownMenu class="dropdown-menu dropdown-menu-addon">
+                <li class="dropdown-item" *ngFor="let salType of selectedCategoryData.categoryType" [value]="salType"
+                  (click)="showCategorySelected(salType)">
+                  {{salType}}
+                </li>
+              </ul> -->
+              <ng-select name="Seatsdd" [(ngModel)]="selectedCategory" class="dropdown  mbs-dropdown-primary custom"
+                [items]="selectedCategoryData.categoryType" [multiple]="false" bindLabel="salType"
+                [closeOnSelect]="true" bindValue="salType" (change)="showCategorySelected($event)" [clearable]="false"
+                [searchable]="false" [labelForId]="'seats'">
+              </ng-select>
+            </div>
+          </div>
+          <div *ngIf="!showSeatPlan">
+            <a class="control-focus txt-sm-lr ls-x-sm txt-black-three txt-underline txt-decoration-skip" href="#" (click)="showSeatingPlan()"><span [innerHTML]="localeObj.tf_4_Checkout_addons_viewSeatingPlan | safeHtml"></span></a>
+          </div>
+          <div *ngIf="showSeatPlan">
+            <a class="control-focus txt-sm-lr ls-x-sm txt-black-three txt-underline txt-decoration-skip" href="#" (click)="showSeatingPlan()"><span [innerHTML]="localeObj.tf_4_Checkout_addons_link_closeSeatingPlan | safeHtml"></span></a>
+          </div>
+        </div>
+        <div class="form-check mbs-checkbox-primary p-0" *ngIf="packageData.consentRequired">
+          <input class="control-focus form-check-input" type="checkbox" value="" id="ageCheck" [(ngModel)]="acknowledgeVal">
+          <label class="form-check-label txt-sm-lr ls-x-sm txt-black-three cursor-pointer" for="ageCheck" [innerHTML]="packageData.consentText | safeHtml"></label>
+        </div>
+        <div class="form-group row align-items-center">
+          <label class="col-form-label pl-0 package-price">
+            <span class="txt-lg-lr ls-x-sm txt-black-three"><span [innerHTML]="localeObj.tf_4_Checkout_addons_packagePrice | safeHtml"></span>:</span>
+            <!-- {{selectedPackagePrice}}
+            {{selectedCategoryData.price}}
+            {{totatSeatselected}} -->
+            <span class="txt-xx-lg-lb ls-1 txt-black"><span [innerHTML]="currCode | safeHtml"></span><span [innerHTML]="packagePrice | customPriceFormat: '': currencyCode | safeHtml"></span></span>
+            <span class="txt-sm-lr ls-x-sm txt-black-three">&nbsp;<span [innerHTML]="localeObj.tf_2_RoomList_ratePlans_avgPerNightText | safeHtml"></span></span>
+          </label>
+        </div>
+        <div class="row">
+          <button class="control-focus btn mbs-button-primary" type="button" [disabled]="!acknowledgeVal && packageData.consentRequired"
+            (click)="selectLionKingPackage()" id="r_addon_btn_book">
+            <span [innerHTML]="localeObj.tf_4_Checkout_addons_button_book | safeHtml"></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="seating-plan" *ngIf="showSeatPlan">
+        <carousel>
+          <slide *ngFor="let slide of packageData.seatingPlanImages; let index=index">
+            <img src="{{slide.imageURL}}" class="seatingplanImage" alt="{{slide.altText}}">
+          </slide>
+        </carousel>
+      </div>
+    </div>
+  </div>
+</ng-template>

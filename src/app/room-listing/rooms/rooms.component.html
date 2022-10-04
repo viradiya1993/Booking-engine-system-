@@ -1,0 +1,159 @@
+<ng-template #template>
+  <div id="room-availability-error-modal">
+    <div class="modal-header">
+      <h5 id="bummer" tabindex="0" class="control-focus modal-title txt-xxx-lg-jb lh-32 txt-black mb-3" [innerHTML] = "localeObj.tf_4_Checkout_upgradeAddons_bummer | safeHtml" id="bummer"></h5>
+      <button id="bummer-closeBtn" tabindex="0" type="button" class="control-focus close pull-right" aria-label="Close" (click)="closeErrorPopUp()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div id="bummer-errMsg" tabindex="0" class="control-focus txt-lg-lr txt-black-three ls-x-sm pl-20" [innerHTML] = "popUpErrorMsg | safeHtml"></div>
+      <div class="col-sm-12 modal-footer-btn mt-30">
+        <button class="control-focus btn mbs-button-primary enhance" type="button" id="bummer-errConsentBtn" tabindex="0" (click)="closeErrorPopUp()"><span [innerHTML] = "localeObj.tf_2_RoomList_rooms_button_back | safeHtml"></span></button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div class="containerDiv">
+  <div name="ErrDiv"></div>
+  <div name="RoomsNotAvailableDiv" id="red-error" class="control-focus" tabindex="0" *ngIf="(errorFound && roomsList !== undefined && roomsList.length === 0) || (errorFound && roomsNotAvailable)">
+    <div class="errDiv txt-lg-lr ls-x-sm txt-black">
+      <p *ngIf="errorMsg !== ''" class="contentClass" [innerHTML] = "errorMsg | safeHtml"></p>
+      <p *ngIf="errorMsg === ''" class="contentClass" [innerHTML] = "noRoomFitlersFoundErrMsg | safeHtml"></p>
+    </div>
+  </div>
+  <div name="RoomsNotAvailableDiv" id="red-error" class="control-focus" tabindex="0" *ngIf="(!errorFound && roomsList !== undefined && roomsList.length === 0) || (!errorFound && roomsList !== undefined && roomsList | priceSlider : currencyType : range).length === 0">
+    <div class="txt-lg-lr ls-x-sm txt-black container" id="red-error">
+      <p class="contentClassFilter" [innerHTML]="localeObj.tf_2_RoomList_filters_noAvailbilityMsg | safeHtml"></p>
+    </div>
+  </div>
+  <ul class="roomList NoListStyle" *ngIf="roomsList !== undefined && roomsList.length>0">
+    <li *ngFor="let room of ((this.propertyType.length > 0 && this.propertyType === 'UD') ? (roomsList | filterRoomsByView : {currVal: roomViewFilterValue, defVal: localeObj.tf_2_RoomList_roomListFilters_secondaryRoomAttribute} : {currVal: roomTypeFilterValue, defVal: localeObj.tf_2_RoomList_rooms_primaryRoomAttribute} | roomsSortBy : currencyType : sortOrder) : (roomsList | roomsSortBy : currencyType : sortOrder | priceSlider : currencyType : range))">
+      <div attr.name={{room.code}}>
+        <div class="card {{room.code}}">
+          <div class="control-focus roomCardBody {{RTL_Flag ? 'text-right':''}}" tabindex="0" [ngClass]="{'disabled-room':(room.code!=roomcode && unselectedroom)}" [attr.name]="scrollByRoomCode(room.code)">
+            <div class="row">
+              <div class="col-md-9 p-20">
+                <h3 class="txt-x-lg-lb txt-black-five ls-1 lh-30">
+                  <span [innerHTML] = "room.roomType | safeHtml"></span><span *ngIf="room.roomView">&nbsp;-&nbsp;<span [innerHTML] = "room.roomView | safeHtml"></span></span>
+                </h3>
+                <div *ngIf="getRoomData(room)">
+                  <p class="bookedRoomStatsColor txt-sm-lr lh-24 txt-bs">
+                    <!-- {{roomupdates.totalBooked}} {{roomupdates.totalBooked>1? (localeObj.tf_4_Checkout_addons_roomsText | lowercase):(localeObj.tf_4_Checkout_addons_roomLc | lowercase)}} {{localeObj.booked_in_last}} {{localeObj[roomupdates.timeSpan] || roomupdates.timeSpan}} -->
+                    <span [innerHTML] = "getMessage(localeObj.tf_2_RoomList_rooms_roomBookedPeriod, [roomupdates.totalBooked,roomupdates.totalBooked>1?
+                      (localeObj.tf_4_Checkout_addons_roomsText | lowercase):(localeObj.tf_4_Checkout_addons_roomLc | lowercase),
+                      (localeObj.tf_Generic_twentyFourHours|| roomupdates.timeSpan)]) | safeHtml"></span>
+                  </p>
+                </div>
+                <div class="row">
+                  <div class="roomImagePanel" *ngIf="propertyType !== 'RVNG'">
+                    <app-room-details [roomname]="room.name" [roomid]="room.code" [isImage]="true" [imgUrl]="room.extraThumbnailJumboImageUrl" [imageUrls]="[]" [threeSixtyDegreeImageUrls]="[]" [roomLongDesc]="room.shortDescription" [altImageText]="room.name">
+                    </app-room-details>
+                    <div class="dprTagLine" id="dprTagLine4" *ngIf="!showClose && room.dprTagLine && room.dprTagLine.length > 0 && isDpr4">
+                      <span class="sample"><img class="bell" src="/assets/icons/icon-noun-alert.png" alt="{{room.dprTagLine}}"></span>
+                      <span class="txt-sm-lr lh-24 mr-2 dprText" [innerHTML] = "room.dprTagLine | safeHtml"></span>
+                    </div>
+                  </div>
+                  <div class="roomImagePanel" *ngIf="propertyType === 'RVNG'">
+                    <app-room-details [roomname]="room.name" [roomid]="room.code" [isImage]="true" [imgUrl]="room.extraThumbnailJumboImageUrl" [imageUrls]="room.imageUrls" [threeSixtyDegreeImageUrls]="room.threeSixtyImages" [roomLongDesc]="room.shortDescription" [altImageText]="room.name">
+                    </app-room-details>
+                    <div class="dprTagLine {{RTL_Flag === false ? '' : 'dprPosition'}}" id="dprTagLine4" *ngIf="!showClose && room.dprTagLine && room.dprTagLine.length > 0 && isDpr4">
+                      <span class="sample"><img class="bell" src="/assets/icons/icon-noun-alert.png" alt="{{room.dprTagLine}}"></span>
+                      <span class="txt-sm-lr lh-24 mr-2 dprText" [innerHTML] = "room.dprTagLine | safeHtml"></span>
+                    </div>
+                  </div>
+                  <div class="roomImageCenterPanel">
+                        <!-- {{roomupdates.totalBooked}} {{roomupdates.totalBooked>1? (localeObj.tf_4_Checkout_addons_roomsText | lowercase):(localeObj.tf_4_Checkout_addons_roomLc | lowercase)}} {{localeObj.booked_in_last}} {{localeObj[roomupdates.timeSpan] || roomupdates.timeSpan}} -->
+                    <div class="dprTagLine mt-0" id="dprTagLine5" *ngIf="!showClose && room.dprTagLine && room.dprTagLine.length > 0 && isDpr5">
+                      <span class="sample"><img class="bell" src="/assets/icons/icon-noun-alert.png" alt="{{room.dprTagLine}}"></span>
+                      <span class="txt-sm-lr lh-24 mr-2 dprText" [innerHTML] = "room.dprTagLine | safeHtml"></span>
+                    </div>
+                    <div class="guestNumberDiv">
+                      <p class="txt-lg-lr lh-30 txt-black mb-2 ls-sm" [innerHTML] = "room.occupancyDescription | safeHtml"></p>
+                    </div>
+                    <div class="longDescriptionDiv txt-lg-lr lh-30 txt-black mb-2 ls-sm" *ngIf="showRoomDescriptionOnListing">
+                      <p [innerHTML] = "room.shortDescription | safeHtml"></p>
+                    </div>
+                    <div *ngIf="room.amenities.length > 0" class="amenitiesDiv">
+                      <ul class="noStyleForList pl-0">
+                        <li class="mb-1" *ngFor="let service of room.amenities | roomAmenitiesFilter: noOfMaxAmenities;"> 
+                          <div class="serviceDiv lh-24 ls-sm txt-black-three">
+                            <img class="icon-service mr-2" src="{{service.thumbnailImageUrl}}" alt="{{service.name}}"/> <span [innerHTML] = "service.name | safeHtml"></span>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                    <div *ngIf="room.amenities.length === 0 && room.roomViewDescription" class = "roomDescDiv txt-sm-lr lh-24 ls-x-sm txt-black-three">
+                      <div [innerHTML] = "room.roomViewDescription | safeHtml"></div>
+                    </div>
+                    <div *ngIf="!room.isBaseRoom && room.amenities.length > 0" class="roomBookingUpdates txt-sm-lr lh-24 ls-x-sm txt-black-three mt-3" [innerHTML] = "localeObj.tf_2_RoomList_rooms_allAmenitiesFromLowerTierRooms | safeHtml"></div>
+                    <p class="m-0 mt-3" *ngIf="propertyType !== 'RVNG'">
+                      <app-room-details [roomname]="room.name" [roomid]="room.code" [isImage]="false" [imageUrls]="[]" [threeSixtyDegreeImageUrls]="[]" [roomLongDesc]="room.shortDescription" [altImageText]="room.name"></app-room-details>
+                    </p>
+                    <p class="m-0 mt-3" *ngIf="propertyType === 'RVNG'">
+                      <app-room-details [roomname]="room.name" [roomid]="room.code" [isImage]="false" [imageUrls]="room.imageUrls" [threeSixtyDegreeImageUrls]="room.threeSixtyImages" [roomLongDesc]="room.shortDescription" [altImageText]="room.name"></app-room-details>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 p-0">
+                <div class="pricePanel p-20" *ngIf="!showClose || selectedRoomCode !== room.code">
+                  <h5 class="txt-lg-lr lh-30 ls-sm txt-black d-inline-block d-sm-block align-middle m-0 mr-1" [innerHTML] = "localeObj.tf_2_RoomList_roomSummary_from | safeHtml"></h5>
+                  <div *ngIf="discountedPrice" class="room-price d-inline-block d-sm-block align-middle">
+                    <del class="strikedPrice txt-lg-lr lh-24 ls-x-sm txt-black-three">&nbsp;<span [innerHTML] = "currCode | safeHtml"></span><span [innerHTML] = "avgPrice |
+                      customPriceFormat: '1.0-2': currencyType | safeHtml"></span></del>
+                  </div>
+                  <div class="room-price d-inline-block d-sm-block align-middle mr-1">
+                    <strong class="control-focus price txt-x-lg-lb lh-30 txt-black ls-1"><span [innerHTML] = "currCode | safeHtml"></span><span [innerHTML] = "(discountedPrice || avgPrice) |
+                      customPriceFormat: '1.0-2': currencyType | safeHtml"></span></strong>
+                    <span class="txt-sm-lr lh-30 txt-black-three ls-x-sm" *ngIf="showAverageNightlyRate">&nbsp;<span [innerHTML] = "localeObj.tf_2_RoomList_rooms_perNight | safeHtml"></span></span>
+                    <span class="txt-sm-lr lh-30 txt-black-three ls-x-sm" *ngIf="!showAverageNightlyRate">&nbsp;<span [innerHTML] = "localeObj.tf_2_RoomList_rooms_label_perStay | safeHtml"></span></span>
+                  </div>
+                  <div>
+                    <span class="txt-x-sm-lr ls-x-sm txt-black-three" [innerHTML] = "roomSpecifications | safeHtml">
+                    </span>
+                  </div>
+                  <div>
+                    <span class="txt-x-sm-lr ls-x-sm txt-black-three" [innerHTML] = "localeObj.tf_2_RoomList_rooms_ratesAndAvailabilityChanges | safeHtml"></span>
+                  </div>
+                  <br *ngIf="!(!showClose && room.dprTagLine && room.dprTagLine.length > 0 && isDpr6)">
+                  <div class="dprTagLine mb-3" id="dprTagLine6" *ngIf="!showClose && room.dprTagLine && room.dprTagLine.length > 0 && isDpr6">
+                    <span class="sample"><img class="bell" src="/assets/icons/icon-noun-alert.png" alt="{{room.dprTagLine}}"></span>
+                    <span class="txt-sm-lr lh-24 mr-2 dprText" [innerHTML] = "room.dprTagLine | safeHtml"></span>
+                  </div>
+                  <button id="r_btn_select_rooms" class="control-focus btn mbs-button-primary" type="button" (click)="selectRoom(room, roomDetail)" attr.aria-label="{{localeObj.tf_3_MultiRoom_banner_chooseRoom}}">
+                    <span [innerHTML] = "localeObj.tf_3_MultiRoom_banner_chooseRoom | uppercase | safeHtml"></span>
+                  </button>
+                </div>
+                <div class="row justify-content-end" *ngIf="showClose && selectedRoomCode === room.code">
+                  <button type="button" class="control-focus close" aria-label="Close" (click)="unselectRoom(room, roomDetail)">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <!-- <a href="#" (click)="show()"><h1><i class="fa fa-times"></i></h1>  </a> -->
+                </div>
+
+              </div>
+            </div>
+            <div class="row">
+              <app-rate-plans [selectedRoom]="room" [roomBookingOrder]="roomBookingOrder" [rateCode]="rateCode"
+                (multiRoomBooked)="multiRoomBooked()" (bedTypeChanged)="setSelectedRoomUniqueCode($event)" #roomDetail class="width-100" [showAverageNightlyRate]="showAverageNightlyRate"></app-rate-plans>
+            </div>
+          </div>
+        </div>
+        <br>
+      </div>
+    </li>
+  </ul>
+  <div *ngIf="errorFound && roomsNotAvailable">
+    <div class="rate-calendar">
+      <app-ratecalendar renderingMode="INLINE" [checkinsummary]="checkinsummary" (checkInSummaryChanged)="onCheckInSummaryChanged($event)" [displayRateCal] ='true'
+        #rateCalComponent></app-ratecalendar>
+    </div>
+    <!-- <div class="rate-calendar-button row justify-content-end">
+      <button class="control-focus btn mbs-button-primary" type="button" (click)="rateCalComponent.updateCheckingData()" id="view_available_rooms" attr.aria-label="{{localeObj.tf_1_Calendar_button_availableRooms}}">
+        <span [innerHTML] = "localeObj.tf_1_Calendar_button_availableRooms | safeHtml"></span>
+      </button>
+    </div> -->
+  </div>
+</div>

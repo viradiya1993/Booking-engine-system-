@@ -1,0 +1,191 @@
+@import "../../../sass/variables/colors";
+.fa-long-arrow-right,
+.fa-long-arrow-left {
+  font-size: 19px;
+  color: $greyish-brown-two;
+}
+
+.pricePanel {
+  background-image: linear-gradient(to right, #f3f3f3, #f6f6f6 48%, #ffffff);
+  padding: 15px 20px;
+  height: 99%;
+  line-height: 1;
+}
+
+.info {
+  font-size: 12px;
+  background-color: transparent !important;
+}
+
+hr {
+  border-color: $greyish-three;
+  border-width: 3px;
+}
+
+.roomImagePanel {
+  padding: 0px 0px 10px 0px;
+  margin-top: 0px;
+  width: 100%;
+}
+
+th,
+td {
+  padding: 10px;
+  vertical-align: top;
+}
+
+.tinyFont {
+  font-size: 11px;
+  text-align: right;
+  cursor: pointer;
+}
+
+.tinyFont:hover {
+  text-decoration: underline;
+}
+
+table {
+  width: 100%;
+}
+
+.bottomLine {
+  border-bottom: 2px solid $pinkish-grey-two;
+}
+
+/* Cancellation Policy Tooltip*/
+
+.TooltipCP {
+  position: relative;
+  display: inline-block;
+  text-decoration: underline;
+}
+
+.TooltipCP:hover {
+  cursor: pointer;
+}
+
+.TooltipCP {
+  .tooltiptextCP {
+    visibility: hidden;
+    width: 260px;
+    line-height: 18px;
+    background-image: linear-gradient(to right, #f3f3f3, #f6f6f6 48%, #ffffff);
+    box-shadow: 0px 2px 7.6px 0.4px rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    padding: 15px 10px;
+    position: absolute;
+    z-index: 120;
+    top: 32px;
+    left: -40px;
+  }
+  &.pt-10 {
+    .tooltiptextCP {
+      top: 42px;
+    }
+  }
+}
+
+.TooltipCP .tooltiptextCP::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 15%;
+  border-width: 15px;
+  border-style: solid;
+  border-color: transparent transparent #f6f6f6 transparent;
+}
+
+.TooltipCP:hover .tooltiptextCP {
+  visibility: visible;
+}
+
+div.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
+// multi room
+.fa-angle-up {
+  color: #2a6ebb;
+}
+
+div .panel-default.card-header {
+  background-color: transparent !important;
+}
+
+.card-body {
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+div .card {
+  background-color: transparent !important;
+  border: none;
+  padding: 5px;
+}
+
+.card {
+  clear: all !important;
+}
+
+div .card-header {
+  background-color: transparent !important; // border: none;
+  // border-top: 2px black;
+  padding-bottom: 5px;
+  width: 100%;
+  padding-left: 0px;
+  font-size: 15px;
+  // border-color: 2px solid black;
+}
+
+div .card-body {
+  padding: 0rem;
+  background-color: transparent !important;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.taxandtotal {
+  padding-left: 5px;
+}
+
+div .col-sm-8 {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.acc-heading {
+  cursor: pointer;
+}
+
+.max-width-credit {
+  @media only screen and (min-width: 992px) {
+    width: 300px;
+  }
+  @media only screen and (min-width: 1200px) {
+    width: 368px;
+  }
+}
+
+::ng-deep * >.multi-room-credit-widget .card{
+display: block !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-bottom: 3px solid #aaaaaa !important;
+  border-radius: 0px !important;
+  background-image: linear-gradient(to right, #f3f3f3, #f6f6f6 48%, #ffffff) !important;
+}
+
+::ng-deep * >.multi-room-credit-widget .card-body {
+  padding: 10px 0px;
+  border-top: 3px solid rgba(0, 0, 0, .125) !important;
+}
+
+::ng-deep *>.multi-room-credit-widget .card-header {
+  padding: 0px 0px 10px 0px !important;
+  background-color: transparent !important;
+  border: none !important;
+}

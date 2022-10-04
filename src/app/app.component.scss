@@ -1,0 +1,169 @@
+@import "../sass/variables/colors";
+@import "../sass/variables/font";
+.placeholder-section {
+  min-height: 400px;
+  .Container {
+    padding: 10px 0px;
+    justify-content: space-around;
+    background-image: -ms-linear-gradient(right, #FCFCFC 0%, #EDEDED 80%);
+    /* IE10+ */
+    background-image: -moz-linear-gradient(right, #FCFCFC 0%, #EDEDED 80%);
+    /* Mozilla Firefox */
+    background-image: -o-linear-gradient(right, #FCFCFC 0%, #EDEDED 80%);
+    /* Opera */
+    background-image: -webkit-gradient(linear, right top, left top, color-stop(0, #FCFCFC), color-stop(80, #EDEDED));
+    /* Webkit (Safari/Chrome 10) */
+    background-image: -webkit-linear-gradient(right, #FCFCFC 0%, #EDEDED 80%);
+    /* Webkit (Chrome 11+) */
+    background-image: linear-gradient(to left, #FCFCFC 0%, #EDEDED 80%);
+    /* W3C Markup */
+    // [class*='step-'] {
+    //   margin: 10px 0;
+    // }
+    .circle {
+      border-radius: 50%;
+    }
+    .outer {
+      background-color: white;
+      width: 34px;
+      height: 34px;
+      padding: 1px;
+    }
+    [class*='inner-circle-'] {
+      width: 30px;
+      height: 30px;
+    }
+    @media only screen and (min-width: 768px) {
+      padding: 10px 15px;
+      .outer {
+        background-color: white;
+        width: 37px;
+        height: 37px;
+        padding: 2px;
+      }
+      [class*='inner-circle-'] {
+        width: 31px;
+        height: 31px;
+      }
+    }
+    .circle-text {
+      text-align: center;
+      font-family: $font-secondary;
+      font-size: $font-size-x-small;
+      font-weight: bold;
+      color: $greyish;
+      @media only screen and (min-width: 768px) {
+        font-size: $font-size-small;
+      }
+    }
+    .shapeborder {
+      border: 1px solid $brownish-grey;
+    }
+    .shapeborder-selected {
+      border: 1px solid $tan;
+      color: white;
+      [class*='inner-circle-'] {
+        background-color: $tan;
+      }
+      &+.label-text {
+        color: $black-three;
+      }
+    }
+    .label-text {
+      font-family: $font-secondary;
+      font-size: $font-size-x-small;
+      font-weight: bold;
+      color: $greyish;
+      letter-spacing: 0.7px;
+      padding-left: 5px;
+      padding-right: 5px;
+      display: none;
+      max-width: 130px;
+      @media only screen and (min-width: 768px) {
+        max-width: 300px;
+        padding-left: 10px;
+        display: block;
+        padding-right: 40px;
+        font-size: $font-size-small;
+      }
+    }
+    .bold-text-and-cursor-pointer {
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .show-on-higlight-mobile {
+      display: block;
+    }
+    .hide-on-unhiglight-mobile {
+      display: none;
+      @media only screen and (min-width: 768px) {
+        display: block;
+      }
+    }
+    .step-search {
+      padding-right: 10px;
+      @media only screen and (min-width: 768px) {
+        padding-right: 0px;
+      }
+    }
+    .step-select-room {
+      padding-right: 10px;
+      @media only screen and (min-width: 768px) {
+        padding-right: 0px;
+      }
+    }
+    @media only screen and (min-width: 768px) {
+      padding: 25px 50px;
+      justify-content: flex-start;
+    }
+    @media only screen and (min-width: 992px) {
+      padding: 25px 30px 25px 85px;
+      justify-content: flex-start;
+    }
+  }
+}
+::ng-deep .loading-text {
+  text-align: center;
+  width: 90% !important;
+
+  .loading-message {
+    font-size: 20px;
+    color: black;
+  }
+}
+
+:host-context(body[dir="rtl"]) {
+  .placeholder-section .Container
+  .label-text {
+    @media only screen and (min-width: 768px) {
+      padding-left: 40px;
+      padding-right: 10px;
+    }
+  }
+  .placeholder-section .Container {
+    @media only screen and (min-width: 992px) {
+      padding: 25px 85px 25px 30px;
+      justify-content: flex-start;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::ng-deep {
+    .sk-ball-spin-clockwise-fade-rotating, .la-ball-spin-clockwise-fade-rotating {
+      animation: 1s linear infinite !important;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::ng-deep {
+    .sk-ball-spin-clockwise-fade-rotating, .la-ball-spin-clockwise-fade-rotating {
+      animation: none !important;
+    }
+  }
+}
+
+::ng-deep .cc-link {
+  color: #303030 !important;
+}

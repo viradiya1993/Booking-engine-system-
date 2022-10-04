@@ -1,0 +1,15 @@
+<div class="outlet-container">
+  <div class="containerDiv">
+  <div name="ErrDiv"></div>
+  <div name="RoomsNotAvailableDiv" *ngIf="errorFound" id="red-error" tabindex="0" class="control-focus" attr.aria-label="{{errorMsg}}">
+    <div class="errDiv txt-lg-lr ls-x-sm txt-black">
+      <p *ngIf="errorMsg !== ''" class="contentClass" [innerHTML] = "errorMsg | safeHtml"></p>
+    </div>
+  </div>
+</div>
+  <div class="rate-calendar">
+    <app-ratecalendar renderingMode="INLINE" [checkinsummary]="checkinsummary" (checkInSummaryChanged)="onCheckInSummaryChanged($event)"
+      #rateCalComponent (iataErrors)="checkIsIATAValid($event)" (accessCodeErrors)="isAccessCodeValid($event)" (calCounter)="counterIncremented($event)" (checkAvailability)="viewAvailability()"></app-ratecalendar>
+  </div>
+
+</div>

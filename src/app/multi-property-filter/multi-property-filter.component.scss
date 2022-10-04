@@ -1,0 +1,98 @@
+// Hides the dropdown arrow
+.mbs-dropdown-primary .dropdown-toggle:after {
+    background-image: none;
+}
+// Select Dropdown edit
+::ng-deep {
+    .select2-container--open .select2-dropdown {
+        border-radius: 25px;
+        border: 1px solid #cfcfcf;
+        top: 23px;
+    }
+
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+        border-radius: 25px;
+        background: #f3f3f3;
+        padding: 10px 15px;
+    }
+    .select2-search__field:focus, .select2-container--focus:focus {
+        outline: none;
+    }
+    .select2-selection__arrow {
+        display: none;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: black;
+        padding: 0px 6px;
+        font-weight: 600;
+        font-family: "Josefin Sans";
+        font-size: 14px;
+    }
+    .select2.select2-container.select2-container--default {
+        margin-right: 15px;
+    }
+    .rating-color {
+        color: #868686;
+    }
+}
+
+// Select Dates btn
+button.selectDates-btn {
+    border-bottom: 1px solid #cfcfcf;
+    text-transform: capitalize;
+    background-color: white;
+}
+
+// Sort by price btn
+.formatButton {
+    background-color: white;
+    border: none;
+    outline: 0;
+    text-transform: uppercase;
+}
+
+// Basic dropdown styles
+.dropdown-toggle {
+    cursor: pointer;
+    font-family: Lato, "Josefin Sans", sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.1px;
+    display: block;
+    position: relative;
+    padding: 0px;
+}
+
+// Filter type alignment
+.filter-type p {
+    margin-bottom: 0px;
+    font-size: 14px;
+}
+
+.multiprop-filters {
+    border: 1px solid #dedede;
+    border-radius: 25px;
+    padding: .3rem 0rem .1rem 0rem;
+    cursor: pointer;
+}
+
+:host-context(body[dir="rtl"]) {
+    .multiprop-filters-list {
+        margin-left: 0;
+        margin-right: 35px;
+    }
+}
+
+.multiprop-filters-list {
+    margin-left: 35px;
+}
+.list-alignment {
+    justify-content: space-between;
+}
+
+.enable-map {
+    margin-right: 35px;
+}
+
+.filter-applied {
+    background-color: #F5F5F5;
+}

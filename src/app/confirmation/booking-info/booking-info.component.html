@@ -1,0 +1,214 @@
+<!-- <ng-template #bookingPopUpTemplate>
+  <div class="modal-header">
+    <h5 class="modal-title txt-xxx-lg-jb lh-32 txt-black-five mb-3"><strong>{{localeObj.manage_your_booking |
+        uppercase}}</strong></h5>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>{{localeObj.enter_res_id_and_email}}</p>
+    <div class="form-group row">
+      <div class="col-sm-12  p-150">
+        <label for="Name" class="txt-lg-lb txt-black-five ls-x-sm">{{localeObj.reservation_id}}</label>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-12  p-150">
+        <input type="text" class="col-sm-12 form-control txt-md-lr txt-black-three ls-x-sm" [(ngModel)]="reservationID"
+          name="resIdInput" id="resIdInput">
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-12  p-150">
+        <label for="Name" class="txt-lg-lb txt-black-five ls-x-sm">{{localeObj.tf_4_Checkout_guestDetails_emailAddress}}</label>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-12  p-150">
+        <input type="text" class="col-sm-12 form-control txt-md-lr txt-black-three ls-x-sm" [(ngModel)]="emailID" name="emailInput"
+          id="emailInput" type="email" (change)="isEmailValid('email')">
+        <small class="error-msg" *ngIf="!isMailValid">{{emailFieldError}}</small>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-12  p-150">
+        <button class="btn mbs-button-primary enhance" type="button" [disabled]="!(reservationID && emailID && isSubmitButtonVisible)"
+          (click)="routetomanagebooking()">{{localeObj.submit | uppercase}}</button>
+      </div>
+    </div>
+  </div>
+</ng-template> -->
+
+<ng-template #modifyBookingWarningTemplate>
+  <div id="modify-reservation-modal">
+    <div class="modal-header">
+      <h5 class="modal-title txt-xxx-lg-jb lh-32 txt-black-five mb-3" tabindex="0" id="mr-modal-title"><strong><span
+            [innerHTML]="localeObj.tf_5_Confirmation_popup_modifyPopupHeading | safeHtml"></span>?</strong></h5>
+      <button type="button" class="control-focus close pull-right" aria-label="Close" (click)="modalRef.hide()" tabindex="0" id="mr-modal-closeBtn">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <hr class="hr-large hr-thick">
+    <div class="modal-body {{ RTL_Flag ? 'text-right' : 'text-left'}}">
+      <p *ngIf="pgDepositAmtAvail === 0" [innerHTML]="localeObj.tf_5_Confirmation_popup_modifyPopupText | safeHtml" tabindex="0"></p>
+      <p *ngIf="pgDepositAmtAvail > 0" [innerHTML]="getMessage(localeObj.tf_5_Confirmation_popup_modifyPopupAmtText, [defCurrCode, pgDepositAmtAvail])" tabindex="0"></p>
+    </div>
+    <br>
+    <div>
+      <button *ngIf="isRT4ModifyFlowEnabled" class="control-focus btn mbs-button-primary enhance" type="button"
+        (click)=" validateForModify(true, true)" tabindex="0" id="mr-modal-proceedBtn">
+        <span [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_button_proceed | safeHtml"></span>
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<app-preferences-lightbox #PreferencesLightBox [source]="'confirmation'" [roomIndex]="roomIndex"
+  [bookingRef]="refNumber" [guestdetailsString]="guestdetailsString"></app-preferences-lightbox>
+
+<div tabindex="0" class="control-focus booking-info">
+  <h1 class="header" *ngIf="!ismanagebooking"
+    [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_bookingConfirmationMsg | safeHtml"></h1>
+  <div class="row" *ngIf="confirmationPageText" >
+    <div class="col-sm-12 px-0">
+      <p [innerHTML]="confirmationPageText | safeHtml"></p>
+    </div>
+  </div>
+  <div class="row" >
+    <div class="col-sm-12 px-0">
+      <p [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_bookingConfimationMsg | safeHtml">
+        <!-- <br>
+        <a href="#" class="resendMail">
+          <u>Resend Confirmation Email</u>
+        </a> -->
+      </p>
+    </div>
+  </div>
+  <div class="row ">
+    <div class="col-sm-12 px-0">
+      <p><span [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_dos | safeHtml"></span>:
+        <span class="d-block d-md-inline">&nbsp;
+          <span class="txt-xx-lg-lb ls-x-sm txt-black-five"
+          [innerHTML]="(objCheckin?.checkindate | date : 'longDate') | uppercase | safeHtml"></span>
+          <i class="fa fa-long-arrow-right"></i>
+          <span class="txt-xx-lg-lb ls-x-sm txt-black-five"
+          [innerHTML]="(objCheckin?.checkoutdate | date : 'longDate') | uppercase | safeHtml"></span>
+        </span>
+      </p>
+    </div>
+  </div>
+  <div class="row" *ngIf="!isMultiRooms">
+    <div class="col-sm-12 px-0">
+      <p><span [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_bookingRefrNo | safeHtml"></span>:
+        <span class="d-block d-md-inline txt-xx-lg-lb ls-x-sm txt-black-five">&nbsp;<span
+            [innerHTML]="refNumber | safeHtml"></span></span>
+      </p>
+      <p *ngIf = "!!transactionID" ><span [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_transactionNo | safeHtml"></span>:
+        <span class="d-block d-md-inline txt-xx-lg-lb ls-x-sm txt-black-five text-uppercase">&nbsp;<span
+            [innerHTML]="transactionID | safeHtml"></span></span>
+      </p>
+    </div>
+  </div>
+  <!-- <div class="row" *ngIf="!isMultiRooms && externalRefNumber">
+    <div class="col-sm-12 px-0">
+      <p><span [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_external_bookingRefrNo | safeHtml"></span>:
+        <span class="d-block d-md-inline txt-xx-lg-lb ls-x-sm txt-black-five">&nbsp;<span [innerHTML]="externalRefNumber | safeHtml"></span></span>
+      </p>
+    </div> -->
+</div>
+<div class="control-focus row {{ismanagebooking ? 'justify-content-between': ''}}" tabindex="0">
+  <div class="px-0 mb-3 justify-content-between {{ismanagebooking ? '': 'col-md-4'}}">
+    <span class="{{ RTL_Flag ? 'pull-right' : 'pull-left'}}" *ngIf="!suppressRateOnLookup">
+      <span [innerHTML]="getTotalPriceMessage() | safeHtml"></span>:
+      <span class="d-block d-md-inline txt-xx-lg-lb ls-x-sm txt-black-five">&nbsp;<span
+          [innerHTML]="paymentCurrencyCode ? (selectedCurrCode | safeHtml) : (defCurrCode | safeHtml)"></span>
+        <span
+          [innerHTML]="paymentCurrencyCode ? (selectedCurrencyPrice | customPriceFormat: '': selectedCurrFilter | safeHtml) : (totalPrice | customPriceFormat: '': defCurrFilter | safeHtml)"></span></span>
+    </span>
+  </div>
+
+  <div class="col-md-8 d-md-flex justify-content-end" *ngIf="!ismanagebooking">
+    <div class="resend-btn-container mb-2" *ngIf="!ismanagebooking">
+      <button *ngIf="showMailResendOption" id="c_btn_resend_email" class="control-focus btn confirm-page-button mbs-button-primary"
+        type="button" (click)="onResendEmailClicked()">
+        <span [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_button_resendEmail | safeHtml"></span>
+      </button>
+    </div>
+    <div class="resend-btn-enhanceYourStay-container mb-2" *ngIf="!ismanagebooking && showManageBookingFlag && isCrossSellAddOnsExists">
+      <button id="c_btn_enhance" class="control-focus btn confirm-page-button mbs-button-primary" type="button"
+        (click)="onEnhanceClicked('EnhancementsDiv')">
+        <span [innerHTML]="localeObj.tf_5_Confirmation_enhanceYourStay_heading | safeHtml"></span>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="ismanagebooking" class='row'>
+  <div *ngIf="isCrossSellAddOnsExists"
+      class=" enhance-your-stay-button">
+      <button id="c_btn_enhance" class="control-focus btn confirm-page-button mbs-button-primary" type="button"
+        (click)="onEnhanceClicked('EnhancementsDiv')">
+        <span [innerHTML]="localeObj.tf_5_Confirmation_enhanceYourStay_heading | safeHtml"></span>
+      </button>
+    </div>
+  
+  <div class=" mb-2 resend-btn-container-manage-page" *ngIf="ismanagebooking">
+    <button *ngIf="showMailResendOption" id="c_btn_resend_email" class="control-focus btn confirm-page-button mbs-button-primary"
+      type="button" (click)="onResendEmailClicked()">
+      <span [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_button_resendEmail | safeHtml"></span>
+    </button>
+  </div>
+  <div *ngIf="ismanagebooking" class="booking-details-modf">
+    <div class="row">
+      <div class="mr-auto" *ngIf="!isRT4ModifyFlowEnabled">
+        <div class="guest-details" *ngIf="cancellationRequiredObj.guaranteePercentage === 100">
+          <span class="txt-lg-lb ls-x-sm txt-black-three"
+            [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_note | safeHtml"></span>:<span
+            class="guest-details-content txt-lg-lr ls-x-sm txt-black-three"
+            [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_bookingNotRefundable | safeHtml">
+          </span>.
+          <br><span class="guest-details-content txt-lg-lr ls-x-sm txt-black-three"
+            [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_hotelReservationAssistance | safeHtml"></span>.
+        </div>
+      </div>
+      <!-- <div class="col-sm-2" *ngIf="!ifModifyBookingVisible()">&nbsp;</div> -->
+      <!-- <div class="col-sm-2 pl-0 pr-0 modify-btn" *ngIf="isRT4ModifyFlowEnabled && canModify && (this.failureStatus === '00' || this.failureStatus === '03')"> -->
+      <div class="px-0 modify-btn-bd" *ngIf="handleModifyBtnDisplay()">
+        <a *ngIf="propertyType === 'UD' && !UDdisableModify" class="control-focus btn mbs-button-primary nav-button show modify-details-bd" (click)="checkIsModifyAllowed(modifyBookingWarningTemplate, 'modal-md')" tabindex="0" role="button" aria-description="Click this button to modify reservation">
+          <span [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_button_modify | uppercase | safeHtml"></span>
+        </a>
+        <a *ngIf="propertyType !== 'UD'" class="control-focus btn mbs-button-primary nav-button show modify-details-bd" (click)="propertyType === 'RVNG' ? validateForModify(true, true) : checkIsModifyAllowed(modifyBookingWarningTemplate, 'modal-md')" tabindex="0" role="button" aria-description="Click this button to modify reservation">
+          <span [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_button_modify | uppercase | safeHtml"></span>
+        </a>
+      </div>
+      <div class="col-sm-2 col-md-6 pl-0 pr-0 modify-btn"
+        *ngIf="(!isRT4ModifyFlowEnabled && !ifPayAndStay()) && (this.failureStatus === '00' || this.failureStatus === '03')"
+        dropdown>
+        <a class="control-focus dropdown-toggle btn mbs-button-primary nav-button show modify-details" dropdownToggle><span
+            [innerHTML]="localeObj.tf_5_Confirmation_bookingInfo_button_modify | uppercase | safeHtml"></span></a>
+        <ul *dropdownMenu class="dropdown-menu dropdown-menu-right list-unstyled">
+          <li>
+            <a *ngIf="propertyType === 'UD' && !UDdisableModify" class="control-focus dropdown-item textunderline" (click)="openModal(modifyBookingWarningTemplate, 'modal-md')"><span [innerHTML]="localeObj.tf_5_Confirmation_dropdown_modifyDropOption1 | safeHtml"></span></a>
+            <a *ngIf="propertyType !== 'UD'" class="control-focus dropdown-item textunderline" (click)="propertyType === 'RVNG' ? validateForModify(true, true) : openModal(modifyBookingWarningTemplate, 'modal-md')"><span [innerHTML]="localeObj.tf_5_Confirmation_dropdown_modifyDropOption1 | safeHtml"></span></a>
+          </li>
+          <li>
+            <a class="control-focus dropdown-item textunderline" (click)="openPreferences('modal-md')"><span
+                [innerHTML]="localeObj.tf_5_Confirmation_dropdown_modifyDropOption2 | safeHtml"></span></a>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="showModifyBtn" class="px-0 modify-btn-bd">
+        <app-cancel-booking class="cancel-booking-button" [cancellationRequiredObj]="cancellationRequiredObj"
+          [bookingRefNo]="refNumber" [email]=email (errorMsg)="isCancelreservationFailed($event)">
+        </app-cancel-booking>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="errDiv txt-lg-lr ls-x-sm txt-black" *ngIf="cancelReserFailed" id="error-{{errorMsg}}">
+  <p class="contentClass" [innerHTML]="errorMsg | safeHtml"></p>
+</div>
+<div class="text-center" *ngIf="resendEmailDisplayFlag" [ngStyle]="{'color': isResendEmailMessage ? 'green': 'red'}">
+  <span [innerHTML]="message"></span>
+</div>

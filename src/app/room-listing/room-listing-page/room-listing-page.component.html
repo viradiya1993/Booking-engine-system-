@@ -1,0 +1,93 @@
+<ng-template #lightboxmodel>
+  <div class="room-filters">
+    <div class="modal-header mb-30">
+      <h4 class="modal-title txt-x-lg-lb lh-30 ls-1 txt-black-five" [innerHTML]="localeObj.tf_2_RoomList_rooms_filterMobilePopUpHeading | safeHtml"></h4>
+      <button type="button" class="control-focus close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="lightbox-contents">
+        <form>
+          <div *ngIf="roomTypes$ && roomTypes$.length > 0" class="mbs-dropdown-primary" dropdown>
+            <a dropdownToggle class="control-focus dropdown-toggle dropdown-toggle-filter">
+              <span [innerHTML]="roomTypeFilter | safeHtml"></span>
+            </a>
+            <ul *dropdownMenu class="dropdown-menu">
+              <li class="dropdown-item" *ngFor="let type of roomTypes$" [value]="type" (click)="updateRoomType(type)">
+                <span [innerHTML]="type | safeHtml"></span>
+              </li>
+            </ul>
+          </div>
+          <div *ngIf="roomViews$ && roomViews$.length > 0" class="mbs-dropdown-primary pt-10" dropdown>
+            <a dropdownToggle class="control-focus dropdown-toggle dropdown-toggle-filter">
+              <span [innerHTML]="roomViewFilter | safeHtml"></span>
+            </a>
+            <ul *dropdownMenu class="dropdown-menu">
+              <li class="dropdown-item" #t *ngFor="let view of roomViews$" [value]="view" (click)="updateRoomView(view)">
+                <span [innerHTML]="view | safeHtml"></span>
+              </li>
+            </ul>
+          </div>
+          <div class="row pt-10 d-block d-sm-flex">
+            <div class="currency filter d-flex align-items-center mr-auto">
+              <div class="label txt-md-lr ls-sm txt-br-grey mr-10">{{localeObj.tf_2_RoomList_roomListFilters_currency}} :</div>
+              <div class="mbs-dropdown-primary currency-dropdown" dropdown>
+                <a dropdownToggle class="control-focus dropdown-toggle dropdown-toggle-filter px-10">
+                  <span [innerHTML]="currencySelection.code | safeHtml"></span>
+                </a>
+                <ul *dropdownMenu class="dropdown-menu">
+                  <li class="dropdown-item px-10 currency-name" *ngFor="let currency of currencies" [value]="currency.code"
+                    (click)="updateCurrencySelection(currency)"> {{currency.code}}
+                      <span [innerHTML]="currency.code | safeHtml"></span>&nbsp;(<span [innerHTML]="currency.symbol | safeHtml"></span>)
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="mt-3 mt-sm-0 sort-by filter d-flex align-items-center ml-auto" (click)="toggleSortOrder()">
+              <div class="txt-md-lr ls-sm txt-br-grey mr-10"><span [innerHTML]="localeObj.tf_2_RoomList_roomListFilters_sortBy | safeHtml"></span>:</div>
+              <div class="txt-md-lb ls-sm txt-black-five pl-20 mr-10 cursor-pointer" [innerHTML]="localeObj.tf_2_RoomList_roomListFilters_price | safeHtml"></div>
+              <button class="control-focus formatButton pb-0 cursor-pointer">
+                <div *ngIf="isSortOrderAsc; then thenBlock else elseBlock"> </div>
+                <ng-template #elseBlock>
+                  <i class="fa fa-long-arrow-up"></i>
+                </ng-template>
+                <ng-template #thenBlock>
+                  <i class="fa fa-long-arrow-down"></i>
+                </ng-template>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="control-focus btn mbs-button-primary w-100 mt-3" type="button" (click)="applyFilters()" id="done">
+        <span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_done | safeHtml"></span>
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<div class="Container">
+  <app-guestduration [roomsListAvail] = roomsList$></app-guestduration>
+</div>
+<div class="outlet-container roomListWithFilters pt-0">
+  <div class="d-block d-md-none mb-3" *ngIf="this.propertyType.length > 0 && this.propertyType === 'UD'">
+    <button class="control-focus btn button-primary" id="mobile_filters_UD" (click)="openFiltersModal(lightboxmodel);">
+      <i class="fa fa-sliders {{RTL_Flag ? 'ml-2':'mr-2'}}" aria-hidden="true"></i>
+      <span [innerHTML]="localeObj.tf_2_RoomList_filterDropdown_filter | safeHtml"></span>
+    </button>
+  </div>
+  <app-filters (roomFilters) = "updateRoomList($event)"  [roomViews]="roomViews$" [roomTypes]="roomTypes$" [roomsList]="roomsList$" [entireRoomsList]="filteredRoomList"></app-filters>
+  <div *ngIf="isSelectedPackageNotFound">
+    <div class="errDiv txt-lg-lr ls-x-sm txt-black" id="red-error">
+      <p class="contentClass" [innerHTML]="noSelectedPackagesFound | safeHtml"></p>
+    </div>
+  </div>
+  <app-multi-room-banner *ngIf="multiRoomBanner" [rateCode]="rateCode" [roomBookingOrder]="roomBookingOrder"
+    (multiRoomRemoved)="multiRoomRemoved($event)"></app-multi-room-banner>
+
+  <app-rooms #Rooms [roomsList]="roomsList$" [rateCode]="rateCode" [isParamsValid]="isParamsValid" [roomBookingOrder]="roomBookingOrder"
+    (multiRoomBook)="multiRoomBooked()"></app-rooms>
+</div>

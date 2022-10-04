@@ -1,0 +1,134 @@
+<ng-template #lightboxmodel>
+  <div class="room-details" id="view-room-details-modal">
+    <div class="modal-header mb-30">
+      <h4 class="modal-title txt-x-lg-lb lh-30 ls-1 txt-black-five" [innerHTML]="roomname | safeHtml" tabindex="0"
+        id="rd-modal-title"></h4>
+      <button type="button" class="control-focus close pull-right" aria-label="Close" (click)="modalRef.hide()"
+        tabindex="0" id="rd-modal-closeBtn">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="lightbox-contents row" *ngIf="lightboxData !== undefined">
+        <div [ngClass]="mainModalclass(propertyType)">
+          <div class="" [ngStyle]="!selectedImage.largeImageUrl ?{'height':'0px'} : {'height':''}">
+            <ngx-slick-carousel class="carousel" #slickModal1="slick-carousel" [config]="slideConfig1"
+              (init)="slickInit($event)" (afterChange)="afterChange($event)" (beforeChange)="beforeChange($event)">
+              <div ngxSlickItem *ngFor="let slide of lightboxData.imageUrls" class="slide">
+                <img *ngIf="selectedImage.largeImageUrl" src="{{selectedImage.largeImageUrl}}" class="slideImage"
+                  alt="{{roomname}}" />
+            </div>
+            </ngx-slick-carousel> 
+          </div>
+
+          <div class="" [ngStyle]="selectedImage.largeImageUrl ?{'display':'none'} : {'display':'block'}">
+            <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig"
+              (init)="slickInit($event)" (beforeChange)="beforeChange($event)">
+
+              <div name="threeSixtyDegreeView" class="iframeClass"></div>
+            </ngx-slick-carousel>
+
+          </div>
+
+
+
+          <ngx-slick-carousel class="carousel horizontal-slider" #slickModal="slick-carousel" [config]="slideConfig"
+            (init)="slickInit($event)" (breakpoint)="breakpoint($event)" (afterChange)="afterChange($event)"
+            (beforeChange)="beforeChange($event)">
+            <div ngxSlickItem *ngFor="let slide of lightboxData.imageUrls; let i = index;"
+              class="slide horizontal-slider-child">
+              <span class="imageIndex">{{i}}</span>
+              <img *ngIf="slide.script" src="{{slide.thumbnailImageUrl }}" class="slider-image" alt="Thumbnail"
+                [ngStyle]="{'opacity': slide.imageOpacity}" (click)="threeSixtyImageSelected(slide, i);">
+              <img *ngIf="!slide.script && slide.largeImageUrl" src="{{slide.largeImageUrl }}" class="slider-image"
+                alt="Thumbnail" [ngStyle]="{'opacity': slide.imageOpacity}" (click)="imageSelected(slide, i)">
+            </div>
+
+            <!-- <div ngxSlickItem *ngFor="let slide of lightboxData.threeSixtyImages" class="slide">
+                <img *ngIf="slide.script" src="{{slide.thumbnailImageUrl}}" class="slider-image" alt="Thumbnail"
+                [ngStyle]="{'opacity': slide.thumbnailImageUrl === selectedImage.thumbnailImageUrl ? 0.4 : 1}"
+                (click)="threeSixtyImageSelected(slide)" />
+              </div> -->
+          </ngx-slick-carousel>
+        </div>
+        <div class="right-panel" *ngIf="propertyType !== 'RVNG' && featuresData">
+          <accordion closeOthers="true">
+            <accordion-group #group
+              *ngIf="lightboxData.keyFeatures?.displayName && lightboxData.keyFeatures?.displayValue"
+              [isOpen]="lightboxData?.keyFeatures?.displayValue?.length > 0">
+              <div accordion-heading class="room-feature-heading txt-lg-lb lh-30 ls-sm txt-black-five">
+                <span [innerHTML]="localeObj.tf_Generic_keyFeatures || lightboxData.keyFeatures.displayName | safeHtml"
+                  tabindex="0"></span>
+                <i class="pull-right glyphicon" [ngClass]="group?.isOpen ? 'fa fa-angle-up': 'fa fa-angle-down'"></i>
+              </div>
+              <ul class="p-0" tabindex="0">
+                <li class="feature circle-bullet txt-lg-lr lh-26 ls-sm txt-black-three mb-2"
+                  *ngFor="let featureItem of lightboxData.keyFeatures.displayValue">
+                  <span [innerHTML]="featureItem | safeHtml" tabindex="0"></span>
+                </li>
+              </ul>
+            </accordion-group>
+            <accordion-group #group [isOpen]="lightboxData?.keyFeatures?.displayValue?.length <= 0 && i == 0"
+              *ngFor="let feature of objectKeys(lightboxData.features); let i = index">
+              <div accordion-heading class="room-feature-heading txt-lg-lb lh-30 ls-sm txt-black-five">
+                <span [innerHTML]="feature | safeHtml" tabindex="0"></span>
+                <i class="pull-right glyphicon" [ngClass]="group?.isOpen ? 'fa fa-angle-up': 'fa fa-angle-down'"></i>
+              </div>
+              <ul class="p-0">
+                <li class="feature circle-bullet txt-lg-lr lh-26 ls-sm txt-black-three mb-2"
+                  *ngFor="let featureItem of lightboxData.features[feature]" tabindex="0">
+                  <span [innerHTML]="featureItem | safeHtml"></span>
+                </li>
+              </ul>
+            </accordion-group>
+          </accordion>
+        </div>
+        <div class="right-panel"
+          *ngIf="(propertyType === 'RVNG' && roomLongDesc !== null && roomLongDesc !== undefined)">
+          <accordion closeOthers="true">
+            <accordion-group #group [isOpen]="true">
+              <div accordion-heading class="room-feature-heading txt-lg-lb lh-30 ls-sm txt-black-five">
+                <span [innerHTML]="localeObj.tf_2_RoomList_roomDetails_popup_heading_roomDesc | safeHtml"
+                  tabindex="0"></span>
+                <i class="pull-right glyphicon" [ngClass]="group?.isOpen ? 'fa fa-angle-up': 'fa fa-angle-down'"></i>
+              </div>
+              <ul class="p-0">
+                <li class="feature circle-bullet txt-lg-lr lh-26 ls-sm txt-black-three mb-2" tabindex="0">
+                  <span [innerHTML]="roomLongDesc | safeHtml"></span>
+                </li>
+              </ul>
+            </accordion-group>
+          </accordion>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="control-focus btn btn-primary" type="button" (click)="modalRef.hide()" tabindex="0">
+        <span [innerHTML]="localeObj.tf_2_RoomList_roomDetails_ok | safeHtml"></span>
+      </button>
+    </div>
+  </div>
+</ng-template>
+<div *ngIf="!isImage && propertyType !== 'RVNG'" class="view-room-details-link">
+  <a href="#" id="r_link_view_room_details_{{roomid}}" class="control-focus txt-lg-lr lh-30 ls-x-sm txt-black hyl-dark"
+    (click)="_storeSvc.setActiveModalElem('r_link_view_room_details_'+roomid); openRoomDetailsModal(lightboxmodel);"
+    attr.aria-label="{{localeObj.tf_2_RoomList_roomDetails_link_viewRoomDetails}}">{{localeObj.tf_2_RoomList_roomDetails_link_viewRoomDetails}}</a>
+</div>
+<div *ngIf="isImage && propertyType !== 'RVNG'" class="view-room-details-link">
+  <a href="#" class="control-focus txt-lg-lr lh-30 ls-x-sm txt-black hyl-dark"
+    (click)="openRoomDetailsModal(lightboxmodel)">
+    <img src="{{imgUrl}}" alt="{{altImageText}}" />
+  </a>
+</div>
+
+<div *ngIf="!isImage && propertyType === 'RVNG'" class="view-room-details-link">
+  <a href="#" id="r_link_view_room_details_{{roomid}}" class="control-focus txt-lg-lr lh-30 ls-x-sm txt-black hyl-dark"
+    (click)="_storeSvc.setActiveModalElem('r_link_view_room_details_'+roomid); OpenRoomDetailsModalForRVNG(lightboxmodel);"
+    attr.aria-label="{{localeObj.tf_2_RoomList_roomDetails_link_viewRoomDetails}}">{{localeObj.tf_2_RoomList_roomDetails_link_viewRoomDetails}}</a>
+</div>
+<div *ngIf="isImage && propertyType === 'RVNG'" class="view-room-details-link">
+  <a href="#" class="control-focus txt-lg-lr lh-30 ls-x-sm txt-black hyl-dark"
+    (click)="OpenRoomDetailsModalForRVNG(lightboxmodel)">
+    <img src="{{imgUrl}}" alt="{{altImageText}}" />
+  </a>
+</div>

@@ -1,0 +1,122 @@
+@import "../../sass/variables/colors";
+
+.modal-dialog {
+  .modal-content {
+    background-image: linear-gradient(to right, $white-seven, $white-eight 48%, white);
+    box-shadow: 0px 2px 5px 0 $black-10;
+    padding: 8px;
+    .modal-header {
+      border: none;
+      padding: 0;
+      .close {
+        font-size: 36px;
+        line-height: 20px;
+        opacity: .4;
+        margin: -1rem;
+      }
+    }
+    .modal-body {
+      overflow: visible;
+      padding: 0;
+      &.terms-and-conditions {
+        * {
+          font-family: $font-secondary;
+          font-size: $font-size-large;
+          color: $black-three;
+          letter-spacing: $letter-spacing-x-small;
+        }
+        ul {
+          padding: 0;
+          li {
+            margin-bottom: 30px;
+            position: relative;
+            padding-left: 15px;
+            &:before {
+              content: '';
+              width: 7px;
+              height: 7px;
+              background: #d2ad49;
+              border-radius: 50%;
+              position: absolute;
+              left: 0;
+              top: 10px;
+            }
+          }
+        }
+      }
+    }
+    .modal-footer {
+      padding: 0;
+    }
+    .room-details {
+      .panel {
+        .card {
+          border-radius: 0;
+          border: none;
+          border-bottom: 1px solid $pinkish-grey-four;
+          .card-header {
+            background: none;
+            border: none;
+          }
+          .card-body {
+            padding-top: 12px;
+          }
+        }
+        &.open {
+          .card {
+            .card-header {
+              padding-bottom: 0;
+            }
+          }
+        }
+        @media only screen and (max-width: 1199px) {
+          &:last-child {
+            .card {
+              border-bottom: none;
+            }
+          }
+        }
+      }
+    }
+    .rate-calendar-inner-content {
+      .left-panel {
+        width: 100% !important;
+        @media only screen and (min-width: 1200px) {
+          width: 68% !important;
+        }
+      }
+      .right-panel {
+        width: 100% !important;
+        border-top: 1px solid #dee2e6 !important;
+        border-left: none !important;
+        @media only screen and (min-width: 1200px) {
+          width: 32% !important;
+          border-top: none !important;
+          border-left: 1px solid #dee2e6 !important;
+        }
+      }
+    }
+    @media only screen and (min-width: 576px) {
+      padding: 30px;
+    }
+    @media only screen and (max-width: 576px) {
+      padding: 30px 30px 40px 30px;
+    }
+  }
+  &.modal-lg {
+    @media only screen and (min-width: 1200px) {
+      max-width: 1200px;
+    }
+  }
+  &.modal-md {
+    @media only screen and (min-width: 992px) {
+      max-width: 930px;
+    }
+  }
+  &.modal-sm {
+    @media only screen and (min-width: 520px) {
+      max-width: 520px;
+    }
+    
+  }
+}

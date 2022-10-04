@@ -1,0 +1,245 @@
+<!-- RT4 and RVNG Filters logic start-->
+
+<!-- Mobile Rooms Page Filters -->
+<ng-template #lightboxmodel>
+  <div class="room-filters">
+    <div class="modal-header mb-30">
+      <h4 class="modal-title txt-x-lg-lb lh-30 ls-1 txt-black-five" [innerHTML]="localeObj.tf_2_RoomList_rooms_filterMobilePopUpHeading | safeHtml"></h4>
+      <button type="button" class="control-focus close pull-right" aria-label="Close" (click)="modalRef.hide(); closeDropdown()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="lightbox-contents">
+        <form>
+          <ul class="mb-2 d-flex flex-column mobile-room-filters" *ngIf="!!roomAttrFilters && roomAttrFilters.length > 0">
+            <li *ngFor="let filter of roomAttrFilters; let id = index" class="txt-md-jr text-capitalize mr-3  mb-3 {{filter.filterClass}} {{filter.selectedFilterValues === localeObj.tf_1_Calendar_rateCalender_selectDropdown ? '' : 'highlight-selectedFilter'}} {{isPromoSpecialsFlow && filter.filterClass === 'Offer' ? 'd-none ml-2': ''}}">
+              <div *ngIf="filter.list.length > 0" class="mbs-dropdown-primary" dropdown>
+                <a dropdownToggle class="control-focus roomsAttr-filters d-flex txt-color-darkBlue toggle" id="{{filter.filterClass}}">
+                  <div *ngIf="!!filter.roomAttributeIconImageURL && filter.staticIcon" [innerHTML]="filter.roomAttributeIconImageURL | safeHtml"></div>
+                  <img class="filter-icons mr-2" src="{{filter.roomAttributeIconImageURL}}" *ngIf="!!filter.roomAttributeIconImageURL && !filter.staticIcon" />
+                  <span class="txt-color-darkBlue" [innerHTML]="filter.attributeName | safeHtml"></span>
+                </a>
+                <ul *dropdownMenu class="dropdown-menu filters-dropdown-menu" (click)="setRoomAttrFilter(filter, $event, id)">
+                  <li class="dropdown-item disabled txt-md-lb d-flex justify-content-between" id=0>
+                    <span [innerHTML]="filter.attributeName | safeHtml"></span>
+                    <span class="txt-md-lr txt-grey" (click)="closeDesktopFilter(filter.filterClass)">X</span>
+                  </li>
+                  <li class="dropdown-item d-flex" *ngFor="let type of filter.list; let optionIndex = index" id="{{type}}">
+                    <input class="side-panel-selection" type="checkbox" *ngIf="type !== localeObj.tf_2_RoomList_filters_clearBtn && filter.list" [value]="type" [checked]="filter.selectedFilterValues.includes(type)" />
+                    <img class="amenity-icons ml-2" src="{{filter.listImages[optionIndex]}}" *ngIf="(item !== localeObj.tf_2_RoomList_filters_clearBtn && filter.selectFilterName === 'Amenities' && !!filter.listImages[optionIndex])" [value]="type">
+                    <span class="{{type !== localeObj.tf_2_RoomList_filters_clearBtn ? 'txt-sm-jr ml-2' : 'txt-x-sm-lb ml-0'}}" [innerHTML]="type | safeHtml"  [value]="type"></span>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+          <!-- <div class="m-3 scroll-panel" *ngIf="!!entireRoomsList">
+            <span  class="txt-md-lb mx-2" [innerHtml] ="localeObj.tf_2_RoomList_filters_priceFilter | safeHtml"></span>
+            <ngx-slider [(value)]="minVal" [(highValue)]="highValue" [options]="options" [manualRefresh]="manualRefresh"></ngx-slider> 
+          </div> -->
+          <div class="row pt-10 d-block d-sm-flex">
+            <div class="currency filter d-flex align-items-center mr-auto">
+              <div class="label txt-md-lr ls-sm txt-br-grey mr-10">{{localeObj.tf_2_RoomList_roomListFilters_currency}} :</div>
+              <div class="mbs-dropdown-primary currency-dropdown" dropdown>
+                <a dropdownToggle class="control-focus dropdown-toggle dropdown-toggle-filter px-10">
+                  <span [innerHTML]="currencySelection.code | safeHtml"></span>
+                </a>
+                <ul *dropdownMenu class="dropdown-menu">
+                  <li class="dropdown-item px-10 currency-name" *ngFor="let currency of currencies" [value]="currency.code"
+                    (click)="updateCurrencySelection(currency)">
+                      <span [innerHTML]="currency.code | safeHtml"></span>&nbsp;(<span [innerHTML]="currency.symbol | safeHtml"></span>)
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="mt-3 mt-sm-0 sort-by filter d-flex align-items-center ml-auto" (click)="toggleSortOrder()">
+              <div class="txt-md-lr ls-sm txt-br-grey mr-10"><span [innerHTML]="localeObj.tf_2_RoomList_roomListFilters_sortPrice | safeHtml"></span></div>
+              <div class="txt-md-lb ls-sm txt-black-five pl-20 mr-10 cursor-pointer" [innerHTML]="localeObj.tf_2_RoomList_roomListFilters_price | safeHtml"></div>
+              <button class="control-focus formatButton pb-0 cursor-pointer">
+                <div *ngIf="isSortOrderAsc; then thenBlock else elseBlock"> </div>
+                <ng-template #elseBlock>
+                  <i class="fa fa-long-arrow-up"></i>
+                </ng-template>
+                <ng-template #thenBlock>
+                  <i class="fa fa-long-arrow-down"></i>
+                </ng-template>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="control-focus btn mbs-button-primary w-100 mt-3" type="button" (click)="applyFilters()" id="done">
+        <span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_done | safeHtml"></span>
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<div *ngIf="(!rateCalenderFilter || isPromoSpecialsFlow) && !(propertyType.length > 0 &&  propertyType === 'UD')  && !hideRoomsFilters" class="d-block d-md-none mb-3">
+  <button class="control-focus btn button-primary {{noFiltersSelected > 0 ? 'mobile-filters-btn': '' }}" id="mobile_filters" (click)="openFiltersModal(lightboxmodel);">
+    <i class="fa fa-sliders {{RTL_Flag ? 'ml-2':'mr-2'}}" aria-hidden="true"></i>
+    <span [innerHTML]="localeObj.tf_2_RoomList_filterDropdown_filter | safeHtml"></span>
+  </button>
+</div>
+
+<!-- Rooms Page Filters -->
+<div *ngIf="(!rateCalenderFilter || isPromoSpecialsFlow) && !(propertyType.length > 0 &&  propertyType === 'UD') && !hideRoomsFilters" class="d-lg-block d-none d-md-block">
+  <!-- 
+  <ngx-slider *ngIf="this.roomsList[this.roomsList.length - 1].averagePriceByCurrency[this.currencySelection.code] > 0"[(value)]="value" [(highValue)]="this.roomsList[this.roomsList.length - 1].averagePriceByCurrency[this.currencySelection.code]" [options]="options"></ngx-slider>  -->
+  <ul class="mb-2 d-flex room-filters" *ngIf="!!roomAttrFilters && roomAttrFilters.length > 0">
+    <li>
+      <button class="control-focus btn filters-btn px-3 py-2 mb-2 mr-2" type="button" role="button" attr.aria-label="click this button to view {{localeObj.tf_2_RoomList_filters_filterBtn}}" tabindex="0" id="rooms-filterBtn" *ngIf="!rateCalenderFilter" (click)="triggerSidePanel('open'); priceFilterValue();">
+        <i class="fa fa-sliders pr-2" aria-hidden="true"></i>
+        <span [innerHTML]="localeObj.tf_2_RoomList_filters_filterBtn | safeHtml"></span>
+      </button>
+    </li>
+    
+        <li *ngFor="let filter of roomAttrFilters.slice(0, filterSlicedVal); let id = index" class="txt-md-jr text-capitalize mr-3 {{filter.filterClass}} {{filter.selectedFilterValues === localeObj.tf_1_Calendar_rateCalender_selectDropdown ? '' : 'highlight-selectedFilter'}} {{isPromoSpecialsFlow && filter.filterClass === 'Offer' ? 'd-none': ''}}">
+          <div *ngIf="filter.list.length > 0" class="mbs-dropdown-primary" dropdown>
+            <a dropdownToggle class="control-focus roomsAttr-filters d-flex txt-color-darkBlue toggle" id="{{filter.filterClass}}">
+              <div *ngIf="!!filter.roomAttributeIconImageURL && filter.staticIcon" [innerHTML]="filter.roomAttributeIconImageURL | safeHtml"></div>
+              <img class="filter-icons mr-2" src="{{filter.roomAttributeIconImageURL}}" *ngIf="!!filter.roomAttributeIconImageURL && !filter.staticIcon" />
+              <span class="txt-color-darkBlue" [innerHTML]="filter.attributeName | safeHtml"></span>
+            </a>
+            <ul *dropdownMenu class="dropdown-menu filters-dropdown-menu" (click)="setRoomAttrFilter(filter, $event, id)">
+              <li class="dropdown-item disabled txt-md-lb d-flex justify-content-between" id=0>
+                <span [innerHTML]="filter.attributeName | safeHtml"></span>
+                <span class="txt-md-lr txt-grey" (click)="closeDesktopFilter(filter.filterClass)">X</span>
+              </li>
+              <li class="dropdown-item d-flex" *ngFor="let type of filter.list; let optionIndex = index" id="{{type}}">
+                <input class="side-panel-selection" type="checkbox" *ngIf="type !== localeObj.tf_2_RoomList_filters_clearBtn && filter.list" [value]="type" [checked]="filter.selectedFilterValues.includes(type)" />
+                <img class="amenity-icons ml-2" src="{{filter.listImages[optionIndex]}}" *ngIf="(item !== localeObj.tf_2_RoomList_filters_clearBtn && filter.selectFilterName === 'Amenities' && !!filter.listImages[optionIndex])" [value]="type">
+                <span class="{{type !== localeObj.tf_2_RoomList_filters_clearBtn ? 'txt-sm-jr ml-2' : 'txt-x-sm-lb ml-0'}}" [innerHTML]="type | safeHtml"  [value]="type"></span>
+              </li>
+            </ul>
+          </div>
+        </li>
+    <li class="txt-md-jr roomsAttr-filters text-capitalize mr-2 d-flex" (click)="toggleSortOrder()">
+      <span class="material-icons-outlined filter-icons mr-2">sort</span>
+      <div class="txt-sm-jr ls-sm mr-1"><span [innerHTML]="localeObj.tf_2_RoomList_roomListFilters_sortPrice | safeHtml"></span></div>
+        <button class="control-focus formatButton pb-0 price_sort cursor-pointer"  tabindex="0" aria-label="sort by price">
+          <div *ngIf="isSortOrderAsc; then thenBlock else elseBlock"> </div>
+          <ng-template #elseBlock>
+            <span class="material-icons-outlined filter-icons">arrow_upward</span>
+          </ng-template>
+          <ng-template #thenBlock>
+            <span class="material-icons-outlined filter-icons">arrow_downward</span>
+          </ng-template>
+        </button>
+    </li>
+  </ul>
+</div>
+
+<!-- Search Page Filters -->
+<div *ngIf="rateCalenderFilter && propertyInfo.isCalendarAttributesEnabled && propertyInfo.calendarAttributeCodes.length > 0 && calendarFilters.length > 0  && !(propertyType.length > 0 &&  propertyType === 'UD')">
+  <ul class="mb-2">
+    <li *ngFor="let filter of calendarFilters; let id = index" class="txt-md-jr calendar-filters text-capitalize mt-3">
+      {{filter.attributeName}}
+      <ng-select name="calendarFilters-{{id}}" [(ngModel)]="this.filtersArray[filter.attributeName]"  class="dropdown custom" [items]="filter.list" [multiple]="filter.selectionType === 'multiple' ? true : false" bindLabel="name" bindValue="name" placeholder="{{localeObj.tf_1_Calendar_rateCalender_selectDropdown}}" [clearable]="false" [searchable]="false" (change) = "setCalendarAttributeFilter(filter, $event, id)" (click) = "setCalendarAttributeFilter(filter, $event, id)"></ng-select>
+    </li>
+  </ul>
+</div>
+
+<!-- Side Panel -->
+<div *ngIf="!rateCalenderFilter" class="side-panel-body d-none d-md-block" id="side-panel">
+  <div class="main-panel" id="main-panel-body">
+  <div class="scroll-panel">
+    <button class="control-focus side-panel-closeBtn px-3 py-1 mr-3" type="button" role="button" attr.aria-label="click this button to close side-panel" tabindex="0" id="room-closeBtn" *ngIf="!rateCalenderFilter" (click)="triggerSidePanel('close')">    
+      X
+    </button>
+    <div class="m-2 mt-3">
+      <span class="txt-md-lb mx-3" [innerHTML] = "localeObj.tf_00_MultiPropertyFilter_Sortby | safeHtml"></span>
+      <div class="d-flex m-2 sortBy cursor-pointer" (click)="updateSortOrder('asc')" >
+        <input class="side-panel-selection mx-2 txt-sm-lr checkmark" type="radio" [checked]="updatedSortOrder" />
+        <span [innerHTML] = "localeObj.tf_2_RoomList_filters_lowestPrice | safeHtml" class="txt-sm-lr"></span>
+      </div>
+      <div class="d-flex m-2 sortBy cursor-pointer" (click)="updateSortOrder('desc')">
+        <input class="side-panel-selection mx-2 txt-sm-lr checkmark" type="radio" [checked]="!updatedSortOrder" />
+        <span [innerHTML] = "localeObj.tf_2_RoomList_filters_highestPrice | safeHtml" class="txt-sm-lr"></span>
+      </div>
+    </div>
+    <div class="m-3" *ngIf="!!entireRoomsList">
+      <span  class="txt-md-lb mx-2" [innerHtml] ="localeObj.tf_2_RoomList_filters_priceFilter | safeHtml"></span>
+      <ngx-slider [(value)]="minVal" [(highValue)]="highValue" [options]="options" [manualRefresh]="manualRefresh"></ngx-slider> 
+    </div>
+    <ul class="m-3 {{isPromoSpecialsFlow && filter.filterClass === 'Offer' ? 'd-none': 'd-flex'}} room-filters flex-column {{filter.filterClass}}" *ngFor="let filter of sidePanelFilters; let id = index" >
+      <div [innerHtml] ="filter.attributeName | safeHtml" class="txt-md-lb mx-2"></div> 
+      <div *ngIf ="!expanded[id]">
+        <li *ngFor="let options of filter.list.slice(0, 5); let optionIndex = index;">
+          <div  class="d-flex py-1 cursor-pointer" *ngIf ="options !== this.localeObj.tf_2_RoomList_filters_clearBtn" (click)="filterSidePanel(filter, options, 'select', id)">
+            <input class="side-panel-selection mx-2"  type ='checkbox' [checked]="filterSidePanel(filter, options, 'check')" >
+            <img class="amenity-icons mr-2" src="{{filter.listImages[optionIndex]}}" *ngIf="(options !== localeObj.tf_2_RoomList_filters_clearBtn && filter.selectFilterName === 'Amenities' && !!filter.listImages[optionIndex])">
+            <span class="side-panel-options txt-sm-lr" [innerHtml] ="options | safeHtml"></span>
+          </div>
+        </li>
+        <span class="txt-x-sm-lr showMore-showLess-filter" *ngIf="!expanded[id] && filter.list.length > 6" (click)="expanded[id] = true" [innerHTML]="localeObj.tf_8_MultiProperty_text_showMore"></span>
+      </div>
+      <div *ngIf="expanded[id]">
+        <li *ngFor="let options of filter.list">
+          <div  class="d-flex py-1 cursor-pointer" *ngIf ="options !== this.localeObj.tf_2_RoomList_filters_clearBtn" (click)="filterSidePanel(filter, options, 'select', id)">
+            <input class="side-panel-selection mx-2"  type ='checkbox' [checked]="filterSidePanel(filter, options, 'check')" >
+            <span class="side-panel-options txt-sm-lr" [innerHtml] ="options | safeHtml"></span>
+          </div>
+        </li>
+        <span class="txt-x-sm-lr mx-2 showMore-showLess-filter" *ngIf="expanded[id]" (click)="expanded[id] = false" [innerHTML]="localeObj.tf_8_MultiProperty_text_showLess"></span>
+      </div>
+    </ul>
+  </div>
+  <div class="d-flex row my-3">
+    <button class="control-focus btn filters-btn col-5 mx-2 txt-sm-jr side-panel-bottomBtn" [innerHTML]="localeObj.tf_2_RoomList_filters_clearBtn | safeHtml" (click)="clearFilterSelection()"></button>
+    <button class="control-focus btn filters-btn col-5 mx-2 txt-sm-jr side-panel-bottomBtn" [innerHTML]="localeObj.tf_2_RoomList_filters_showResult | safeHtml" (click)="showResults()"></button>
+  </div>
+</div>
+</div>
+
+<!-- End of RT4 and RVNG Filters logic -->
+
+
+
+<!-- UD Filters logic start -->
+<div class="d-block d-md-flex {{isPromoSpecialsFlow ? 'promo-filter' : 'outer'}}" *ngIf="propertyType.length > 0 &&  propertyType === 'UD'">
+  <div *ngIf="((roomViews && roomViews.length > 0) || (roomTypes && roomTypes.length > 0)) &&
+      roomsList && roomsList.length > 0 && !isPromoSpecialsFlow" class="row align-items-center custom-dropdown {{RTL_Flag ? 'custom-dropdown-rtl' : ''}}">
+    <div *ngIf="roomViews && roomViews.length > 0" class=" mbs-dropdown-primary room-filters-dropdown accesibleDropDown" dropdown>
+      <ng-select tabindex="0" name="roomViewFilter" [ngModel]="roomViewFilter" class="control-focus hyl-dark" [items]="roomViews" [multiple]="false" [closeOnSelect]="true" [clearable]="false" [searchable]="false" (change)="updateRoomView($event)" role="combobox" aria-label="Room View Filter"></ng-select>
+    </div>
+    <div *ngIf="roomViews.length > 0 && roomTypes.length" class="room-view-seperator {{!RTL_Flag ? '' : 'seperator-rtl'}}"></div>
+    <div *ngIf="roomTypes.length" class="mbs-dropdown-primary room-filters-dropdown accesibleDropDown" dropdown>
+      <ng-select tabindex="0" name="roomTypeFilter" [ngModel]="roomTypeFilter" class="control-focus dropdown custom" [items]="roomTypes" [multiple]="false" [closeOnSelect]="true" [searchable]="false" [clearable]="false" (change)="updateRoomType($event)" role="combobox" aria-label="Room Type Filter"></ng-select>
+    </div>
+  </div>
+  <div *ngIf="(roomsList && roomsList.length > 0) || isPromoSpecialsFlow" class="row align-items-center">
+    <div class="sort-by filter d-flex align-items-center" (click)="toggleSortOrder()">
+      <div class="txt-md-lr ls-sm txt-br-grey mr-10"><span [innerHTML]="localeObj.tf_2_RoomList_roomListFilters_sortBy | safeHtml"></span>:</div>
+      <div class="txt-md-lb ls-sm txt-black-five mr-10 cursor-pointer" [innerHTML]="localeObj.tf_2_RoomList_roomListFilters_price | safeHtml"></div>
+      <button class="control-focus formatButton pb-0 price_sort cursor-pointer"  tabindex="0" aria-label="sort by price">
+        <div *ngIf="isSortOrderAsc; then thenBlock else elseBlock"> </div>
+        <ng-template #elseBlock>
+          <i class="fa fa-long-arrow-up"></i>
+        </ng-template>
+        <ng-template #thenBlock>
+          <i class="fa fa-long-arrow-down"></i>
+        </ng-template>
+      </button>
+    </div>
+    <div class="seperator"></div>
+    <div class="{{RTL_Flag ? 'currency--rtl' : 'currency'}} pl-3 filter d-flex align-items-center">
+      <div class="label txt-md-lr ls-sm txt-br-grey">
+        <span [innerHTML]="localeObj.tf_2_RoomList_roomListFilters_currency | safeHtml"></span>&nbsp;:
+      </div>
+      <div class="mbs-dropdown-primary currency-dropdown accesibleDropDown custom-dropdown {{RTL_Flag ? 'text-left custom-dropdown-rtl' : 'text-right'}}" dropdown>
+        <ng-select [(ngModel)]="currencySelection.code" (change)="updateCurrencySelectionForUD($event)" [closeOnSelect]="true" [searchable]="false" [clearable]="false" role="combobox" name="Select Currency" aria-label="Currency Filter" tabindex="0">
+          <section *ngFor="let currency of currencies;">
+              <ng-option [value]="currency" (click)="updateCurrencySelectionForUD(currency)" attr.aria-label="{{ currency.code }} ({{currency.symbol}})">
+                    {{ currency.code }} ({{currency.symbol}})
+              </ng-option>
+          </section>
+        </ng-select>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- UD Filters logic end -->

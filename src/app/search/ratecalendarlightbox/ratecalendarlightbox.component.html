@@ -1,0 +1,17 @@
+<ng-template #lightboxmodel>
+  <div id="rc-modal">
+    <div class="modal-header mb-30">
+      <h4 class="modal-title txt-x-lg-lb lh-30 ls-1 txt-black-five" [innerHTML]="localeObj.tf_2_RoomList_rateCalenderPopup_editBookingHeading | safeHtml" tabindex="0" id="rc-modal-title"></h4>
+      <button type="button" class="control-focus close pull-right" aria-label="Close" (click)="modalRef.hide()" tabindex="0" id="rc-modal-closeBtn">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="lightbox-contents content row component-ws100">
+        <app-ratecalendar class="component-ws100" [checkinsummary]="checkinsummary" [isPromoDetailsPage]="isPromoDetailsPage" [isMultiProp]="isMultiProp" [selectedPromoCode]="selectedPromoCode" (checkInSummaryChanged)="onCheckInSummaryChanged($event)" (multiPropertyCheckInSummaryChanged)="onMultiPropertyCheckInSummaryChanged($event)" 
+          (rateCalendarClose)="closeRateCal()" (checkAvailableUpgrades)="checkAvailableUpgradesEvent()" (updatePreference)="updatePref()" #rateCalComponent></app-ratecalendar>
+      </div>
+    </div>
+  </div>
+</ng-template>

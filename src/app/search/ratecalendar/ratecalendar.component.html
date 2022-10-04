@@ -1,0 +1,180 @@
+<div class="row noselect rate-calendar-inner-content">
+  <div class="left-panel px-3 py-4">
+    <div class="row bb-g-two-3y justify-content-between pb-10">
+      <div class="normalView">
+        <div class="d-flex flex-row">
+          <img class="mr-2 mb-2" src="/assets/legends/No-check-in.svg" attr.alt="{{localeObj.tf_1_Calendar_rateCalender_noCheckIn}}">
+          <div class="txt-md-lr txt-black-three mr-3 mb-2" [innerHTML]="localeObj.tf_1_Calendar_rateCalender_noCheckIn"></div>
+          <img class="mr-2 mb-2" src="/assets/legends/No-check-out.svg" attr.alt="{{localeObj.tf_1_Calendar_rateCalender_noCheckOut}}">
+          <div class="txt-md-lr txt-black-three mb-2 {{RTL_Flag === false ? '' : 'mr-3'}}" [innerHTML]="localeObj.tf_1_Calendar_rateCalender_noCheckOut"></div>
+        </div>
+      </div>
+      <div class="{{RTL_Flag === false ? 'ml-auto' : 'mr-auto'}} txt-md-lr txt-black-three normalView" [innerHTML]="ratesShownInCurrency | safeHtml"></div>
+      <div class="mobileView">
+        <div class="row">
+          <img class="mr-2 mb-2" src="/assets/legends/No-check-in.svg" attr.alt="{{localeObj.tf_1_Calendar_rateCalender_noCheckIn}}">
+          <div class="txt-md-lr txt-black-three mr-3 mb-2 noCheckIn" [innerHTML]="localeObj.tf_1_Calendar_rateCalender_noCheckIn"></div>
+        </div>
+        <div class="row">
+          <img class="mr-2 mb-2" src="/assets/legends/No-check-out.svg" attr.alt="{{localeObj.tf_1_Calendar_rateCalender_noCheckOut}}">
+          <div class="txt-md-lr txt-black-three mb-2 noCheckOut" [innerHTML]="localeObj.tf_1_Calendar_rateCalender_noCheckOut"></div>
+        </div>
+      </div>
+      <div class="ml-auto txt-md-lr txt-black-three ratesShownInCurrencyMobileView" [innerHTML]="ratesShownInCurrency | safeHtml"></div>
+    </div>
+    <div class="control-focus container-fluid monthlyCal" [ngClass]="minCalendarMonths === 1 ? 'min-calendar-months': ''" (scroll)="onMouseScroll($event)" tabindex="0" aria-label="Select Arrival and Departure dates from Calendar" role="Calendar">
+      <ng-template ngFor let-item [ngForOf]="weeks" let-weekindex="index">
+        <div class="month text-center my-4" *ngIf="item.month.length > 0">
+          <ul class="m-0 p-0">
+            <li class="txt-lg-lb text-uppercase txt-black" attr.aria-label="{{getCalMonthHeading(item.month, item.year)}}">
+              <span [innerHTML]="getCalMonthHeading(item.month, item.year) | safeHtml"></span>
+            </li>
+          </ul>
+        </div>
+        <ul class="weekdays txt-lg-lr  txt-black-three m-0 p-0 d-flex flex-row" *ngIf="item.month.length > 0 && calendarStartOnSunday">
+          <li><span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_weekDay_sun | safeHtml"></span></li>
+          <li><span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_weekDay_mon | safeHtml"></span></li>
+          <li><span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_weekDay_tue | safeHtml"></span></li>
+          <li><span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_weekDay_wed | safeHtml"></span></li>
+          <li><span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_weekDay_thu | safeHtml"></span></li>
+          <li><span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_weekDay_fri | safeHtml"></span></li>
+          <li><span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_weekDay_sat | safeHtml"></span></li>
+        </ul>
+
+        <ul class="weekdays txt-lg-lr  txt-black-three m-0 p-0 d-flex flex-row" *ngIf="item.month.length > 0 && !calendarStartOnSunday">
+          <li><span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_weekDay_mon | safeHtml"></span></li>
+          <li><span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_weekDay_tue | safeHtml"></span></li>
+          <li><span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_weekDay_wed | safeHtml"></span></li>
+          <li><span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_weekDay_thu | safeHtml"></span></li>
+          <li><span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_weekDay_fri | safeHtml"></span></li>
+          <li><span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_weekDay_sat | safeHtml"></span></li>
+          <li><span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_weekDay_sun | safeHtml"></span></li>
+        </ul>
+
+        <ul class="days m-0 p-0 d-flex flex-row cal-list" [attr.nodeData]="item" role="calendar">
+          <ng-template ngFor let-dayitem [ngForOf]="item.days" let-i="index">
+            <li class="text-center weekday-{{i}} {{!dayitem.dayNo ? 'notAvailableDay' : ''}}" [ngClass]="dayitem.customCss" [attr.data-dayData]="dayitem.actualDate" [attr.data-isAvailable]="isCTD(dayitem.customCss) || dayitem.isAvailable" [attr.data-dayNo] = "dayitem.dayNo"
+                (click)="dayClicked($event, dayitem, $event.currentTarget); checkInitialParamChange('calendar', dayitem)" (keyup.enter) = "$event.target.click()" (keyup)= "navigateCal($event)" (mouseenter)="hoverStylingEnable($event.currentTarget)" (mouseleave)="hoverStylingDisable($event.currentTarget)" tabindex="{{dayitem.isAvailable? '0': isCTD(dayitem.customCss) ? '0':'-1'}}" (focus)="hoverStylingEnable($event.currentTarget)" (focusout)="hoverStylingDisable($event.currentTarget)" role="button" 
+                attr.aria-label="{{dayitem.dayNo ? dayitem.dayNo: 'Not Avaialable'}} {{(dayitem.dayRate.length > 0 && dayitem.dayRate === 'Check out' && dayitem.isAvailable)? localeObj.tf_1_Calendar_rateCalender_checkOut : ''}}{{dayitem.calendarDate}}  {{(dayitem.dayRate.length > 0 && dayitem.dayRate !== 'Check out') ? dayitem.currCode : ''}} {{(dayitem.dayRate.length > 0 && dayitem.dayRate !== 'Check out') ? dayitem.dayRate: ''}}">
+              <div class="control-focus calendarCellContent d-flex flex-column justify-content-center">
+                <!-- <b *ngIf="dayitem.dayNo === 0">
+                  <h5 style="visibility: hidden;">&nbsp;</h5>
+                </b> -->
+                <b *ngIf="dayitem.dayNo !== 0">
+                  <h5 class="txt-md-lb  {{(dayitem.customCss.includes('notAvailableDate') && !dayitem.customCss.includes('pastDate'))? 'txt-black-two' : 'text-muted-cal txt-black-two'}}" [innerHTML]="dayitem.dayNo | safeHtml" aria-hidden="true"></h5>
+                </b>
+
+                <span class="px-1 text-muted-cal txt-sm-lr txt-warm-grey-two" *ngIf="dayitem.dayRate.length <= 0">&nbsp;</span>
+                <span class="px-1 text-muted-cal txt-sm-lr txt-warm-grey-two" id="checkInDate" *ngIf="dayitem.dayRate.length > 0 && dayitem.dayRate !== 'Check out'"><span [innerHTML] = "dayitem.currCode | safeHtml"></span><br class="conditional-break"><span [innerHTML] = "dayitem.dayRate | customPriceFormat: '1.0-0': currFilterValue | safeHtml"></span></span>
+                <span class="px-1 text-muted-cal txt-sm-lr txt-warm-grey-two" id ="checkOutDate" *ngIf="(dayitem.dayRate.length > 0 && dayitem.dayRate === 'Check out' && dayitem.isAvailable) || (dayitem.dayRate.length > 0 && toggleCheckOutLabel(dayitem.customCss))"><span [innerHTML] = "localeObj.tf_1_Calendar_rateCalender_checkOut | safeHtml"></span></span>
+              </div>
+            </li>
+          </ng-template>
+        </ul>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="right-panel px-3 py-4 {{RTL_Flag ? 'text-right' : ''}} d-flex flex-column justify-content-between" id="guestDurationInfoDiv">
+    <div>
+    <div class="control-focus row bb-g-two-3y txt-md-lb txt-black pb-10 mb-20">
+      <span>
+        <strong [innerHTML]="localeObj.tf_1_Calendar_rateCalender_roomsGuestsCount | safeHtml"></strong>
+      </span>
+    </div>
+
+    <div *ngFor="let rooms of roomSelectionArray; let i = index">
+      <div class="px-0 rate-cal-search-header txt-md-lb txt-black">
+        <span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_room | uppercase | safeHtml"></span>&nbsp;<span [innerHTML]="i + 1 | safeHtml"></span>
+      </div>
+      <div class="row rate-cal-search-header">
+        <div class="col-md-6 col-lg-6 rate-cal-counter-wrapper {{RTL_Flag ? 'pr-0 pl-2 pl-md-3' : 'pl-0 pr-2 pr-md-3'}}">
+          <div class="txt-sm-lb" [innerHTML]="localeObj.tf_1_Calendar_rateCalender_adults | safeHtml"></div>
+          <div class="rate-cal-counter">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <strong class="control-focus input-group-text" (click)="updateAdultCount(-1, i); checkInitialParamChange('guestCount', i)" (keyup.enter)="$event.target.click()" tabindex="{{rooms.noOfAdults > 1? 0: -1}}" role="link" attr.aria-label="click this button to decrease adult count from {{rooms.noOfAdults}} to {{rooms.noOfAdults - 1}} for room {{[i+1]}}"><span aria-hidden="true">-</span></strong>
+              </div>
+              <input readonly type="tel" min="1" class="control-focus px-0 form-control txt-md-lr txt-black-three" [(ngModel)]="rooms.noOfAdults" (change)="changeAdultCount(i)" id="adults-field-{{i}}" tabindex="0" attr.aria-label="selected {{rooms.noOfAdults}} Adults for room {{[i+1]}}">
+              <div class="input-group-append">
+                <strong class="control-focus input-group-text" (click)="updateAdultCount(1, i); checkInitialParamChange('guestCount', i)" (keyup.enter)="$event.target.click()" tabindex="0"  role="link" attr.aria-label="click this button to increase adult count from {{rooms.noOfAdults}} to {{rooms.noOfAdults + 1}} for room {{[i+1]}}"><span aria-hidden="true">+</span></strong>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-6 rate-cal-counter-wrapper {{RTL_Flag ? 'pr-0 pl-2 pl-md-3' : 'pl-0 pr-0 pr-md-0'}}">
+          <div class="txt-sm-lb">
+            <span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_children | safeHtml"></span>&nbsp;
+            <span *ngIf="!isMultiProp" [innerHTML]="getMessage(localeObj.tf_1_Calendar_rateCalender_children_under, [adultAge]) | safeHtml"></span>&nbsp;&nbsp;
+            <span *ngIf="!isMultiProp" class="control-focus Tooltip outer circle shapeborder circle-text outer-only" triggers="hover focus"  (keyup.enter)="$event.target.click()"  popover="{{popoverText}}" placement="bottom" container="body" containerClass="tooltiptextCP children" tabindex = "0" role="button" attr.aria-description="{{localeObj.tf_1_Calendar_rateCalender_childrenBedding}}" (click)="test();">i</span>
+          </div> 
+          <div class="rate-cal-counter row children">
+            <div [ngClass]="roomSelectionArray.length > 1 ? 'col-md-10': 'col-md-12'" class="input-group mb-3 px-0">
+              <div class="input-group-prepend" >
+                <strong class="control-focus input-group-text" (click)="updateChildCount(-1, i); checkInitialParamChange('guestCount', i)" (keyup.enter)="$event.target.click()" tabindex="{{rooms.noOfChildren >= 1? 0: -1}}" role="button" attr.aria-label="click this button to decrease child count from {{rooms.noOfChildren}} to {{rooms.noOfChildren - 1}} for room {{[i+1]}}">-</strong>
+              </div>
+              <input readonly type="tel" min="0" class="control-focus px-0 form-control txt-md-lr txt-black-three" [(ngModel)]="rooms.noOfChildren" (change)="changeChildrenCount(i)" attr.aria-label="selected {{rooms.noOfChildren}} Children for room {{[i+1]}}">
+              <div class="input-group-append" id="testq123">
+                <!-- <strong class="control-focus input-group-text" [attr.id]="makeId(i)" triggers="hover focus" #p="bs-popover"  (click)="updateChildCount(1, i)" (keyup.enter)="$event.target.click()" (document:click)="closeFix($event, p, 'bedding_policy'+i)" popover="{{localeObj.tf_1_Calendar_rateCalender_childrenBedding}}" placement="bottom" container="body" containerClass="tooltiptextCP children" tabindex = "0" role="button" attr.aria-label="click this button to increase child count from {{rooms.noOfChildren}} to {{rooms.noOfChildren + 1}} for room {{[i+1]}}" attr.aria-description="{{localeObj.tf_1_Calendar_rateCalender_childrenBedding}}">+</strong> -->
+                <strong class="control-focus input-group-text"   (click)="updateChildCount(1, i); checkInitialParamChange('guestCount', i)" (keyup.enter)="$event.target.click()"  tabindex = "0" role="button" attr.aria-label="click this button to increase child count from {{rooms.noOfChildren}} to {{rooms.noOfChildren + 1}} for room {{[i+1]}}">+</strong>
+              </div>
+            </div>
+            <button *ngIf="roomSelectionArray.length > 1" type="button" class="control-focus close col-md-2 mb-3" aria-label="Remove Room" (click)="removeRoom(i); checkInitialParamChange('guestCount', i)" attr.aria-description="click this button to remove the room {{i}}">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="showAddRoom">+
+      <a class="control-focus hyl-dark txt-md-lr ls-x-sm txt-underline cursor-pointer" (click)="addNewRoom(); checkInitialParamChange('guestCount', 0)" tabindex="0" (keyup.enter)="$event.target.click()" role="link">
+        <span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_link_anotherRoom | safeHtml" attr.aria-description="click this link to {{localeObj.tf_1_Calendar_rateCalender_link_anotherRoom}}"></span>
+      </a>
+    </div>
+
+    <!-- <div class="row">
+      <span>Selected Dates : {{selectionStartDate | date : 'yyyy MMM dd'}}
+        <b>-></b> {{selectionEndDate | date : 'yyyy MMM dd'}}</span>
+    </div> -->
+
+    <div class="row mt-20" *ngIf="showIATA && (!isPromoOrSpecialsFlow || isMultiProp)">
+      <div class="pl-0 col-12 pr-2">
+          <label class="control-focus txt-md-jr txt-black mb-0" [innerHTML]="localeObj.tf_1_Calendar_roomsGuests_iataCode | safeHtml" for="iata-code" tabindex="0"></label>
+          <div class="mt-0">
+            <input [(ngModel)]="iataCode" class="control-focus form-control txt-sm-jr iata-code" placeholder="{{localeObj.tf_1_Calendar_roomsGuest_iataHelptext}}" (blur)="checkBasicIATAValidation($event.target.value)" (keyup)="checkInitialParamChange('iataCode',$event.target.value)" id="iata-code" attr.aria-label="{{localeObj.tf_1_Calendar_roomsGuests_iataCode}}" tabindex="0">
+          </div>
+          <span class="error-message" *ngIf="iataErrorMessage && !enableViewAvailabilityBtn" tabindex="0">{{iataErrorMessage}}</span>
+      </div>
+    </div>
+    <div class="row mt-3" *ngIf="showAccessCode && (!isPromoOrSpecialsFlow || isMultiProp)">
+      <div class="pl-0 col-12 pr-2">
+        <label class="control-focus txt-md-jr txt-black mb-0" [innerHTML]="localeObj.tf_1_Calendar_roomsGuests_promoCode | safeHtml" for="accessCode" tabindex="0"></label>
+        <div class="mt-0">
+          <input [(ngModel)]="accessCode" id="accessCode" class="control-focus form-control txt-sm-jr access-code" placeholder="{{localeObj.tf_1_Calendar_roomsGuest_promoHelptext}}" attr.aria-label="{{localeObj.tf_1_Calendar_roomsGuests_promoCode}}" (blur)="addAccessCode($event.target.value)" (keyup)="checkInitialParamChange('accessCode', $event.target.value)" tabindex="0">
+        </div>
+        <span class="error-message txt-md-jr" *ngIf="isAccessCodeInvalid" [innerHTML]="localeObj.tf_1_Calendar_roomsGuest_invalidPromoError" tabindex="0"></span>
+    </div>
+    </div>
+    <app-filters class="d-md-block promo-filter" [rateCalenderFilter]="true" (filterVal) = "checkInitialParamChange('filter', $event)" *ngIf="displayFilters() && !(propertyType.length > 0 &&  propertyType === 'UD')"></app-filters>
+    <a type="button" class="control-focus refresh-calendar-rat" aria-label="localeObj.tf_1_Calendar_rateCalender_refreshCalRates" (click)="resetDefaultsOnRefresh()" *ngIf="refreshRateCalendar && enableRateCalendar && displayFilters() && !(propertyType.length > 0 &&  propertyType === 'UD')">
+      <i class="fa fa-repeat px-1" aria-hidden="true"></i> 
+      <span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_refreshCalRates | safeHtml"></span>
+    </a>
+    </div>
+    <div class="rate-calendar-button align-self-end" *ngIf="renderingMode === 'INLINE'">
+      <button id="s_btn_view_rooms" class="control-focus btn mbs-button-primary" type="button" (click)="viewAvailability()" [disabled]="showIATA && !enableViewAvailabilityBtn" attr.aria-description="click this button to {{localeObj.tf_1_Calendar_button_availableRooms}}">
+        <span [innerHTML] = "localeObj.tf_1_Calendar_button_availableRooms || '' | safeHtml"></span>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="modal-footer justify-content-end" *ngIf="renderingMode != 'INLINE'">
+  <button *ngIf="!isMultiProp" class="control-focus mt-20 btn mbs-button-primary" type="button" role="button" (click)="viewAvailability()" [disabled]="showIATA && !enableViewAvailabilityBtn" attr.aria-label="click this button to {{localeObj.tf_1_Calendar_rateCalender_done}}" tabindex="0" id="rc-doneBtn">
+    <span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_done | safeHtml"></span>
+  </button>
+
+  <button *ngIf="isMultiProp" class="control-focus mt-20 btn mbs-button-primary" type="button" role="button" (click)="viewHotelsAvailability()" [disabled]="showIATA && !enableViewAvailabilityBtn" attr.aria-label="click this button to {{localeObj.tf_1_Calendar_rateCalender_done}}" tabindex="0" id="rc-doneBtn">
+    <span [innerHTML]="localeObj.tf_1_Calendar_rateCalender_done | safeHtml"></span>
+  </button>
+</div>

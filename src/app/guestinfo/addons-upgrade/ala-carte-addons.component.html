@@ -1,0 +1,183 @@
+<div class="row" id="alaCarteAddOnsDiv" *ngIf="!!Response && Response.status.statusCode === 1000 && isaddonAvailable && displayAddons">
+  <strong>
+    <h4 class="txt-xxx-lg-jb txt-black-five m-0 header" [innerHTML]="localeObj?.tf_04_Checkout_alaCarteAddons_upgradeAddons | safeHtml"></h4>
+  </strong>
+</div>
+
+<div class="mbs-card pl-0 {{RTL_Flag ? 'text-right' : '' }}" *ngIf="!!Response && Response.status.statusCode === 1000 && isaddonAvailable && displayAddons">
+  <div class="row my-3 mx-2">
+    <div class="col-sm-4">
+      <p class="txt-lg-lb txt-black-five ls-x-sm" [innerHtml]="localeObj?.tf_04_Checkout_alaCarteAddons_select_addon | safeHtml"></p>
+    </div>
+    <div class="col-sm-8" *ngIf='!(!!addonsList); else addonSelected'>
+      <div class="toogle-panel">
+        <p class="txt-lg-lr txt-black-three ls-x-sm" [innerHTML]=" addonsText | safeHtml">
+        </p>
+        <button
+          id="addons_modal_popup"
+          class="control-focus btn mbs-button-secondary text-uppercase"
+          (click)="store.setActiveModalElem('addons_modal_popup'); openAddonsModal()"
+        >
+          <span [innerHtml]="localeObj.tf_04_Checkout_alaCarteAddons_button_select_now | safeHtml"></span>
+        </button>
+      </div>
+    </div>
+    <ng-template #addonSelected>
+      <div class="col-sm-8">
+        <div class="toogle-panel">
+          <p class="txt-lg-jr ls-x-sm addonsList mb-1">
+            <span [innerHtml]="localeObj.tf_04_Checkout_alaCarteAddons_total_addon_selected | safeHtml"></span>
+            <span> {{addonsList}}. </span>
+          </p> 
+          <p class="txt-lg-lr txt-black-three ls-x-sm">
+            <span [innerHtml] = "localeObj.tf_04_Checkout_alaCarteAddons_total_cost | safeHtml"></span>:&nbsp;
+            <span class= "txt-lg-lb" [innerHtml] = " currCode "></span>
+            <span class= "txt-lg-lb" [innerHtml]="Total | customPriceFormat: '1.0-2': currencyType"></span>
+          </p>
+          <button
+            id="remove_alacarte_addons"
+            class="control-focus btn mbs-button-secondary text-uppercase"
+            (click)="removeAddons('true');"
+          >
+            <span [innerHtml]="localeObj.tf_04_Checkout_alaCarteAddons_button_remove_addons | safeHtml"></span>
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<!-- Addons Modal -->
+<ng-template #addons>
+  <div id = "ala-carte-addons-modal">
+  <div class="modal-header {{RTL_Flag ? 'text-right' : '' }}">
+    <h5 class="control-focus modal-title txt-xxx-lg-jb lh-32 txt-black mt-2 mb-3" [innerHtml]="localeObj.tf_04_Checkout_alaCarteAddons_select_addons_title | safeHtml" tabindex="0" attr.aria-label="{{localeObj.tf_04_Checkout_alaCarteAddons_select_addons_title}}" id="aca-modal-name">
+    </h5>
+    <div class="pull-right mb-3 d-flex addonsTotal">
+    <h5 class="control-focus txt-x-lg-lb lh-32 txt-black mt-1 mr-3 {{RTL_Flag ? 'ml-3' : 'mr-3' }}" tabindex="0">
+      <span [innerHtml] = "localeObj.tf_04_Checkout_alaCarteAddons_total_addons_selected | safeHtml" attr.aria-label="{{localeObj.tf_04_Checkout_alaCarteAddons_total_addons_selected}}"></span>&nbsp;
+      <span class="total-cost" [innerHtml] = " currCode "></span>
+      <span class="total-cost" [innerHtml]="Total | customPriceFormat: '1.0-2': currencyType"></span>
+    </h5>
+    <button
+      id="bck_to_reservation"
+      class="control-focus btn mbs-button-secondary text-uppercase"
+      (click)="closeBummerModal(bummerType)"
+      [innerHtml]="localeObj.tf_04_Checkout_alaCarteAddons_back_to_reservation | safeHtml"
+      tabindex="0"
+      attr.aria-label = "{{localeObj.tf_04_Checkout_alaCarteAddons_back_to_reservation}}"
+    >
+    </button>
+  </div>
+  </div>
+  <div class="modal-body container {{commonRoomAddons.length  >= 3 ? '' : 'min-addon'}} {{RTL_Flag ? 'text-right' : '' }}">
+    <div *ngFor="let addon of commonRoomAddons | addonFilter : currencyType : true">
+      <span class="card" *ngIf="addon.priceBasis === 'PER_UNIT' ? addon.maxQuantityBookable > 0  : 'true'" [ngStyle]="{'height':RoomsAvail.length > 1 ? multiRoomCard : '430px'}" id ="Addon-{{addon.addOnCode}}">
+      <div class="addon-type control-focus" tabindex="0" attr.aria-label="{{addon.addOnName}}">{{ addon.addOnName }}</div>
+      <img *ngIf="!!addon.imageInfo[0] else emptyImg"
+        src = "{{ addon.imageInfo[0].urls.thumb_yankee_jumbo}}"
+        class="card-img-top"
+        alt="{{ addon.addOnName }}"
+      />
+      <ng-template #emptyImg>
+        <img 
+        src = "/assets/images/offers-blank.png"
+        class="card-img-top empty-img"
+        alt="{{ addon.addOnName }}"
+      />
+      </ng-template>
+      <div class="addon-cost control-focus" tabindex="0" *ngIf="!(!!addon.base_perChild || !!addon.base_perAdult); else elseBlock">
+        <p class="addon-pricing mb-0">
+          <span [innerHTML] = " currCode "></span>
+          <span [innerHTML]= " addon.basePrice[currencyType] | customPriceFormat: '1.0-2': currencyType"></span>
+        </p>
+        <p class="addon-frequency mb-0">
+          <span [innerHtml]="localeObj[addon.frequency] | safeHtml" ></span>&nbsp;
+          <span [innerHtml]="localeObj[addon.basis] | safeHtml" ></span>
+        </p>
+      </div>
+
+      <ng-template #elseBlock>
+        <div class="addon-cost mb-2 multiAddonValue control-focus" tabindex="0">
+          <p class="addon-pricing mb-0">
+            <span [innerHTML] = " currCode "></span>
+            <span [innerHTML]= " addon.baseAdultPrices[currencyType] | customPriceFormat: '1.0-2': currencyType"></span>
+          </p>
+          <p class="addon-frequency mb-0">
+            <span [innerHtml]="localeObj[addon.frequency] | safeHtml" ></span>&nbsp;
+            <span [innerHtml]="localeObj[addon.base_perAdult] | safeHtml" ></span>
+          </p>
+        </div>
+        <div class="addon-cost multiAddonValue control-focus" tabindex="0">
+          <p class="addon-pricing mb-0">
+            <span [innerHTML] = " currCode "></span>
+            <span [innerHTML]= " addon.baseChildPrices[currencyType] | customPriceFormat: '1.0-2': currencyType"></span>
+            </p
+          >
+          <p class="addon-frequency mb-0">
+            <span [innerHtml]="localeObj[addon.frequency] | safeHtml" ></span>&nbsp;
+            <span [innerHtml]="localeObj[addon.base_perChild] | safeHtml" ></span>
+          </p>
+        </div>
+
+      </ng-template>
+
+      <div class="card-body {{!!addon.base_perChild && !!addon.base_perAdult ? 'multiValueCard' : ''}}">
+        <h5 class="card-title">
+          <span class="short-addon-description mb-1"
+            ><b>{{ addon.shortDescription }}</b></span
+          ><br />
+          <span class="addon-description">{{ addon.description }}</span>
+        </h5>
+        <div *ngFor="let room of RoomsAvail; index as id">
+          <span class="d-flex avail-rooms" *ngIf = "availabilityCheck(id, addon)" [ngStyle]="{'border-bottom': RoomsAvail.length > 1 ? '1px solid #e2e2e2': '0px'}">
+          <div class="col-sm-6" *ngIf="RoomsAvail.length > 1">
+            <span class="room-count">Room {{ id + 1 }}</span
+            ><br />
+            <span class="room-name">{{ room.name }}</span>
+          </div>
+          <div
+            class="col-sm-6"
+            *ngIf="addon.btn_selector === 'select'; else toggleBlock"
+          >
+            <button type="button" id="btn_select" class="control-focus btn mbs-button-primary mt-1 {{RoomsAvail.length > 1 ? 'pull-right' : ''}}" [ngStyle]="{'margin': RoomsAvail.length > 1 ? '4px': '0px'}" id="selectedRoom{{id}}-{{addon.addOnCode}}" attr.aria-label="Click to select {{ addon.addOnName }} addon" (click)="selectedAddon(id, addon, room)"
+              [innerHtml]="localeObj.tf_04_Checkout_alaCarteAddons_button_select | safeHtml" tabindex="0">
+            </button>
+          </div>
+          <ng-template #toggleBlock>
+            <div class="col-sm-6 {{RoomsAvail.length > 1 ? 'justify-content-end' : ''}} d-flex">
+              <button type="button" id="btn_inc" class="control-focus btn toggle mt-1 mbs-button-primary" (click)="decrement(id, RoomsAvail[id].alaCarteAddOns.NOT_SPECIFIED[addon.index].numberOfUnit, addon, room)" tabindex="0">
+                &#65293;
+              </button>
+              <div class="px-3 py-2">{{RoomsAvail[id].alaCarteAddOns.NOT_SPECIFIED[addon.index]?.numberOfUnit}}</div>
+              <button type="button" id="btn_dec" class="control-focus btn toggle mt-1 mbs-button-primary" (click)="increment(id, RoomsAvail[id].alaCarteAddOns.NOT_SPECIFIED[addon.index].numberOfUnit, addon, room)" tabindex="0" >
+                &#65291;
+              </button>
+            </div>
+            </ng-template>
+          </span>
+          </div>
+        </div>
+       </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Error Modal for Addons -->
+<ng-template #errorTemplate>
+  <div id="ala-carte-addons-error-modal">
+    <div class="modal-header">
+      <h5 id="bummer" tabindex="0" class="control-focus modal-title txt-xxx-lg-jb lh-32 txt-black mb-3" [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_bummer | safeHtml"></h5>
+      <button id="bummer-closeBtn" type="button" class="control-focus close pull-right" tabindex="0" aria-label="Close" (click)="reselectAddons()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="control-focus txt-lg-lr txt-black-three ls-x-sm pl-20" id="bummer-errMsg" tabindex="0" [innerHTML]="errorMsg | safeHtml"></div>
+      <div class="col-sm-12 modal-footer-btn mt-30">
+        <button class="control-focus btn mbs-button-primary enhance" id="bummer-errConsentBtn" tabindex="0" type="button" (click)="proceedWithBummer()"><span [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_button_proceed | safeHtml"></span></button>
+      </div>
+    </div>
+  </div>
+</ng-template>

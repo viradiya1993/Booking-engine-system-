@@ -1,0 +1,15 @@
+<div class="outlet-container {{RTL_Flag ? 'text-right' : 'text-left'}}">
+  <div class="mt-30 mb-10">
+    <h4 class="control-focus modal-title txt-xxx-lg-jb lh-32 txt-black mb-3 text-uppercase" tabindex="0" [innerHTML] = "localeObj.tf_5_Confirmation_cancelBooking_bookingCancelHeading | safeHtml"></h4>
+  </div>
+  <div class="mt-30 mb-10">
+    <div class="control-focus txt-lg-lr ls-x-sm txt-black-two" tabindex="0" [innerHTML]="getCancellationCodeString()"></div>
+  </div>
+  <div class="mb-10">
+    <div class="control-focus txt-lg-lr ls-x-sm txt-black-two lh-44" tabindex="0" *ngIf="pgDepositAmtAvail === 0" [innerHTML]="getMessage(localeObj.tf_5_Confirmation_cancelBooking_cancelConfirmationMsg, [propertyPhone])"></div>
+    <div class="control-focus txt-lg-lr ls-x-sm txt-black-two lh-44" tabindex="0" *ngIf="pgDepositAmtAvail > 0" [innerHTML]="getMessage(localeObj.tf_5_Confirmation_cancelBooking_cancellationRefundAmtMsg, [defCurrCode ,(pgDepositAmtAvail | customPriceFormat: '': defCurrCode)])"></div>
+  </div>
+  <div class="lh-24 mt-30">
+    <button class="control-focus btn mbs-button-secondary nav-button show" tabindex="0" (click)="redirectToHomepage()"><span [innerHTML] = "localeObj.tf_5_Confirmation_cancelBooking_button_newReservation | safeHtml"></span></button>
+  </div>
+</div>

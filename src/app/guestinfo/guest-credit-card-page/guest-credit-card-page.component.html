@@ -1,0 +1,76 @@
+<ng-template #template>
+  <div id="payment-confirmation-error-modal">
+    <div class="modal-header">
+      <h5 id="bummer" class="control-focus modal-title txt-xxx-lg-jb lh-32 txt-black mb-3" tabindex="0" [innerHTML]="localeObj.tf_4_Checkout_upgradeAddons_bummer | safeHtml"></h5>
+      <button type="button" id="bummer-closeBtn" tabindex="0" class="control-focus close pull-right" aria-label="Close" (click)="closeBummerPopUp()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="control-focus txt-lg-lr txt-black-three ls-x-sm pl-20" tabindex="0" id="bummer-errMsg" [innerHTML]="errorMsg | safeHtml"></div>
+      <div class="col-sm-12 modal-footer-btn mt-30">
+        <button class="control-focus btn mbs-button-primary enhance" id="bummer-errConsentBtn" tabindex="0" type="button" (click)="processPayment()"><span [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_button_proceed | safeHtml"></span></button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #confirmationbummer>
+  <div id="rvng-bummer-modal">
+    <div class="modal-header">
+      <h5 class="control-focus modal-title txt-xxx-lg-jb txt-black d-none d-sm-block" id="bummer" tabindex="0">CONFIRM YOUR CHANGES</h5>
+      <button type="button" id="bummer-closeBtn" class="control-focus close pull-right" aria-label="Close"  tabindex="0" (click)="closeBummerPopUp()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="txt-lg-lr txt-black-three ls-x-sm pl-20"  tabindex="0" id="bummer-errMsg" [innerHTML]="confirmModifyMsg | safeHtml"></div>
+      <div class="row" style="padding: 30px;margin-left: 200px">
+        <div style="margin-right: 50px">
+          <button class="control-focus btn mbs-button-primary enhance" id="bummer-errConsentBtn" type="button" tabindex="0"  (click)="processPayment(true)" [innerHTML]="localeObj.tf_4_Checkout_paymentMethod_button_proceed | safeHtml"><span></span></button>
+        </div>
+        <div>
+          <button class="control-focus btn mbs-button-primary enhance" id="bummer-errCloseBtn" type="button"  tabindex="0" (click)="closeBummerPopUp()" [innerHTML]="localeObj.tf_4_Checkout_RVNG_pricebummer_button_cancel | safeHtml"><span></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div class="outlet-container mt-30" id="outletContainer">
+  <div class="row">
+    <div class="col-lg-8 pl-0">
+      <app-packagelisting class="PackageListing" (reloadMBVerbiage)="reloadAlipayMBVerbiage()" #PackageListing></app-packagelisting>
+      <app-guest-info-form #GuestInfoForm></app-guest-info-form>
+      <div>
+        <app-ala-carte-addons (processPayment) = "processPayment()" [validatedAddons]="validatedAddons" *ngIf="displayAddons"></app-ala-carte-addons>
+        <app-available-upgrades-addons #AvailableUpgrades (upgradeEvent)="resetPreferences($event)" *ngIf="displayUpgrades"></app-available-upgrades-addons>
+      </div>
+      <app-payment-method class="PaymentMethod" #PaymentMethod id="PaymentMethodDiv" (ManualCardStatus)="ResetManualCardStatus($event)" *ngIf="displayPaymentMethods"></app-payment-method>
+      <app-guest-info-footer #GuestInfoFooter (paymentEvent)="processPayment($event)"></app-guest-info-footer>
+    </div>
+    <div class="col-lg-4 col-md-4 align-items-start credit-guest-widget" style="position: relative">
+      <!-- <sticky [sticky-offset-top]="0" id="mySticky" [sticky-offset-bottom]="80" [sticky-end-class]="1100" [sticky-media-query]="'min-width: 992px'">
+        <app-credit-guest-widget></app-credit-guest-widget>
+      </sticky> -->
+      <div id="mySticky" [ngClass]="scrollClass">
+        <app-credit-guest-widget (checkAvailableUpgrades)="checkAvailableUpgradesEvent()" (reloadPreferencesAndPaymentMethod)="creditGuestWidgetRefresh()" (saveGuestInfo)="saveGuestInfo()"></app-credit-guest-widget>
+      </div>
+
+    </div>
+  </div>
+</div>
+<app-amex #AmexPopUp (openManualDiv)='openManualCreditCardDiv()'></app-amex>
+
+<div *ngIf = "isShowPaymentErrorModel">
+  <div id="PaymentErrorPopup" class="Payment-Error-popup">
+    <div class="Payment-Error-popup-content">
+        <p id="Payment-Error-Header" tabindex="0" [innerHTML]="ErrorPopup_heading | safeHtml"></p>
+        <p id="Payment-Error-Sub-Header"  tabindex="0" [innerHTML]="ErrorPopup_subTitle | safeHtml"> <strong></strong></p>
+        <p id="Payment-Error-msg" tabindex="0" [innerHTML]="formatMsg()| safeHtml" ></p>
+        <div class= "overlayButton">
+            <button type="button" (click)="closepopup()" class="stay"  tabindex="0" [innerHTML]="ErrorButton | safeHtml"></button>
+        </div>
+    </div>
+  </div>
+</div>

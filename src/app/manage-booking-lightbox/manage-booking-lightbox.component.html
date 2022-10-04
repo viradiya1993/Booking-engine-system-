@@ -1,0 +1,50 @@
+<ng-template #lightboxmodel>
+  <div id="modal-id">
+  <div class="modal-header mb-10">
+    <h4 class="control-focus modal-title txt-xxx-lg-jb lh-30 ls-1 txt-black-five" tabindex="0" id="mb-modal-name" [innerHTML] = "localeObj.tf_5_Confirmation_manageBooking_manageBookingHeading | safeHtml" attr.aria-label="{{localeObj.tf_5_Confirmation_manageBooking_manageBookingHeading}}"></h4>
+
+    <button type="button" class="control-focus close pull-right" aria-label="Close" id="mb-modal-closeBtn" (click)="closeManageBooking()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="control-focus errDiv txt-lg-lr ls-x-sm txt-black" *ngIf="!isReservationValid" tabindex="0" id="red-error" attr.aria-label="{{errorMsg}}">
+    <p class="contentClass" [innerHTML]="errorMsg | safeHtml"></p>
+  </div>
+  <div class="modal-body outlet-container">
+    <div class="lightbox-contents content row component-ws100">
+      <div class="card">
+        <div class="manageBookingForm">
+        <div class="form-group row">
+          <label for="mb-modal-resIdInput" class="control-focus col-sm-4 p-0 txt-x-lg-jb txt-black-five ls-x-sm mb-label" tabindex="0" id="mb-modal-label1" [innerHTML]="localeObj.tf_5_Confirmation_manageBooking_reservationID | safeHtml" attr.aria-label ="{{localeObj.tf_5_Confirmation_manageBooking_reservationID}}"></label>
+          <div class="col-sm-6  p-0">
+            <input type="text" placeholder="{{localeObj.tf_5_Confirmation_manageBooking_rescheckForm1Helptext}}" attr.aria-label="{{localeObj.tf_5_Confirmation_manageBooking_rescheckForm1Helptext}}" class="control-focus form-control txt-md-jr txt-br-grey ls-x-sm" [(ngModel)]="reservationID" name="resIdInput" tabindex="0"
+              id="mb-modal-resIdInput" (focusout)="isReservationIdValid();resNumberTouched=true;">
+            <small class="error-msg" *ngIf="resNumberTouched && !isResIdValid" [innerHTML]="localeObj.tf_5_Confirmation_manageBooking_invalidReservationIDError | safeHtml" attr.aria-label="{{localeObj.tf_5_Confirmation_manageBooking_invalidReservationIDError}}"></small>
+          </div>
+        </div>
+    
+        <div class="form-group row">
+          <label for="mb-modal-emailInput" class="control-focus col-sm-4  p-0 txt-x-lg-jb txt-black-five ls-x-sm mb-label" tabindex="0" id="mb-modal-label2" [innerHTML]="localeObj.tf_5_Confirmation_manageBooking_emailID | safeHtml" attr.aria-label="{{localeObj.tf_5_Confirmation_manageBooking_emailID}}"></label>
+          <div class="col-sm-6  p-0">
+            <input type="text" placeholder="{{localeObj.tf_5_Confirmation_manageBooking_rescheckForm2Helptext}}" attr.aria-label="{{localeObj.tf_5_Confirmation_manageBooking_rescheckForm2Helptext}}" class="control-focus form-control txt-md-jr txt-br-grey ls-x-sm " [(ngModel)]="emailID" name="emailInput" tabindex="0"
+              id="mb-modal-emailInput" type="email" (keyup)="isEmailValid()" (focusout)="isEmailValid();emailInputTouched = true">
+            <small class="error-msg" *ngIf="emailInputTouched && isMailInvalid" [innerHTML]="localeObj.tf_5_Confirmation_manageBooking_invalidEmailAddressError | safeHtml" attr.aria-label="{{localeObj.tf_5_Confirmation_manageBooking_invalidEmailAddressError}}"></small>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-4"></div>
+          <div class="col-sm-6  p-0">
+            <button class="control-focus btn mbs-button-primary enhance" type="button" [attr.tabindex]="!(isResIdValid && isSubmitButtonVisible) ? '-1' : '0'" id="mb-modal-routeBtn" [disabled]="!(isResIdValid && isSubmitButtonVisible)" (click)="routetomanagebooking()">
+              <span [innerHTML]="localeObj.tf_5_Confirmation_manageBooking_button_submit | uppercase | safeHtml" attr.aria-label="{{localeObj.tf_5_Confirmation_manageBooking_button_submit}}"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- <div class = "manageBookingPolicy">
+      <p class="txt-md-jr" [innerHTML]="localeObj.tf_5_Confirmation_manageBooking_reservationsCutoverNote | safeHtml"></p>
+      </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+</ng-template>

@@ -1,0 +1,4 @@
+{
+  "/mbsp/:resource": "/:resource",
+  "/mbsp/:resource/:id": "/:resource/:id"
+}

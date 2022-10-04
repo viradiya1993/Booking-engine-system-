@@ -1,0 +1,24 @@
+<div class="row" *ngIf="packageData && packageData.length > 0">
+  <strong>
+    <h4 class="txt-xxx-lg-jb txt-black-five m-0" [innerHTML]="localeObj.tf_4_Checkout_packageListing_showTicketsHeading | safeHtml"></h4>
+  </strong>
+</div>
+<div class="mbs-card pl-0" *ngIf="packageData && packageData.length > 0">
+  <div class="row" *ngFor="let package of packageData">
+    <div class="col-sm-4">
+      <p class="txt-lg-lb txt-black-five ls-x-sm"><span [innerHTML]="localeObj.tf_4_Checkout_packageListing_ticketsTo | safeHtml"></span>&nbsp;<span [innerHTML]="package.Name | safeHtml"></span></p>
+    </div>
+    <div class="col-sm-8">
+      <div class="toogle-panel txt-lg-lr txt-black-three ls-x-sm">
+        <div><span [innerHTML]="totalSeats | safeHtml"></span>&nbsp;<span [innerHTML]="totalSeats>1 ? localeObj.tf_3_MultiRoom_packageListing_tickets : localeObj.tf_3_MultiRoom_packageListing_ticket | titlecase | safeHtml"></span><span [innerHTML]="localeObj.tf_3_MultiRoom_packageListing_comma ||
+          ',' | safeHtml"></span>&nbsp;<span [innerHTML]="package.Category | safeHtml"></span></div>
+        <div><span [innerHTML]="getTransformedDate(package.ShowTime) | safeHtml"></span>.</div>
+        <div class="edit-seating">
+          <a id = "g_link_edit_addon" class="control-focus hyl-dark txt-underline" href="#" (click)="editPackageDetail(package, roomsInBasket)"><span [innerHTML]="localeObj.tf_4_Checkout_packageListing_editDateAndSeating | safeHtml"></span></a>
+        </div>
+        <div class="error-msg ScrollToElement" *ngIf="packageError"><span [innerHTML]="packageError | safeHtml"></span></div>
+      </div>
+    </div>
+  </div>
+  <app-add-ons #lionKingComponent (lionKingPackageSelected)="onLionKingPackageSelected($event)"></app-add-ons>
+</div>

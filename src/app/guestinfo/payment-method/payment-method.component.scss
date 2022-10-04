@@ -1,0 +1,235 @@
+@import "../../../sass/typography/font";
+
+.payment-option {
+  max-width: 50px;
+  max-height: 27px;
+}
+
+.payment-icon-center {
+  top: 50%;
+  transform: translateY(-10%);
+}
+
+.amex-payment-option {
+  max-width: 50px;
+  max-height: 40px;
+  @media only screen and (max-width: 576px) {
+    max-width: 50px;
+    max-height: 27px;
+  }
+}
+
+form {
+  width: 100%;
+}
+
+input.form-control::-webkit-input-placeholder { color: rgb(212, 212, 212); }
+input.form-control:-moz-placeholder { color: rgb(212, 212, 212); } /* FF 4-18 */
+input.form-control::-moz-placeholder { color: rgb(212, 212, 212); } /* FF 19+ */
+input.form-control:-ms-input-placeholder { color: rgb(212, 212, 212); } /* IE 10+ */
+
+input:focus::-webkit-input-placeholder { color:transparent; }
+input:focus:-moz-placeholder { color:transparent; } /* FF 4-18 */
+input:focus::-moz-placeholder { color:transparent; } /* FF 19+ */
+input:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.form-group {
+  padding: 10px 5px;
+  margin: 0px;
+  > * {
+    padding: 0 0 15px 0;
+    @media only screen and (min-width: 576px) {
+      padding: 0 15px;
+    }
+  }
+}
+
+.ali-label{
+  min-width: 76px;
+}
+.amex-style {
+  width: 20px;
+  @media only screen and (max-width: 576px) {
+    width: 20px;
+  }
+}
+
+.form-group p {
+  margin-bottom: 0px;
+}
+
+.dropdown {
+  margin-right: 10px;
+  height: 38px !important;
+  border: 0px !important;
+}
+
+.inputcon input {
+  margin-bottom: 15px;
+  height: 36px;
+  border: 1px solid #ced4da;
+  @media only screen and (max-width: 575px) {
+    width: 24%;
+    padding: 6px;
+  }
+  @media only screen and (min-width: 576px) {
+    margin-right: 10px;
+    margin-bottom: 0;
+  }
+}
+
+.payment-icons {
+  padding: 0px !important;
+  justify-content: flex-start;
+  @media only screen and (max-width: 768px) {
+    justify-content: flex-start !important;
+    .payment-method-container {
+      margin-right: 0.4rem;
+      padding: 2px !important;
+    }
+  }
+}
+
+.month-dropdown {
+  margin-right: 10px;
+}
+
+.form-check-inline {
+  margin-right: 0px !important;
+  top: 50%;
+  transform: translateY(-50%);
+  -ms-transform: translateY(15%);
+}
+
+.form-check {
+  padding-left: 0px;
+}
+
+hr {
+ border: 2px solid $pinkish-grey-two;
+}
+
+.payment-error-message {
+  margin-top: -25px;
+  margin-bottom: 25px;
+}
+
+.mbs-dropdown-primary{
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  min-width: 80px;
+}
+
+.dropdown-toggle {
+  border: 1px solid #ced4da;
+  height: 38px;
+  padding: 6px 24px 0px 10px;
+  font-weight: unset !important;
+  min-width: 60px;
+  background: white;
+}
+
+.dropdown-menu {
+  border: 1px solid #ced4da;
+  min-width: 60px;
+  max-height: 200px;
+  overflow: auto;
+}
+
+.dropdown-item {
+  padding-left: 10px;
+}
+
+.payment-method-container {
+    margin-bottom: .5rem !important;
+    padding: 15px !important;
+    @media only screen and (min-width: 576px) {
+      margin-bottom: 0px !important;
+    }
+}
+
+.payment-label-spacing-on-flex-start {
+  margin-right: 20px;
+}
+
+h4 {
+  &.header {
+    @media only screen and (max-width: 575px) {
+      font-size: 22px;
+    }
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #2A6EBB;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #2A6EBB;
+}
+
+.ng-select.custom {
+  border:0px;
+  min-width: 60px;
+  border-radius: 0px!important;
+  width: 75px !important;
+}
+.ng-select.custom .ng-select-container  {            
+  background-color: #fff;
+  border-radius: 0px !important;
+  border:1px solid #ced4da;
+  align-items: center;
+  cursor: pointer!important;
+}
+
+.ng-select.custom .ng-select-container .ng-value-container .ng-input>input{
+    cursor: pointer !important;
+}
+
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input{
+  padding-right: 20px !important;
+}
+
+.manualcc-charge-msg {
+  font-style: normal;
+  font-weight: normal;
+  color: #000000;
+}
+
+.expiry-date .ng-select.custom {
+  width: 77px !important;
+}
+
+.seperator {
+  width: 1px;
+  background: #dddddd;
+  height: inherit;
+  top: 10px;
+  position: relative;
+}
+
+.payment-options {
+  flex-direction: row;
+  @media only screen and (max-width: 768px) {
+    flex-direction: column;
+  }
+  .pay-later{
+    @media only screen and (max-width: 768px) {
+      margin-top: 15px;
+    }
+  }
+}

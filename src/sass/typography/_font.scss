@@ -1,0 +1,189 @@
+@import "../../sass/variables/colors";
+@import "../../sass/variables/font";
+
+//Primary Font
+.txt-x-sm-jr, .txt-sm-jr,
+.txt-md-jr, .txt-lg-jr,
+.txt-sm-jb, .txt-md-jb,
+.txt-lg-jb, .txt-x-lg-jb,
+.txt-xx-lg-jb, .txt-xxx-lg-jb,
+.txt-xxxxx-lg-jb {
+  font-family: $font-primary;
+}
+
+//Secondary Font
+.txt-x-sm-lr, .txt-sm-lr,
+.txt-md-lr, .txt-lg-lr,
+.txt-sm-lb, .txt-md-lb,
+.txt-lg-lb, .txt-x-lg-lb,
+.txt-xx-lg-lb, .txt-x-sm-li {
+  font-family: $font-secondary;
+}
+
+//Regular Font
+.txt-x-sm-jr, .txt-sm-jr,
+.txt-md-jr, .txt-lg-jr,
+.txt-x-sm-lr, .txt-sm-lr,
+.txt-md-lr, .txt-lg-lr {
+  font-weight: normal !important;
+}
+
+//Bold Font
+.txt-sm-jb, .txt-md-jb,
+.txt-lg-jb, txt-x-lg-jb,
+.txt-xx-lg-jb, .txt-xxx-lg-jb,
+.txt-xxxxx-lg-jb,
+.txt-sm-lb, .txt-md-lb,
+.txt-lg-lb, .txt-x-lg-lb,
+.txt-xx-lg-lb {
+  font-weight: bold;
+}
+
+//Italic Font
+.txt-x-sm-li {
+  font-style: italic;
+}
+
+//Font Sizes
+.txt-x-sm-jr,
+.txt-x-sm-lr,
+.txt-x-sm-li {
+  font-size: $font-size-x-small;
+}
+
+//Font Sizes
+.txt-xx-sm-jr,
+.txt-xx-sm-lr,
+.txt-xx-sm-li {
+  font-size: $font-size-xx-small;
+}
+
+.txt-sm-jr, .txt-sm-lr,
+.txt-sm-jb, .txt-sm-lb {
+  font-size: $font-size-small;
+}
+
+.txt-md-jr, .txt-md-lr,
+.txt-md-jb, .txt-md-lb  {
+  font-size: $font-size-medium;
+}
+
+.txt-lg-jr, .txt-lg-lr,
+.txt-lg-jb, .txt-lg-lb {
+  font-size: $font-size-medium;
+  @media only screen and (min-width: 768px) {
+    font-size: $font-size-large;
+  }
+}
+
+.txt-x-lg-jb,
+.txt-x-lg-lb {
+  font-size: $font-size-m-large;
+  @media only screen and (min-width: 768px) {
+    font-size: $font-size-x-large;
+  }
+}
+
+.txt-xx-lg-jb,
+.txt-xx-lg-lb {
+  font-size: $font-size-x-large;
+  @media only screen and (min-width: 768px) {
+    font-size: $font-size-xx-large;
+  }
+}
+
+.txt-xxx-lg-jb {
+  font-size: $font-size-xxx-large;
+}
+
+.txt-xxxxx-lg-jb {
+  font-size: $font-size-xxxxx-large;
+}
+
+.txt-black {
+  color: black;
+}
+
+.txt-black-two {
+  color: $black-two;
+}
+
+.txt-black-three {
+  color: $black-three;
+}
+
+.txt-black-three-60 {
+  color: $black-three-60;
+}
+
+.txt-black-five {
+  color: $black-five;
+}
+
+.txt-warm-grey-two {
+  color: $warm-grey-two;
+}
+
+.txt-warm-grey-three {
+  color: $warm-grey-three;
+}
+
+.txt-warm-grey-four {
+  color: $warm-grey-four;
+}
+
+.txt-br-grey {
+  color: $brownish-grey;
+}
+
+.txt-br-grey-two {
+  color: $greyish-brown-two;
+}
+
+.txt-bs {
+  color: $burnt-sienna;
+}
+
+.txt-brick {
+  color: $brick;
+}
+
+.txt-md-green {
+  color: $medium-green;
+}
+
+.ls-x-sm {
+  letter-spacing: $letter-spacing-x-small;
+}
+
+.ls-sm {
+  letter-spacing: $letter-spacing-small;
+}
+
+.ls-1 {
+  letter-spacing: $letter-spacing-1;
+}
+
+.lh-24 {
+  line-height: $line-height-24;
+}
+
+.lh-26 {
+  line-height: $line-height-26;
+}
+
+.lh-30 {
+  line-height: $line-height-30;
+}
+
+.lh-32 {
+  line-height: $line-height-32;
+}
+
+.txt-underline {
+  text-decoration: underline !important;
+}
+
+.txt-decoration-skip{
+  text-decoration-skip-ink: none;
+}
